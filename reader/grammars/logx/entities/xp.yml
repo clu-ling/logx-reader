@@ -1,0 +1,97 @@
+# FIXME: switch to Penn tagset
+- name: "base-concept-penn"
+  label: Concept
+  type: token
+  unit: tag
+  pattern: |
+    /NN|PROPN|ADJ/* /NN/+
+
+# FIXME: switch to Penn tagset
+- name: "base-concept-universal"
+  label: Concept
+  type: token
+  unit: tag
+  pattern: |
+    /NOUN|PROPN|ADJ/* /NOUN|PROPN/+
+
+# FIXME: switch to Penn tagset
+- name: "noun-phrase-1"
+  label: NounPhrase
+  priority: 1
+  type: token
+  action: convertToConcept
+  unit: "tag"
+  pattern: |
+  /DET|NOUN|PROPN|ADJ/* /NOUN|PROPN|PRON|ADJ/ /DET|NOUN|PROPN|ADJ/*
+
+- name: "prep-phrase"
+  label: PrepPhrase
+  priority: 2
+  type: token
+  unit: "tag"
+  pattern: |
+  "ADP"+ @NounPhrase
+
+- name: "prep-phrase-recurs"
+  label: PrepPhrase
+  priority: 3
+  type: token
+  unit: "tag"
+  pattern: |
+  @PrepPhrase{2,}
+
+- name: "noun-phrase-2"
+  label: NounPhrase
+  priority: 4
+  type: token
+  unit: "tag"
+  pattern: |
+  @NounPhrase @PrepPhrase
+
+- name: "noun-phrase-3"
+  label: NounPhrase
+  priority: 5
+  type: token
+  unit: "tag"
+  pattern: |
+  @NounPhrase "CCONJ" @PrepPhrase
+
+- name: "verb-phrase-1"
+  label: VerbPhrase
+  priority: 6
+  type: token
+  unit: "tag"
+  pattern: |
+  /^(PART|ADV|VERB)/+ @PrepPhrase? @NounPhrase+ ("CCONJ" @NounPhrase)* @PrepPhrase*
+
+- name: "verb-phrase-2"
+  label: VerbPhrase
+  priority: 6+
+  type: token
+  unit: "tag"
+  pattern: |
+  /^(PART|ADV|VERB)/+ @PrepPhrase
+
+- name: "wh-phrase-1"
+  label: WhPhrase
+  priority: 7
+  type: token
+  unit: "tag"
+  pattern: |
+  /^W/ @VerbPhrase
+
+- name: "verb-phrase-3"
+  label: VerbPhrase
+  priority: 8
+  type: token
+  unit: "tag"
+  pattern: |
+  @VerbPhrase (@WhPhrase | @VerbPhrase)+
+
+- name: "sentence-1"
+  label: Sentence
+  priority: 9
+  type: token
+  unit: "tag"
+  pattern: |
+  @NounPhrase @VerbPhrase+

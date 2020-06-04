@@ -1,0 +1,34 @@
+{
+  "metadata": {
+    "authors": [
+      {
+        "givenName": "Naim",
+        "surName": "Edwards",
+        "email": "nkedward@umich.edu"
+      }
+    ],
+    "title": "Effects of Garden Attributes on Ant (Formicidae) Species Richness and Potential for Pest Control",
+    "doi": {
+      "doi": "10.2134/urbanag2015.01.1405"
+    },
+    "journal": "Urban Agriculture & Regional Food Systems",
+    "volume": "1",
+    "publicationDate": {
+      "year": 2016,
+      "month": 7,
+      "day": 28
+    },
+    "publisher": "American Society of Agronomy and Crop Science Society of America"
+  },
+  "documentAbstract": "Urban vegetable gardens serve as sources of social, economic, and biodiversity conservation opportunities. Determining how gardens can be developed to enhance biodiversity and ecosystem services is important for organic food production. This study investigated the diversity of ant (Formicidae) species in relation to various garden attributes in three distinct gardening sites in Ann Arbor, MI. Further, predation experiments were conducted to explore the potential bio-control services of commonly encountered ant species on Cabbage Looper moths (Trichoplusia ni) and Squash Bugs (Anasa tristis). Results indicated that community gardens have the capacity to support a multitude of ant species; 19 species from 12 genera were sampled. However, soil texture, intense tilling, and distance from less disturbed areas significantly reduces species richness. Less intensively tilled garden plots averaged nearly double the number of ant species collected in tractor-tilled plots. Plots bordered by grass lawns and closer to wooded areas had significantly more ant species than plots surrounded by other garden plots. Predation experiments indicated that ants consume Cabbage Looper moth eggs and larvae, although predation on Squash Bugs was less common. Some of the species that demonstrated levels of predation are rare in gardens due to sensitivity to disturbance. Thus, reducing disturbance within and around gardens can promote ant biodiversity and beneficial predators leading to increased predation on garden pests.",
+  "sections": [
+    {
+      "kind": "methods",
+      "content": "A 'community garden' is defined as an aggregation of organic vegetable garden plots where individual gardeners manage each plot independently. Three community garden sites in Ann Arbor, MI (42°16′53″ N, 83°44′54″ W) were selected based on the number of plots within each site that were tilled either by a tractor (tractor tilled, TT) or less intensively tilled with garden tools (self-tilled, ST). The site names are: County Farms Park (CFA and CFB), Greenview (GV), and Catholic Social Services (CSS) and are shown in Fig. 1. County Farms Park is divided into two sections because the gardening space is divided by a concrete trail and mixed vegetation approximately 20 m wide. The two sections also differ in soil texture. Randomization of plot selection was limited by access and permission from all of the gardeners to sample in their plot. Still, the plots sampled accounted for a minimum of 25% of any given site and represented 31% of all available plots."
+    },
+    {
+      "kind": "results",
+      "content": "All statistical analyses were conducted using SPSS and EstimateS. Each garden plot was considered the basic sampling unit for ant species diversity, and the data from May to August for each plot was combined for analysis. Independent t tests compared the mean number of ant species encountered between tillage groups (TT and ST). One-way ANOVAs compared the mean number of ant species per plot between sites (which varied by soil type) and between plots varying in the number of sides bordered by a grass lawn. Multiple regression analyses assessed the relationship between ant species per plot and plot characteristics including distance from a concrete or wooded area and the number of sides adjacent to a lawn."
+    }
+  ]
+}

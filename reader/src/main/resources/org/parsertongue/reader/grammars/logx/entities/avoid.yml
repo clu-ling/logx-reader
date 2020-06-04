@@ -1,0 +1,32 @@
+##################################################################
+#
+# Avoid mentions
+#
+# Used to prevent overmatching of entities and events
+#
+##################################################################
+
+- name: "et-al"
+  label: Reference
+  example: "et al."
+  type: token
+  pattern: |
+    [tag=NNP]* "et" [word=/^al\.?$/]
+
+- name: "in-text-citation"
+  label: Reference
+  example: "Mathis et al. ( 2000 )"
+  type: token
+  pattern: |
+    @Reference "(" [word=/^[\d]{4}[a-z]*$/] ")"
+
+- name: "parenthetical-citation"
+  label: Reference
+  example: "(Campbell et al ., 1991a , 1991d )"
+  type: token
+  pattern: |
+    "("
+    @Reference
+    (".,"|"." ",")?
+    ([word=/^[\d]{4}[a-z]*$/] ","?)+
+    ")"

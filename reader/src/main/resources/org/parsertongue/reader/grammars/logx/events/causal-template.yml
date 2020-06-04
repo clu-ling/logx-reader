@@ -1,0 +1,13 @@
+###############
+### SYNTAX
+###############
+
+- name: "${eventLabel}-${causeType}-${effectType}-syntax-1"
+  example: "???"
+  #priority: ${rulePriority}
+  label: ${eventLabel}
+  action: ${eventAction}
+  pattern: |
+    trigger = [lemma=/^(${trigger})/ & tag=/^VB/]
+    cause:${causeType} = <advcl? nsubj (acl nmod_with nmod_of?)? /conj|compound|amod|nmod_(such_as|including)/{,2}
+    effect:${effectType} = dobj (nmod_of)? /conj|compound|amod|nmod_(such_as|including)/{,2}

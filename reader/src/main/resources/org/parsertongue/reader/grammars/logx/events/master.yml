@@ -1,0 +1,48 @@
+taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
+
+vars:
+  #pathPrefix: "org/parsertongue/reader/grammars/logx"
+  pathPrefix: "org/parsertongue/reader/grammars/logx"
+  agents: "nsubj|'nsubj:xsubj'|'nsubjpass:xsubj'|nsubjpass|csubj|csubjpass|<acl|nmod_along_with"
+
+  increase_triggers: "acceler|cataly|caus|compound|contribut|deepen|lead|led"
+
+  decrease_triggers: "limit|lose|loss|lower|negat|reduc"
+
+  event_action: "identity"
+
+rules:
+  - import: ${pathPrefix}/events/transport.yml
+    # vars:
+    #   rulePriority: "1"
+    #   eventAction: ${event_action}
+
+  ############################
+  # Entity affects Entity
+  ############################
+  #
+  # Increase events (entity -> entity)
+  # use template
+  # - import: ${pathPrefix}/events/causal-template.yml
+  #   vars:
+  #     rulePriority: "1"
+  #     eventLabel: "Increase"
+  #     eventAction: ${event_action}
+  #     trigger: ${increase_triggers}
+  #     agents: ${agents}
+  #     causeType: "Entity"
+  #     effectType: "Entity"
+  #     forms: ${formsWords}
+
+  # Decrease events (entity -> entity)
+  # use template
+  # - import: ${pathPrefix}/events/causal-template.yml
+  #   vars:
+  #     rulePriority: "1"
+  #     eventLabel: "Decrease"
+  #     eventAction: ${event_action}
+  #     trigger: ${decrease_triggers}
+  #     agents: ${agents}
+  #     causeType: "Entity"
+  #     effectType: "Entity"
+  #     forms: ${formsWords}

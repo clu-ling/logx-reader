@@ -1,0 +1,22 @@
+- name: "transport-1-syntax"
+  example: "How many TEUs of DoD Frozen Meat are heading to Hamburg?"
+  #priority: ${rulePriority}
+  label: Transport
+  pattern: |
+    trigger = [lemma=/^head/ & tag=/^VB/]
+    shipment:Cargo = nsubj nmod_of?
+    destination:Location = nmod_to
+
+
+
+# - name: "query-1-syntax"
+#   example: "How many TEUs of DoD Frozen Meat are heading to Hamburg?"
+#   #priority: ${rulePriority}
+#   label: Transport
+#   pattern: |
+#     trigger = [lemma=how] [lemma=/^(many|much)$/ & tag=JJ]
+#     unit:Unit? = <amod
+#     element:Cargo = <amod nmod_of?
+
+#     shipment:Cargo = nsubj nmod_of
+#     destination:Location = nmod_to

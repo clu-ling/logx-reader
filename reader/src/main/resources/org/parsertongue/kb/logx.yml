@@ -1,0 +1,15 @@
+#
+# Format:
+# KB TAB name of NER KB TAB tab-separated list species to consider for NER (all if empty)
+# The order of knowledge bases is important, because manually maintained KBs have priority over standard KBs.
+#
+
+
+HazMat:
+  - hazardous-materials
+
+# Org:
+#   - federal-orgs
+
+# Transportation:
+#   - vehicles

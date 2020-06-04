@@ -1,0 +1,23 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+GET     /                              controllers.ApiController.index
+#GET     /                               controllers.ApiController.visualizer
+GET     /buildinfo                      controllers.ApiController.buildInfo
+
+# VIZ
+#GET    /api/extract-as-tag              controllers.ApiController.tag(text: String)
+
+# API calls
+GET     /api/extract                    controllers.ApiController.extract(text: String, pretty: Option[Boolean])
+GET     /api/annotate                   controllers.ApiController.annotate(text: String, pretty: Option[Boolean])
+GET     /api                            controllers.ApiController.openAPI(version = "v1")
+#GET     /api/:version                  controllers.ApiController.openAPI(version: String)
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /favicon.ico                    controllers.Assets.at(file="images/favicon.ico")
+GET     /assets/*file                   controllers.Assets.at(file)
+#GET     /assets/*file               controllers.Assets.at(path="/public", file: String)

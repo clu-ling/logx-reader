@@ -1,0 +1,3 @@
+-Xmx10G
+-XX:+CMSClassUnloadingEnabled
+-Dhttp.port=9000

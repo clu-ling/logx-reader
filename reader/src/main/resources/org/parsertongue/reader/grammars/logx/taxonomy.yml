@@ -1,0 +1,32 @@
+- Sentence:
+  - XP:
+    - VerbPhrase
+    - PrepPhrase
+    - WhPhrase
+    # NOTE: these are converted in an action to create Concepts
+    - NounPhrase
+
+- Avoid:
+  - Reference
+  - PossibleTrigger
+
+- Entity:
+  - Concept:
+    - Location
+    - Organization
+    - Cargo
+- Measurement:
+  - Unit
+  - Quantity
+
+- Event:
+  - Causal:
+    - Increase
+    - Decrease
+    - Correlation
+    - SameAs
+  - Transport
+- Coref
+
+# See https://gitlab.logx.cloud/team/bbn/logx-reader/-/issues/1
+- Query
