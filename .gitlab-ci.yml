@@ -46,11 +46,11 @@ deploy:
     - sbt dockerize
     #- docker images
     #- sbt docker:publishLocal
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN gitlab-registry.logx.cloud
+    - docker login -u $CI_USER -p $CI_BUILD_TOKEN $CI_REGISTRY
     #- docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY;
   script:
     # push all tags
-    - docker push gitlab-registry.logx.cloud/team/bbn/logx-reader
+    - docker push $PROJECT_DOCKER_REGISTRY
 
 
 # TODO: deploy on OpenStack using terraform
