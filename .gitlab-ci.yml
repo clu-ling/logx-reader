@@ -1,50 +1,51 @@
-image: openjdk:11
+# use our custom image
+image: parsertongue/ubuntu:20.04
 
 stages:
   - test
   - deploy
 
+variables:
+  # used in conjunction with cache
+  SBT_OPTS: "-Dsbt.global.base=sbt-cache/sbtboot -Dsbt.boot.directory=sbt-cache/boot -Dsbt.ivy.home=sbt-cache/.ivy2"
+
+# cache modules in between jobs
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - "sbt-cache/.ivy2/cache"
+    - "sbt-cache/boot"
+    - "sbt-cache/sbtboot"
+    #- "sbt-cache/coursier"
+
 before_script:
-  - apt-get update -y
-  - apt-get install apt-transport-https -y
-  ## Install SBT
-  - echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
-  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-  - apt-get -y update
-  - apt-get -y install sbt
   - sbt sbtVersion
 
 test:
   stage: test
+  image: parsertongue/ubuntu:20.04
   script:
     # - sbt clean coverage test coverageReport
     - sbt clean test
-    - sbt dockerize
-    #- sbt docker:publishLocal
 
 deploy:
-  tags:
-    - docker
-    - arizona
+  only:
+    # only publish docker images, etc. for commits to master
+    refs:
+      - master
+  # tags:
+  #   - docker
+  #   - arizona
   stage: deploy
-  # image: openjdk:11
-  # before_script:
-  #   - apt-get update -y
-  #   - apt-get install apt-transport-https -y
-  #   ## Install SBT
-  #   - echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
-  #   - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-  #   - apt-get update -y
-  #   - apt-get install sbt -y
-  #   - sbt sbtVersion
-  #   - sbt docker:publishLocal
-  #   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY;
-
-  image: docker:latest
+ 
+  image: parsertongue/ubuntu:20.04
   # see https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
   # see https://docs.gitlab.com/ee/api/deploy_tokens.html
   # see https://docs.gitlab.com/ee/user/project/deploy_tokens/index.html#creating-a-deploy-token
   before_script:
+    - sbt dockerize
+    #- docker images
+    #- sbt docker:publishLocal
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN gitlab-registry.logx.cloud
     #- docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY;
   script:
