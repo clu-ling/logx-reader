@@ -83,7 +83,7 @@ docker run --name="odinson-rest-api" \
   --restart "on-failure" \
   -e "HOME=/app" \
   -p "0.0.0.0:9000:9000" \
-  "lumai/odinson-rest-api"
+  "gitlab-registry.logx.cloud/team/bbn/logx-reader:latest"
 ```
 
 Navigate to [localhost:9000/api](http://localhost:9000/api) to interactively explore the API through the [OpenAPI 3.0](http://spec.openapis.org/oas/v3.0.3) specification.
