@@ -30,6 +30,12 @@ class TestEntities extends FlatSpec with Matchers {
 
 
   }
+  // WhatQuery -> "What cargo was shipped from Los Angeles on August 12, 2014?"
+  // Date -> "August 12, 2014"
+  // Date -> "August 12 2014"
+  // Date -> "August 2014"
+  // UnspecifiedCargo -> "What cargo was shipped from Los Angeles on August 12, 2014?"
+
 }
 
 

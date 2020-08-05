@@ -1,8 +1,8 @@
 taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
 
 vars:
-  #pathPrefix: "org/parsertongue/reader/grammars/logx"
   pathPrefix: "org/parsertongue/reader/grammars/logx"
+  #pathPrefix: "org/parsertongue/reader/grammars/logx"
   agents: "nsubj|'nsubj:xsubj'|'nsubjpass:xsubj'|nsubjpass|csubj|csubjpass|<acl|nmod_along_with"
 
   increase_triggers: "acceler|cataly|caus|compound|contribut|deepen|lead|led"

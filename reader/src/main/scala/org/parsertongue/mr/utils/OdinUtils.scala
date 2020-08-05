@@ -3,6 +3,12 @@ package org.parsertongue.mr.utils
 import com.typesafe.scalalogging.LazyLogging
 import org.clulab.processors.{ Document, Sentence }
 import org.clulab.odin._
+import org.clulab.odin.impl.Taxonomy
+import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.constructor.Constructor
+
+import java.util.Collection
+import scala.io.Source
 
 /** Utilities related to odin mentions */
 object OdinUtils extends LazyLogging {
@@ -96,5 +102,5 @@ object OdinUtils extends LazyLogging {
 
     toks.mkString(" ")
   }
-
+  
 }

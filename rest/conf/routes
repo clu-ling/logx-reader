@@ -5,7 +5,9 @@
 
 GET     /                              controllers.ApiController.index
 #GET     /                               controllers.ApiController.visualizer
-GET     /buildinfo                      controllers.ApiController.buildInfo
+GET     /api/buildinfo                      controllers.ApiController.buildInfo(pretty: Option[Boolean])
+GET     /api/config                     controllers.ApiController.configInfo(pretty: Option[Boolean])
+
 
 # VIZ
 #GET    /api/extract-as-tag              controllers.ApiController.tag(text: String)
@@ -13,6 +15,8 @@ GET     /buildinfo                      controllers.ApiController.buildInfo
 # API calls
 GET     /api/extract                    controllers.ApiController.extract(text: String, pretty: Option[Boolean])
 GET     /api/annotate                   controllers.ApiController.annotate(text: String, pretty: Option[Boolean])
+GET     /api/taxonomy/hyponyms-for                   controllers.ApiController.taxonomyHyponymsFor(term: String, pretty: Option[Boolean])
+GET     /api/taxonomy/hypernyms-for                   controllers.ApiController.taxonomyHypernymsFor(term: String, pretty: Option[Boolean])
 GET     /api                            controllers.ApiController.openAPI(version = "v1")
 #GET     /api/:version                  controllers.ApiController.openAPI(version: String)
 

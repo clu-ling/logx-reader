@@ -3,9 +3,11 @@
   #priority: ${rulePriority}
   label: Transport
   pattern: |
-    trigger = [lemma=/^head/ & tag=/^VB/]
-    shipment:Cargo = nsubj nmod_of?
-    destination:Location = nmod_to
+    trigger = [lemma=/^(head|ship)/ & tag=/^VB/]
+    shipment:Cargo = /nsubj.*/ nmod_of?
+    origin:Location? = nmod_from
+    destination:Location? = nmod_to
+    time:TimeExpression? = /^nmod_/
 
 
 

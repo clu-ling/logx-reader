@@ -92,6 +92,37 @@ Navigate to [localhost:9000/api](http://localhost:9000/api) to interactively exp
 
 See [this gist](https://gist.github.com/myedibleenso/9241a4c9c71d29f148ef0b8c44602b60) for sample input and output corresponding to the `/api/extract` endpoint.
 
+## Develop
+
+To avoid reloading NLP models during development, point the reader to the external version of the grammar outside of 
+`src/main/resources` using the `RULES_PREFIX` environment variable and launch the REST API server in development mode:
+```bash
+# assumes you've cloned to ~/repos/clu-ling/logx-reader
+# adjust as needed
+RULES_PREFIX=file://$HOME/repos/clu-ling/logx-reader/reader/grammars/logx sbt web
+```
+
+Alter files under `reader/grammars/logx`
+
+### Visualizer
+
+You can use the `parsertongue/odin-tutorial:latest` docker image for the Odin tutorial to visualize the output of the `logx-reader` using [TAG](https://github.com/lum-ai/TAG).  See the following `docker-compose.yml` fragment:
+
+
+```docker
+version: "2.3"
+services:
+  # use localhost:8880/playground for the visualizer
+  frontend:
+    image: parsertongue/odin-tutorial:local
+    restart: always
+    ports:
+      - "8880:7777"
+    environment:
+      ODIN_API_BASE_URL: reader:9000/api
+```
+
+
 ## Support
 
 For feature requests and bug reports, please open an issue.

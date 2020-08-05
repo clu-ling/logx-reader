@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject._
 import org.clulab.odin.Mention
+import org.clulab.odin.impl.Taxonomy
 //import scala.util.control.NonFatal
 import scala.concurrent.{ Future, ExecutionContext }
 import scala.concurrent.duration._
@@ -56,13 +57,35 @@ class ApiController @Inject() (
     }
   }
 
-  def buildInfo = Action(Ok(jsonBuildInfo))
+  def buildInfo(pretty: Option[Boolean] = None) = Action.async {
+    Future{
+      jsonBuildInfo.format(pretty)
+    }(readerContext)
+  }
+
+  def configInfo(pretty: Option[Boolean]) = Action {
+    val options = ConfigRenderOptions.concise.setJson(true)
+    val json = Json.parse(config.root.render(options))
+    json.format(pretty)
+  }
 
   def index = Action {
     Redirect("/api")
   }
   def openAPI(version: String) = Action.async {
     Future(Ok(views.html.api(version)))(readerContext)
+  }
+
+  def taxonomyHyponymsFor(term: String, pretty: Option[Boolean] = None) = Action.async {
+    Future{
+      Json.toJson(ieSystem.taxonomy.hyponymsFor(term)).format(pretty)
+    }(readerContext)
+  }
+
+  def taxonomyHypernymsFor(term: String, pretty: Option[Boolean] = None) = Action.async {
+    Future{
+      Json.toJson(ieSystem.taxonomy.hyponymsFor(term)).format(pretty)
+    }(readerContext)
   }
 
   //def index = Action(Redirect("/api"))

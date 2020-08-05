@@ -10,6 +10,7 @@ import org.parsertongue.mr.utils.{ RuleUtils }
 import com.typesafe.config.{ Config, ConfigFactory }
 import com.typesafe.scalalogging.LazyLogging
 import org.clulab.odin.{ Action, Actions, Mention, State }
+import org.clulab.odin.impl.Taxonomy
 import org.clulab.processors.{ Document => CluDocument, Processor }
 import org.clulab.processors.clu.{ CluProcessor }
 
@@ -27,6 +28,9 @@ class MachineReadingSystem(val config: Config) extends LazyLogging {
   var eventRulesPath: String     = config[String]("org.parsertongue.mr.events.eventFinder.rulesPath")
 
 
+  val rulesPrefix = config[String]("org.parsertongue.mr.rulesPrefix")
+
+  val taxonomy: Taxonomy = RuleUtils.readTaxonomy(s"${rulesPrefix}/taxonomy.yml")
   lazy val proc: Processor = mkProcessor(config[String]("org.parsertongue.mr.processor"))
 
   var entityFinder: EntityFinder = mkEntityFinder(entityFinderName)

@@ -13,7 +13,9 @@ tags:
   - name: "ie"
     description: |
       Operations related to information extraction.
-
+  - name: "config"
+    description: |
+      Endpoints for inspecting project config.
 paths:
   /extract:
     get:
@@ -65,6 +67,34 @@ paths:
               schema:
                 $ref: '#/components/schemas/Document'
 
+  # /buildinfo:
+  #   get:
+  #     tags:
+  #       - config
+  #     summary: |
+  #       App version information
+  #     description: |
+  #       Display information about the app's commit, branch, etc.
+  #     responses:
+  #       '200':
+  #         description: Version information
+  #         content:
+  #           application/json
+
+  # /config:
+  #   get:
+  #     tags:
+  #       - config
+  #     summary: |
+  #       Appplication config
+  #     description: |
+  #       Display app configuration for debugging purposes
+  #     responses:
+  #       '200':
+  #         description: Config information
+  #         content:
+  #           application/json
+            
 components:
   schemas:
 

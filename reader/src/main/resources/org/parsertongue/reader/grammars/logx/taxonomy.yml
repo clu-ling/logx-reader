@@ -14,10 +14,24 @@
   - Concept:
     - Location
     - Organization
-    - Cargo
+    - Cargo:
+      # "the cargo"
+      - UnspecifiedCargo
+
 - Measurement:
   - Unit
   - Quantity
+
+- TimeExpression:
+  - Date:
+    - Month
+    - Day:
+      # ex. 11 in 3/11/2012
+      - CalendarDay
+      # Monday, Tuesday, etc.
+      - DayOfWeek
+    - Year
+
 
 - Event:
   - Causal:
@@ -29,4 +43,5 @@
 - Coref
 
 # See https://gitlab.logx.cloud/team/bbn/logx-reader/-/issues/1
-- Query
+- Query:
+  - WhatQuery

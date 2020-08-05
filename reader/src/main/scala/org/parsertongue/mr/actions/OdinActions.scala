@@ -40,6 +40,20 @@ class OdinActions extends Actions {
   def identityAction(mentions: Seq[Mention], state: State): Seq[Mention] = mentions
 
   def cleanupEvents(mentions: Seq[Mention], state: State): Seq[Mention] = {
-    splitEvents(mentions, state)
+    val res1 = keepLongest(mentions, state)
+    splitEvents(res1, state)
   }
+
+  /** Keeps the longest mention for each group of overlapping mentions **/
+  def keepLongest(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+    val mns: Iterable[Mention] = for {
+    // find mentions of the same label and sentence overlap
+      (k, v) <- mentions.groupBy(m => (m.sentence, m.label))
+      m <- v
+      // for overlapping mentions starting at the same token, keep only the longest
+      longest = v.filter(_.tokenInterval.overlaps(m.tokenInterval)).maxBy(m => m.end - m.start)
+    } yield longest
+    mns.toVector.distinct
+  }
+
 }

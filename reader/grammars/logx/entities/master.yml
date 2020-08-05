@@ -1,8 +1,8 @@
 taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
 
 vars:
-  #pathPrefix: "file:///reader/grammars/logx"
-  pathPrefix: "org/parsertongue/grammars/logx"
+  pathPrefix: "file:///Users/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
+  #pathPrefix: "org/parsertongue/grammars/logx"
   wh-words-en: "how|that|what|whatever|when|whenever|where|which|who|whoever|whom|whose|why"
 
 rules:
@@ -49,6 +49,15 @@ rules:
     type: token
     pattern: |
       [word=/(?i)frozen/] [tag=/^N/]+
+      |
+      [tag=/^N/] cargo
+
+  - name: "unknown-cargo"
+    label: UnspecifiedCargo
+    type: token
+    pattern: |
+      # "the cargo"
+      (?<=[!tag=/^N/]) cargo
 
   # see https://gitlab.logx.cloud/team/bbn/logx-reader/-/issues/1
   - name: "basic-query"
@@ -58,6 +67,46 @@ rules:
     pattern: |
       [tag=/^W/] []*? [incoming="A1"]
 
+  - name: "what-query"
+    label: WhatQuery
+    type: token
+    pattern: |
+      [word=/(?i)^what$/] @Entity
+
+# time expressions
+  - name: "month"
+    label: Month
+    type: token
+    pattern: |
+        January|February|March|April|May|June|July|August|September|October|November|December
+ 
+  - name: "calendar-day"
+    label: CalendarDay
+    type: token
+    pattern: |
+        # August 12
+        (?<=@Month) [word=/^\d{1,2}$/]
+        |
+        [word=/^\d{1,2}$/] (?=","? @Year)
+
+  - name: "year"
+    label: Year
+    type: token
+    pattern: |
+        # in 2014
+        (?<=[tag=IN]) [word=/^\d{4}$/]
+        | 
+        # "12 2020" or August 2020
+        (?<=@Month|[word=/\d{1,2}/] ","?) [word=/^\d{4}$/]
+
+  - name: "date"
+    label: Date
+    type: token
+    pattern: |
+        # "August 2020" or "August 3 2020"
+        @Month @Day? ","? @Year
+        
+    
   # - name: "concept"
   #   label: Concept
   #   type: token
