@@ -5,9 +5,9 @@
   pattern: |
     trigger = [lemma=/^(head|ship)/ & tag=/^VB/]
     shipment:Cargo = /nsubj.*/ nmod_of?
-    origin:Location? = nmod_from
-    destination:Location? = nmod_to
-    time:TimeExpression? = /^nmod_/
+    origin:Location? = <conj_and? nmod_from
+    destination:Location? = <conj_and? nmod_to
+    time:TimeExpression? = <conj_and?/^nmod_/
 
 
 
