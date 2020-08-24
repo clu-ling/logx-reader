@@ -44,6 +44,45 @@ class OdinActions extends Actions {
     splitEvents(res1, state)
   }
 
+  /**
+   * NOTE: this should be handled by extending Odin to support :Type in a (?<argname> ) named capture (i.e., ?<argname:ArgType> [constraint])
+  **/
+  def argsAsEntities(mentions: Seq[Mention], state: State): Seq[Mention] = {
+    mentions flatMap {
+      case em: EventMention    => 
+        // FIXME: convert each arg to have label Entity if it doesn't match Entity
+        //mention.arguments
+        val newArgs = for {
+          pair <- em.arguments
+          name = pair._1
+          args = pair._2
+        } yield {
+          val newArgs = args.map{ 
+            case acceptable if acceptable matches "Entity" => acceptable
+            case unacceptable => replaceLabels(unacceptable, "Entity")
+          }
+          (name, newArgs)
+        }
+        Seq(em.copy(arguments = newArgs.toMap))
+      case rm: RelationMention => 
+        // FIXME: convert each arg to have label Entity if it doesn't match Entity
+        //mention.arguments
+        val newArgs = for {
+          pair <- rm.arguments
+          name = pair._1
+          args = pair._2
+        } yield {
+          val newArgs = args.map{ 
+            case acceptable if acceptable matches "Entity" => acceptable
+            case unacceptable => replaceLabels(unacceptable, "Entity")
+          }
+          (name, newArgs)
+        }
+        Seq(rm.copy(arguments = newArgs.toMap))
+      case other => Seq(other)
+    }
+  }
+
   /** Keeps the longest mention for each group of overlapping mentions **/
   def keepLongest(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
     val mns: Iterable[Mention] = for {
@@ -56,4 +95,12 @@ class OdinActions extends Actions {
     mns.toVector.distinct
   }
 
+  def replaceLabels(mention: Mention, newLabel: String = "Entity"): Mention = mention match {
+    case tb: TextBoundMention => tb.copy(labels = Seq(newLabel))
+    case rm: RelationMention => rm.copy(labels = Seq(newLabel))
+    case em: EventMention => em.copy(labels = Seq(newLabel))
+    // FIXME: CrossSentenceMention has no copy method
+    case other => mention
+    //case cm: CrossSentenceMention => cm.copy(labels = Seq(newLabel))
+  }
 }

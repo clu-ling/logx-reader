@@ -38,6 +38,7 @@ class MachineReadingSystem(val config: Config) extends LazyLogging {
 
   /** Reloads grammars.  Useful for interactive development */
   def reload(): Unit = {
+    println(s"event rules: ${eventRulesPath}")
     entityFinder = mkEntityFinder(entityFinderName)
     eventFinder = mkEventFinder(eventFinderName)
   }
@@ -138,7 +139,8 @@ class MachineReadingSystem(val config: Config) extends LazyLogging {
     val longest = MentionFilter.keepLongestMentions(shortEnough)
 //    println(s"AFTER keepLongestMentions:")
 //    summarizeMentions(longest.filter(_ matches "Event"))
-    val events = MentionFilter.disallowOverlappingArgs(longest)
+    val filtered = longest.filter{ mn => (mn matches "VerbPhrase") == false }
+    val events = MentionFilter.disallowOverlappingArgs(filtered)
 //    println(s"AFTER disallowOverlappingArgs:")
 //    summarizeMentions(events.filter(_ matches "Event"))
     events

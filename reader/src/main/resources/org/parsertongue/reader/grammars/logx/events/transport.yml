@@ -5,11 +5,23 @@
   pattern: |
     trigger = [lemma=/^(head|ship)/ & tag=/^VB/]
     shipment:Cargo = /nsubj.*/ nmod_of?
-    origin:Location? = nmod_from
-    destination:Location? = nmod_to
-    time:TimeExpression? = /^nmod_/
+    origin:Location? = <conj_and? nmod_from
+    destination:Location? = <conj_and? nmod_to
+    time:TimeExpression? = <conj_and?/^nmod_/
 
 
+- name: "transport-1-syntax-acl"
+  example: "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?"
+  #priority: ${rulePriority}
+  label: Transport
+  pattern: |
+    trigger = [lemma=/^(head|ship|arriv|reach)/ & tag=/^VB/]
+    shipment:Cargo = <acl
+    origin:Location? = <conj_and? nmod_from
+    destination:Location? = <conj_and? nmod_to
+    time:TimeExpression? = <conj_and?/^nmod_/
+
+      
 
 # - name: "query-1-syntax"
 #   example: "How many TEUs of DoD Frozen Meat are heading to Hamburg?"

@@ -1,6 +1,7 @@
 taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
 
 vars:
+  # NOTE: change pathPrefix for development
   pathPrefix: "org/parsertongue/reader/grammars/logx"
   #pathPrefix: "org/parsertongue/reader/grammars/logx"
   agents: "nsubj|'nsubj:xsubj'|'nsubjpass:xsubj'|nsubjpass|csubj|csubjpass|<acl|nmod_along_with"
@@ -17,6 +18,16 @@ rules:
     #   rulePriority: "1"
     #   eventAction: ${event_action}
 
+  - import: ${pathPrefix}/events/queries.yml
+
+  - name: risk-of
+    label: RiskOf
+    example: "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?"
+    pattern: |
+      trigger = [lemma=risk] of
+      type:Entity = nmod_of
+
+  
   ############################
   # Entity affects Entity
   ############################
