@@ -2,7 +2,9 @@ taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
 
 vars:
   # NOTE: change pathPrefix for development
-  pathPrefix: "file:///Users/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
+  # pathPrefix: "file:///Users/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
+  pathPrefix: "file:///Users/davidmedeiros/repos/clu-ling/logx/logx-reader/reader/grammars/logx"
+
   #pathPrefix: "org/parsertongue/logx"
   agents: "nsubj|'nsubj:xsubj'|'nsubjpass:xsubj'|nsubjpass|csubj|csubjpass|<acl|nmod_along_with"
 
