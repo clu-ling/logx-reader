@@ -2,9 +2,10 @@
   example: "How many TEUs of DoD Frozen Meat are heading to Hamburg?"
   #priority: ${rulePriority}
   label: Transport
+  action: handleTransportEvent
   pattern: |
     trigger = [lemma=/^(head|ship)/ & tag=/^VB/]
-    shipment:Cargo = /nsubj.*/ nmod_of?
+    shipment:Concept = /nsubj.*/ nmod_of?
     origin:Location? = <conj_and? nmod_from
     destination:Location? = <conj_and? nmod_to
     time:TimeExpression? = <conj_and?/^nmod_/
@@ -14,9 +15,10 @@
   example: "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?"
   #priority: ${rulePriority}
   label: Transport
+  action: handleTransportEvent
   pattern: |
     trigger = [lemma=/^(head|ship|arriv|reach)/ & tag=/^VB/]
-    shipment:Cargo = <acl
+    shipment:Concept = <acl
     origin:Location? = <conj_and? nmod_from
     destination:Location? = <conj_and? nmod_to
     time:TimeExpression? = <conj_and?/^nmod_/
@@ -27,10 +29,11 @@
 #   example: "How many TEUs of DoD Frozen Meat are heading to Hamburg?"
 #   #priority: ${rulePriority}
 #   label: Transport
+#   action: handleTransportEvent
 #   pattern: |
 #     trigger = [lemma=how] [lemma=/^(many|much)$/ & tag=JJ]
 #     unit:Unit? = <amod
-#     element:Cargo = <amod nmod_of?
+#     element:Concept = <amod nmod_of?
 
-#     shipment:Cargo = nsubj nmod_of
+#     shipment:Concept = nsubj nmod_of
 #     destination:Location = nmod_to

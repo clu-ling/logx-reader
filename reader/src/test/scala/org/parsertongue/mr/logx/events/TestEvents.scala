@@ -13,6 +13,11 @@ class TestEvents extends FlatSpec with Matchers {
           label = "Transport", 
           sentence = "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?", 
           args = Seq("frozen fish", "Dubai", "August 24th 2020")
+        ), 
+        EventTestCase(
+          label = "Transport",
+          sentence = "How many F16 engines are heading to Dubai?",
+          args = Seq("F16 engines", "Dubai")
         )
       )
 
