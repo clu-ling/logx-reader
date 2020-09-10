@@ -16,7 +16,7 @@ rules:
 
   - name: "org-ner"
     label: Organization
-    priority: 2+
+    priority: 2
     example: "DoD"
     type: token
     pattern: |
@@ -49,8 +49,6 @@ rules:
     label: Cargo
     type: token
     pattern: |
-      [word=/(?i)frozen/] [tag=/^N/]+
-      |
       [tag=/^N/] cargo
 
   - name: "unknown-cargo"
