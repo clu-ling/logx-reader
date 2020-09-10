@@ -3,21 +3,47 @@ package org.parsertongue.mr.logx.events
 import org.parsertongue.mr.TestUtils._
 import org.scalatest.{ FlatSpec, Matchers }
 
-case class EventTestCase(label: String, sentence: String, args: Seq[String])
 
 class TestEvents extends FlatSpec with Matchers {
     "MachineReadingSystem" should "find Transport events" in {
 
       val testCases = Seq(
         EventTestCase(
-          label = "Transport", 
+          labels = Seq("Transport"), 
           sentence = "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?", 
-          args = Seq("frozen fish", "Dubai", "August 24th 2020")
-        ), 
+          args = List(
+            ArgTestCase(
+              role = "shipment", 
+              labels = Seq("Cargo"),
+              text = "frozen fish"
+            ),
+            ArgTestCase(
+              role = "destination",
+              labels = Seq("Location"),
+              text  = "Dubai"
+            ),
+            ArgTestCase(
+              role = "time",
+              labels = Seq("Date", "TimeExpression"),
+              text = "August 24th 2020"
+            )
+          )
+        ),
         EventTestCase(
-          label = "Transport",
+          labels = Seq("Transport"),
           sentence = "How many F16 engines are heading to Dubai?",
-          args = Seq("F16 engines", "Dubai")
+          args = List(
+            ArgTestCase(
+              role = "shipment", 
+              labels = Seq("Cargo"),
+              text = "F16 engines"
+            ),
+            ArgTestCase(
+              role = "destination",
+              labels = Seq("Location"),
+              text  = "Dubai"
+            )
+          )
         )
       )
 
@@ -27,9 +53,7 @@ class TestEvents extends FlatSpec with Matchers {
       testCases foreach { tc =>
         val results = system.extract(tc.sentence)
         results should not be empty
-        val events = results filter (_.matches(tc.label))
-        //events should have length 2
-        hasEventWithArguments(tc.label, tc.args, events) should be (true)
+        hasEvent(tc, results) should be (true)
       }
     }
 }

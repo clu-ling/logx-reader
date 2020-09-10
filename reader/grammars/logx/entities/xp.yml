@@ -4,7 +4,8 @@
   priority: 3
   type: token
   pattern: |
-    [tag=/NN|PROPN|ADJ/ & !mention=/./]* [tag=/NN/ &!mention=/./]+
+    [tag=/^(NN|JJ)/ & !mention=/./ & !word=/(?i)^(many|several)/]* 
+    [tag=/NN/ &!mention=/./]+
 
 - name: "verb"
   label: Verb
