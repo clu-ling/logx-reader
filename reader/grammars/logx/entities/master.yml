@@ -38,6 +38,8 @@ rules:
     type: token
     pattern: |
       [lemma=/^(?i)TEU/]
+      |
+      [lemma=ton]
 
   - name: "quantity"
     label: Quantity

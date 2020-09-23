@@ -1,0 +1,5 @@
+- name: "proximity-contraint-1"
+  label: ProximityConstraint
+  pattern: |
+    trigger = [lemma=/^(near)$/]
+    location: Location = >/^nmod_/
