@@ -1,0 +1,20 @@
+vars:
+  rulePriority: "1+"
+
+rules:
+  - name: "proximity-contraint-1"
+    label: ProximityConstraint
+    example: "near Hamburg"
+    priority: ${rulePriority}
+    pattern: |
+      trigger = [lemma=/^(near)$/]
+      location: Location = <case
+
+  - name: "quantity-contraint-1"
+    label: QuantityConstraint
+    type: token
+    example: "with enough excess cargo capacity"
+    priority: ${rulePriority}
+    pattern: |
+      (?<trigger> [lemma=/^(excess)$/])
+      (?<item> [mention=/./]+ [lemma=/^(capacity)/])

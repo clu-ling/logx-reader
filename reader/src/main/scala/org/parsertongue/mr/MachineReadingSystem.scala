@@ -3,6 +3,7 @@ package org.parsertongue.mr
 import ai.lum.common.ConfigUtils._
 import org.parsertongue.mr.processors.ProxiedProcessor
 import org.parsertongue.mr.logx.processors.LogxProcessor
+import org.parsertongue.mr.logx.odin.LogxActions
 import org.parsertongue.mr.entities.{ EntityFinder, OdinEntityFinder }
 import org.parsertongue.mr.events.{ EventFinder, OdinEventFinder }
 import org.parsertongue.mr.meta.{ Hedging, Negation }
@@ -70,15 +71,23 @@ class MachineReadingSystem(val config: Config) extends LazyLogging {
 
         // FIXME: this shouldn't be required to be an action in .actions
         val globalAction: Action = {
-          val globalActionName = config[String]("org.parsertongue.mr.entities.entityFinder.globalAction")
+          val actionName = config[String]("org.parsertongue.mr.entities.entityFinder.globalAction")
           val am = new org.clulab.odin.impl.ActionMirror(actions)
-          am.reflect(globalActionName)
+          am.reflect(actionName)
+        }
+
+        // Runs exactly once after extractor engine has finished
+        val finalAction: Action = {
+          val actionName = config[String]("org.parsertongue.mr.entities.entityFinder.finalAction")
+          val am = new org.clulab.odin.impl.ActionMirror(actions)
+          am.reflect(actionName)
         }
 
         new OdinEntityFinder(
           rules        = rules,
           actions      = actions,
-          globalAction = globalAction
+          globalAction = globalAction,
+          finalAction  = finalAction
         )
 
       case _ =>
@@ -101,15 +110,22 @@ class MachineReadingSystem(val config: Config) extends LazyLogging {
 
         // FIXME: this shouldn't be required to be an action in .actions
         val globalAction: Action = {
-          val globalActionName = config[String]("org.parsertongue.mr.events.eventFinder.globalAction")
+          val actionName = config[String]("org.parsertongue.mr.events.eventFinder.globalAction")
           val am = new org.clulab.odin.impl.ActionMirror(actions)
-          am.reflect(globalActionName)
+          am.reflect(actionName)
+        }
+
+        val finalAction: Action = {
+          val actionName = config[String]("org.parsertongue.mr.events.eventFinder.finalAction")
+          val am = new org.clulab.odin.impl.ActionMirror(actions)
+          am.reflect(actionName)
         }
 
         new OdinEventFinder(
           rules        = rules,
           actions      = actions,
-          globalAction = globalAction
+          globalAction = globalAction,
+          finalAction  = finalAction
         )
 
       case _ =>
@@ -123,26 +139,8 @@ class MachineReadingSystem(val config: Config) extends LazyLogging {
   }
 
   def extract(document: CluDocument): Seq[Mention] = {
-    val unfilteredEntities = entityFinder.extract(document)
-//    println(s"BEFORE filtering entities:")
-//    summarizeMentions(unfilteredEntities)
-    val validEntities = MentionFilter.validEntities(unfilteredEntities)
-    val entities = MentionFilter.keepLongestMentions(validEntities)
-//    println(s"AFTER filtering entities:")
-//    summarizeMentions(entities)
-    val unFilteredEvents = eventFinder.extract(document, State(entities))
-//    println(s"BEFORE filtering events:")
-//    summarizeMentions(unFilteredEvents.filter(_ matches "Event"))
-    val shortEnough = MentionFilter.keepShortSpans(unFilteredEvents)
-//    println(s"AFTER keepShortSpans:")
-//    summarizeMentions(shortEnough.filter(_ matches "Event"))
-    val longest = MentionFilter.keepLongestMentions(shortEnough)
-//    println(s"AFTER keepLongestMentions:")
-//    summarizeMentions(longest.filter(_ matches "Event"))
-    val filtered = longest.filter{ mn => (mn matches "VerbPhrase") == false }
-    val events = MentionFilter.disallowOverlappingArgs(filtered)
-//    println(s"AFTER disallowOverlappingArgs:")
-//    summarizeMentions(events.filter(_ matches "Event"))
+    val entities = entityFinder.extract(document)
+    val events   = eventFinder.extract(document, State(entities))
     events
   }
 

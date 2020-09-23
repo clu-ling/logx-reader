@@ -5,12 +5,13 @@ import org.scalatest.{ FlatSpec, Matchers }
 
 
 class TestEvents extends FlatSpec with Matchers {
+
     "MachineReadingSystem" should "find Transport events" in {
 
       val testCases = Seq(
         EventTestCase(
           labels = Seq("Transport"), 
-          sentence = "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?", 
+          text = "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?", 
           args = List(
             ArgTestCase(
               role = "shipment", 
@@ -24,14 +25,14 @@ class TestEvents extends FlatSpec with Matchers {
             ),
             ArgTestCase(
               role = "time",
-              labels = Seq("Date", "TimeExpression"),
-              text = "August 24th 2020"
+              labels = Seq("TimeExpression", "OnTimeExpression"),
+              text = "on August 24th 2020"
             )
           )
         ),
         EventTestCase(
           labels = Seq("Transport"),
-          sentence = "How many F16 engines are heading to Dubai?",
+          text = "How many F16 engines are heading to Dubai?",
           args = List(
             ArgTestCase(
               role = "shipment", 
@@ -44,6 +45,22 @@ class TestEvents extends FlatSpec with Matchers {
               text  = "Dubai"
             )
           )
+        ),
+        EventTestCase(
+          labels = Seq("Transport"),
+          text = "How many TEUs of DoD Frozen Meat are heading to Hamburg?",
+          args = List(
+            ArgTestCase(
+              role = "shipment", 
+              labels = Seq("Cargo"),
+              text = "DoD Frozen Meat"
+            ),
+            ArgTestCase(
+              role = "destination",
+              labels = Seq("Location"),
+              text  = "Hamburg"
+            )
+          )
         )
       )
 
@@ -51,7 +68,40 @@ class TestEvents extends FlatSpec with Matchers {
       //val doc: AnnotatedDocument
 
       testCases foreach { tc =>
-        val results = system.extract(tc.sentence)
+        val results = system.extract(tc.text)
+        results should not be empty
+        hasEvent(tc, results) should be (true)
+      }
+    }
+    
+    it should "find Query events" in {
+
+      val testCases = Seq(
+        EventTestCase(
+          labels = Seq("Query", "WhatQuery"),
+          text = "Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg before last week.",
+          args = List(
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("ProximityConstraint", "Constraint"),
+              text = "near Hamburg"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("QuantityConstraint", "Constraint"),
+              text = "excess cargo capacity"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("TimeConstraint", "TimeExpression", "BeforeTimeExpression"),
+              text = "before last week"
+            )
+          )
+        )
+      )
+
+      testCases foreach { tc =>
+        val results = system.extract(tc.text)
         results should not be empty
         hasEvent(tc, results) should be (true)
       }

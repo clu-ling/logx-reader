@@ -7,13 +7,11 @@ import org.clulab.processors.Document
 class OdinEventFinder(
   rules: String,
   actions: Actions = new Actions,
-  globalAction: Action = identityAction
+  globalAction: Action = identityAction,
+  finalAction: Action  = identityAction
 ) extends OdinExtractor(
   rules = rules,
   actions = actions,
-  globalAction = globalAction
-) with EventFinder {
-
-  override def extract(doc: Document, state: State): Seq[Mention] = baseEngine.extractFrom(doc, state)
-
-}
+  globalAction = globalAction,
+  finalAction = identityAction
+) with EventFinder { }

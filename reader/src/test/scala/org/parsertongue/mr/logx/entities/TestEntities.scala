@@ -5,10 +5,44 @@ import org.parsertongue.mr.TestUtils._
 import org.scalatest.{ FlatSpec, Matchers }
 
 
-// class TestEntities extends FlatSpec with Matchers {
+class TestEntities extends FlatSpec with Matchers {
+    
+  "LogX MachineReadingSystem" should "identify TimeExpression mentions" in {
 
-//   "LogX MachineReadingSystem" should "identify Query mentions" in {
+    val testCases = Seq(
+      EntityTestCase(
+        labels = Seq("TimeExpression"),
+        text = "August 24th 2020"
+      ),
+      EntityTestCase(
+        labels = Seq("TimeExpression", "OnTimeExpression"),
+        text = "on August 24th 2020" 
+      ),
+      EntityTestCase(
+        labels = Seq("TimeExpression", "AfterTimeExpression"),
+        text = "after August 24, 2020" 
+      ),
+      EntityTestCase(
+        labels = Seq("TimeExpression", "BeforeTimeExpression"),
+        text = "by August 24th 2020" 
+      ),
+      EntityTestCase(
+        labels = Seq("TimeExpression", "IntervalTimeExpression"),
+        text = "from August 12, 2020 to August 19, 2020" 
+      ),
+      EntityTestCase(
+        labels = Seq("TimeExpression", "TimeUnit"),
+        text = "the next few days" 
+      )
+    )
 
+    testCases foreach { tc =>
+      val results = system.extract(tc.text)
+      results should not be empty
+      hasEntity(tc, results) should be (true)
+    }  
+  }
+}
 //     val text1 = "How many TEUs of DoD frozen meat is heading to Hamburg?"
 
 //     // "How many TEUs" with "Query" as a label.
