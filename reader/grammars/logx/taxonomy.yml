@@ -38,6 +38,7 @@
   - BeforeTimeExpression
   - AfterTimeExpression
   - IntervalTimeExpression
+  - TimeUnit
 
 - RiskOf
 

@@ -29,6 +29,10 @@ class TestEntities extends FlatSpec with Matchers {
         EntityTestCase(
             labels = Seq("TimeExpression", "IntervalTimeExpression"),
             text = "from August 12, 2020 to August 19, 2020" 
+        ),
+        EntityTestCase(
+            labels = Seq("TimeExpression", "TimeUnit"),
+            text = "the next few days" 
         )
     )
 
