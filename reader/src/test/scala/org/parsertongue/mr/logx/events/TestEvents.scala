@@ -10,7 +10,7 @@ class TestEvents extends FlatSpec with Matchers {
       val testCases = Seq(
         EventTestCase(
           labels = Seq("Transport"), 
-          sentence = "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?", 
+          text = "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?", 
           args = List(
             ArgTestCase(
               role = "shipment", 
@@ -24,14 +24,14 @@ class TestEvents extends FlatSpec with Matchers {
             ),
             ArgTestCase(
               role = "time",
-              labels = Seq("Date", "TimeExpression"),
-              text = "August 24th 2020"
+              labels = Seq("TimeExpression", "OnTimeExpression"),
+              text = "on August 24th 2020"
             )
           )
         ),
         EventTestCase(
           labels = Seq("Transport"),
-          sentence = "How many F16 engines are heading to Dubai?",
+          text = "How many F16 engines are heading to Dubai?",
           args = List(
             ArgTestCase(
               role = "shipment", 
@@ -44,6 +44,22 @@ class TestEvents extends FlatSpec with Matchers {
               text  = "Dubai"
             )
           )
+        ),
+        EventTestCase(
+          labels = Seq("Transport"),
+          text = "How many TEUs of DoD Frozen Meat are heading to Hamburg?",
+          args = List(
+            ArgTestCase(
+              role = "shipment", 
+              labels = Seq("Cargo"),
+              text = "DoD Frozen Meat"
+            ),
+            ArgTestCase(
+              role = "destination",
+              labels = Seq("Location"),
+              text  = "Hamburg"
+            )
+          )
         )
       )
 
@@ -51,11 +67,13 @@ class TestEvents extends FlatSpec with Matchers {
       //val doc: AnnotatedDocument
 
       testCases foreach { tc =>
-        val results = system.extract(tc.sentence)
+        val results = system.extract(tc.text)
         results should not be empty
         hasEvent(tc, results) should be (true)
       }
     }
+    
+    
 }
 // What cargo was shipped from Los Angeles on August 12 2014 and is heading to Hamburg?
 // What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?

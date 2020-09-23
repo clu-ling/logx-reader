@@ -1,9 +1,11 @@
 taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
+#taxonomy: file:///Users/davidmedeiros/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
 
 vars:
   # NOTE: change pathPrefix for development
-  pathPrefix: "org/parsertongue/reader/grammars/logx"
   #pathPrefix: "org/parsertongue/reader/grammars/logx"
+  #pathPrefix: "org/parsertongue/reader/grammars/logx"
+  pathPrefix: "org/parsertongue/reader/grammars/logx"
   wh-words-en: "how|that|what|whatever|when|whenever|where|which|who|whoever|whom|whose|why"
 
 rules:
@@ -37,6 +39,8 @@ rules:
     type: token
     pattern: |
       [lemma=/^(?i)TEU/]
+      |
+      [lemma=ton]
 
   - name: "quantity"
     label: Quantity
@@ -58,52 +62,6 @@ rules:
       # "the cargo"
       (?<=[!tag=/^N/]) cargo
 
-###############################
-#
-# time expressions
-#
-###############################
-  - name: "month"
-    label: Month
-    type: token
-    pattern: |
-        January|February|March|April|May|June|July|August|September|October|November|December
- 
-  - name: "calendar-day"
-    label: CalendarDay
-    type: token
-    pattern: |
-        # August 12
-        (?<=@Month) [word=/^\d{1,2}(rd|th)?$/]
-        |
-        [word=/^\d{1,2}(rd|th)?$/] (?=","? @Year)
-
-  - name: "year"
-    label: Year
-    type: token
-    pattern: |
-        # in 2014
-        (?<=[tag=IN]) [word=/^\d{4}$/]
-        | 
-        # "12 2020" or August 2020
-        (?<=@Month|[word=/\d{1,2}(rd|th)?/] ","?) [word=/^\d{4}$/]
-
-  - name: "date"
-    label: Date
-    type: token
-    pattern: |
-        # "August 2020" or "August 3 2020"
-        @Month @Day? ","? @Year
-
-  - name: "date-slashed"
-    label: Date
-    type: token
-    pattern: |
-      # 01/05/1986
-      [word=/^([0-9]{1,2}\/[0-9]{1,2}\/([0-9][0-9]){1,2})/]
-      |
-      # 01/86
-      [word=/^([0-9]{1,2}\/([0-9][0-9]){1,2})/]
     
   # - name: "concept"
   #   label: Concept
@@ -119,5 +77,6 @@ rules:
   #   pattern: |
   #     [tag=/^(JJ|NN)/]* [lemma=/ility$/ & entity=O & !mention=/./]
 
-
+  - import: ${pathPrefix}/entities/time-expressions.yml
   - import: ${pathPrefix}/entities/xp.yml
+  
