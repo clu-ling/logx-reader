@@ -3,81 +3,81 @@
 # time expressions
 #
 ###############################
-  - name: "month"
-    label: Month
-    type: token
-    pattern: |
-        January|February|March|April|May|June|July|August|September|October|November|December
- 
-  - name: "calendar-day"
-    label: CalendarDay
-    type: token
-    pattern: |
-        # August 12
-        (?<=@Month) [word=/^\d{1,2}(rd|th|st)?$/]
-        |
-        [word=/^\d{1,2}(rd|th|st)?$/] (?=","? @Year)
-        #added 'st' to allow for e.g. March 1st
+- name: "month"
+  label: Month
+  type: token
+  pattern: |
+      January|February|March|April|May|June|July|August|September|October|November|December
 
-  - name: "year"
-    label: Year
-    type: token
-    pattern: |
-        # in 2014
-        (?<=[tag=IN]) [word=/^\d{4}$/]
-        | 
-        # "12 2020" or August 2020
-        (?<=@Month|[word=/\d{1,2}(rd|th)?/] ","?) [word=/^\d{4}$/]
-
-  - name: "date"
-    label: Date
-    type: token
-    pattern: |
-        # "August 2020" or "August 3 2020"
-        @Month @Day? ","? @Year
-
-  - name: "date-slashed"
-    label: Date
-    type: token
-    pattern: |
-      # 01/05/1986
-      [word=/^([0-9]{1,2}\/[0-9]{1,2}\/([0-9][0-9]){1,2})/]
+- name: "calendar-day"
+  label: CalendarDay
+  type: token
+  pattern: |
+      # August 12
+      (?<=@Month) [word=/^\d{1,2}(rd|th|st)?$/]
       |
-      # 01/86
-      [word=/^([0-9]{1,2}\/([0-9][0-9]){1,2})/]
+      [word=/^\d{1,2}(rd|th|st)?$/] (?=","? @Year)
+      #added 'st' to allow for e.g. March 1st
 
-  - name: "on-time-expression"
-    label: OnTimeExpression
-    type: token
-    pattern: |
-      [lemma=/^(on|at|around|about)$/] @Date
+- name: "year"
+  label: Year
+  type: token
+  pattern: |
+      # in 2014
+      (?<=[tag=IN]) [word=/^\d{4}$/]
+      | 
+      # "12 2020" or August 2020
+      (?<=@Month|[word=/\d{1,2}(rd|th)?/] ","?) [word=/^\d{4}$/]
 
-  - name: "after-time-expression"
-    label: AfterTimeExpression
-    type: token
-    pattern: |
-      [word=/^(?i)(start|starting|beginning|from|after|following|since|past)$/] @Date
+- name: "date"
+  label: Date
+  type: token
+  pattern: |
+      # "August 2020" or "August 3 2020"
+      @Month @Day? ","? @Year
 
-  - name: "before-time-expression"
-    label: BeforeTimeExpression
-    type: token
-    pattern: |
-      [lemma=/^(before|by|end|ending|until|to)$/] @Date
+- name: "date-slashed"
+  label: Date
+  type: token
+  pattern: |
+    # 01/05/1986
+    [word=/^([0-9]{1,2}\/[0-9]{1,2}\/([0-9][0-9]){1,2})/]
+    |
+    # 01/86
+    [word=/^([0-9]{1,2}\/([0-9][0-9]){1,2})/]
 
-  - name: "interval-time-expression"
-    label: IntervalTimeExpression
-    type: token
-    pattern: |
-      [lemma=/^(since|until|during|through|throughout|over)$/] @Date
-      #note that 'since', 'until' are both interval and after/before
-      |
-      @AfterTimeExpression @BeforeTimeExpression
-      |
-      [lemma=between] @Date [lemma=and] @Date
-      # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'
+- name: "on-time-expression"
+  label: OnTimeExpression
+  type: token
+  pattern: |
+    [lemma=/^(on|at|around|about)$/] @Date
 
-  - name: "time-unit"
-    label: TimeUnit
-    type: token
-    pattern: |
-      [tag=DT]* [tag=JJ]* [lemma=/^(second|minute|hour|day|week|month|year|annum|decade)$/ & tag=/^N/]
+- name: "after-time-expression"
+  label: AfterTimeExpression
+  type: token
+  pattern: |
+    [word=/^(?i)(start|starting|beginning|from|after|following|since|past)$/] @Date
+
+- name: "before-time-expression"
+  label: BeforeTimeExpression
+  type: token
+  pattern: |
+    [lemma=/^(before|by|end|ending|until|to)$/] @Date
+
+- name: "interval-time-expression"
+  label: IntervalTimeExpression
+  type: token
+  pattern: |
+    [lemma=/^(since|until|during|through|throughout|over)$/] @Date
+    #note that 'since', 'until' are both interval and after/before
+    |
+    @AfterTimeExpression @BeforeTimeExpression
+    |
+    [lemma=between] @Date [lemma=and] @Date
+    # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'
+
+- name: "time-unit"
+  label: TimeUnit
+  type: token
+  pattern: |
+    [tag=DT]* [tag=JJ]* [lemma=/^(second|minute|hour|day|week|month|year|annum|decade)$/ & tag=/^N/]

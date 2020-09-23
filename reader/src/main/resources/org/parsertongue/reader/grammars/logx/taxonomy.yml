@@ -38,6 +38,7 @@
   - BeforeTimeExpression
   - AfterTimeExpression
   - IntervalTimeExpression
+  - TimeUnit
 
 - RiskOf
 
@@ -49,6 +50,9 @@
     - SameAs
   - Transport
 - Coref
+
+- Constraint:
+  - ProximityConstraint
 
 # See https://gitlab.logx.cloud/team/bbn/logx-reader/-/issues/1
 - Query:

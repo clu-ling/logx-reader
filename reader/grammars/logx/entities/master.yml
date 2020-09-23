@@ -3,9 +3,8 @@ taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
 
 vars:
   # NOTE: change pathPrefix for development
-  #pathPrefix: "file:///Users/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
-  #pathPrefix: "file:///Users/davidmedeiros/repos/clu-ling/logx-reader/reader/grammars/logx"
   pathPrefix: "org/parsertongue/grammars/logx"
+  #pathPrefix: "file:///Users/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
   wh-words-en: "how|that|what|whatever|when|whenever|where|which|who|whoever|whom|whose|why"
 
 rules:
