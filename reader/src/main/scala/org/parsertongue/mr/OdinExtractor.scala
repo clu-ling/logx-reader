@@ -6,11 +6,15 @@ import org.clulab.processors.{ Document => CluDocument }
 class OdinExtractor(
   val rules: String,
   val actions: Actions = new Actions,
-  val globalAction: Action = identityAction
+  val globalAction: Action = identityAction,
+  val finalAction: Action = identityAction
 ) extends InformationExtractor {
 
   val baseEngine = ExtractorEngine(rules = rules, actions = actions, globalAction = globalAction)
 
-  def extract(doc: CluDocument, state: State): Seq[Mention] = baseEngine.extractFrom(doc, state)
+  def extract(doc: CluDocument, state: State): Seq[Mention] = {
+    val res = baseEngine.extractFrom(doc, state)
+    finalAction(res, state)
+  }
 
 }

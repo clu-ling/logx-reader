@@ -5,6 +5,7 @@ import org.scalatest.{ FlatSpec, Matchers }
 
 
 class TestEvents extends FlatSpec with Matchers {
+
     "MachineReadingSystem" should "find Transport events" in {
 
       val testCases = Seq(
@@ -73,7 +74,38 @@ class TestEvents extends FlatSpec with Matchers {
       }
     }
     
-    
+    it should "find Query events" in {
+
+      val testCases = Seq(
+        EventTestCase(
+          labels = Seq("Query", "WhatQuery"),
+          text = "Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg before last week.",
+          args = List(
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("ProximityConstraint", "Constraint"),
+              text = "near Hamburg"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("QuantityConstraint", "Constraint"),
+              text = "excess cargo capacity"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("TimeConstraint", "TimeExpression", "BeforeTimeExpression"),
+              text = "before last week"
+            )
+          )
+        )
+      )
+
+      testCases foreach { tc =>
+        val results = system.extract(tc.text)
+        results should not be empty
+        hasEvent(tc, results) should be (true)
+      }
+    }
 }
 // What cargo was shipped from Los Angeles on August 12 2014 and is heading to Hamburg?
 // What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?

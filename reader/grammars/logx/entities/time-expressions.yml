@@ -3,81 +3,95 @@
 # time expressions
 #
 ###############################
-- name: "month"
-  label: Month
-  type: token
-  pattern: |
+vars:
+  actionFlow: identityAction
+
+rules:
+  - name: "month"
+    label: Month
+    type: token
+    action: ${actionFlow}
+    pattern: |
       January|February|March|April|May|June|July|August|September|October|November|December
 
-- name: "calendar-day"
-  label: CalendarDay
-  type: token
-  pattern: |
+  - name: "calendar-day"
+    label: CalendarDay
+    type: token
+    action: ${actionFlow}
+    pattern: |
       # August 12
       (?<=@Month) [word=/^\d{1,2}(rd|th|st)?$/]
       |
       [word=/^\d{1,2}(rd|th|st)?$/] (?=","? @Year)
       #added 'st' to allow for e.g. March 1st
 
-- name: "year"
-  label: Year
-  type: token
-  pattern: |
+  - name: "year"
+    label: Year
+    type: token
+    action: ${actionFlow}
+    pattern: |
       # in 2014
       (?<=[tag=IN]) [word=/^\d{4}$/]
       | 
       # "12 2020" or August 2020
       (?<=@Month|[word=/\d{1,2}(rd|th)?/] ","?) [word=/^\d{4}$/]
 
-- name: "date"
-  label: Date
-  type: token
-  pattern: |
+  - name: "date"
+    label: Date
+    type: token
+    action: ${actionFlow}
+    pattern: |
       # "August 2020" or "August 3 2020"
       @Month @Day? ","? @Year
 
-- name: "date-slashed"
-  label: Date
-  type: token
-  pattern: |
-    # 01/05/1986
-    [word=/^([0-9]{1,2}\/[0-9]{1,2}\/([0-9][0-9]){1,2})/]
-    |
-    # 01/86
-    [word=/^([0-9]{1,2}\/([0-9][0-9]){1,2})/]
+  - name: "date-slashed"
+    label: Date
+    type: token
+    action: ${actionFlow}
+    pattern: |
+      # 01/05/1986
+      [word=/^([0-9]{1,2}\/[0-9]{1,2}\/([0-9][0-9]){1,2})/]
+      |
+      # 01/86
+      [word=/^([0-9]{1,2}\/([0-9][0-9]){1,2})/]
 
-- name: "on-time-expression"
-  label: OnTimeExpression
-  type: token
-  pattern: |
-    [lemma=/^(on|at|around|about)$/] @Date
+  - name: "on-time-expression"
+    label: OnTimeExpression
+    type: token
+    action: ${actionFlow}
+    pattern: |
+      [lemma=/^(on|at|around|about)$/] @TimeExpression
 
-- name: "after-time-expression"
-  label: AfterTimeExpression
-  type: token
-  pattern: |
-    [word=/^(?i)(start|starting|beginning|from|after|following|since|past)$/] @Date
+  - name: "after-time-expression"
+    label: AfterTimeExpression
+    type: token
+    action: ${actionFlow}
+    pattern: |
+      [word=/^(?i)(start|starting|beginning|from|after|following|since|past)$/] @TimeExpression
 
-- name: "before-time-expression"
-  label: BeforeTimeExpression
-  type: token
-  pattern: |
-    [lemma=/^(before|by|end|ending|until|to)$/] @Date
+  - name: "before-time-expression"
+    label: BeforeTimeExpression
+    type: token
+    action: ${actionFlow}
+    pattern: |
+      [lemma=/^(before|by|end|ending|until|to)$/] @TimeExpression
 
-- name: "interval-time-expression"
-  label: IntervalTimeExpression
-  type: token
-  pattern: |
-    [lemma=/^(since|until|during|through|throughout|over)$/] @Date
-    #note that 'since', 'until' are both interval and after/before
-    |
-    @AfterTimeExpression @BeforeTimeExpression
-    |
-    [lemma=between] @Date [lemma=and] @Date
-    # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'
+  - name: "interval-time-expression"
+    label: IntervalTimeExpression
+    type: token
+    action: ${actionFlow}
+    pattern: |
+      [lemma=/^(since|until|during|through|throughout|over)$/] @TimeExpression
+      #note that 'since', 'until' are both interval and after/before
+      |
+      @AfterTimeExpression @BeforeTimeExpression
+      |
+      [lemma=between] @TimeExpression [lemma=and] @TimeExpression
+      # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'
 
-- name: "time-unit"
-  label: TimeUnit
-  type: token
-  pattern: |
-    [tag=DT]* [tag=JJ]* [lemma=/^(second|minute|hour|day|week|month|year|annum|decade)$/ & tag=/^N/]
+  - name: "time-unit"
+    label: TimeUnit
+    type: token
+    action: ${actionFlow}
+    pattern: |
+      [tag=DT]* [tag=JJ]* [lemma=/^(second|minute|hour|day|week|month|year|annum|decade)$/ & tag=/^N/]

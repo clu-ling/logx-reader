@@ -4,7 +4,7 @@
   label: Transport
   action: handleTransportEvent
   pattern: |
-    trigger = [lemma=/^(head|ship)/ & tag=/^VB/]
+    trigger = [lemma=/^(head|ship|redirect)/ & tag=/^VB/]
     shipment:Concept = /nsubj.*/ nmod_of?
     origin:Location? = <conj_and? nmod_from
     destination:Location? = <conj_and? nmod_to
@@ -17,7 +17,7 @@
   label: Transport
   action: handleTransportEvent
   pattern: |
-    trigger = [lemma=/^(head|ship|arriv|reach)/ & tag=/^VB/]
+    trigger = [lemma=/^(head|ship|arriv|reach|redirect)/ & tag=/^VB/]
     shipment:Concept = <acl
     origin:Location? = <conj_and? nmod_from
     destination:Location? = <conj_and? nmod_to

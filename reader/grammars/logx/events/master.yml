@@ -1,10 +1,10 @@
 taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
-#taxonomy: file:///Users/davidmedeiros/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
+#taxonomy: file:///Users/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
 
 vars:
   # NOTE: change pathPrefix for development
-  pathPrefix: "org/parsertongue/logx"
-  #pathPrefix: "file:///Users/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
+  #pathPrefix: "org/parsertongue/reader/grammars/logx"
+  pathPrefix: "file:///Users/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
 
   agents: "nsubj|'nsubj:xsubj'|'nsubjpass:xsubj'|nsubjpass|csubj|csubjpass|<acl|nmod_along_with"
 
@@ -15,6 +15,8 @@ vars:
   event_action: "identity"
 
 rules:
+  - import: ${pathPrefix}/events/constraints.yml
+  
   - import: ${pathPrefix}/events/transport.yml
     # vars:
     #   rulePriority: "1"

@@ -1,10 +1,10 @@
 taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
-#taxonomy: file:///Users/davidmedeiros/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
+#taxonomy: file:///Users/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
 
 vars:
   # NOTE: change pathPrefix for development
-  pathPrefix: "org/parsertongue/grammars/logx"
-  #pathPrefix: "file:///Users/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
+  #pathPrefix: "org/parsertongue/reader/grammars/logx"
+  pathPrefix: "file:///Users/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
   wh-words-en: "how|that|what|whatever|when|whenever|where|which|who|whoever|whom|whose|why"
 
 rules:
@@ -77,5 +77,6 @@ rules:
   #     [tag=/^(JJ|NN)/]* [lemma=/ility$/ & entity=O & !mention=/./]
 
   - import: ${pathPrefix}/entities/time-expressions.yml
+
   - import: ${pathPrefix}/entities/xp.yml
   

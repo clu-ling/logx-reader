@@ -62,7 +62,11 @@ object TestUtils {
       println(s"testCase failed for '${testCase.text}'")
       val firstLabel: String = testCase.labels.head
       val subset = mentions.filter(_ matches firstLabel)
-      if (subset.nonEmpty) { DisplayUtils.displayMentions(subset) }
+      if (subset.nonEmpty) { 
+        DisplayUtils.displayMentions(subset) 
+      } else {
+        DisplayUtils.displayMentions(mentions)
+      }
     }
     success
   }

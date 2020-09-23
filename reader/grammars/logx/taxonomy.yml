@@ -7,7 +7,7 @@
     - WhPhrase
     # NOTE: these are converted in an action to create Concepts
     - NounPhrase:
-      - Nount
+      - Noun
 
 - Avoid:
   - Reference
@@ -25,21 +25,6 @@
   - Unit
   - Quantity
 
-- TimeExpression:
-  - Date:
-    - Month
-    - Day:
-      # ex. 11 in 3/11/2012
-      - CalendarDay
-      # Monday, Tuesday, etc.
-      - DayOfWeek
-    - Year
-  - OnTimeExpression
-  - BeforeTimeExpression
-  - AfterTimeExpression
-  - IntervalTimeExpression
-  - TimeUnit
-
 - RiskOf
 
 - Event:
@@ -53,6 +38,22 @@
 
 - Constraint:
   - ProximityConstraint
+  - QuantityConstraint
+  - TimeConstraint:
+    - TimeExpression:
+      - Date:
+        - Month
+        - Day:
+          # ex. 11 in 3/11/2012
+          - CalendarDay
+          # Monday, Tuesday, etc.
+          - DayOfWeek
+        - Year
+      - OnTimeExpression
+      - BeforeTimeExpression
+      - AfterTimeExpression
+      - IntervalTimeExpression
+      - TimeUnit
 
 # See https://gitlab.logx.cloud/team/bbn/logx-reader/-/issues/1
 - Query:
