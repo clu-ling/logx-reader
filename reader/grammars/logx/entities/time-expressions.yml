@@ -20,9 +20,9 @@ rules:
     action: ${actionFlow}
     pattern: |
       # August 12
-      (?<=@Month) [word=/^\d{1,2}(rd|th|st)?$/]
+      (?<=@Month) [word=/^\d{1,2}(nd|rd|th|st)?$/]
       |
-      [word=/^\d{1,2}(rd|th|st)?$/] (?=","? @Year)
+      [word=/^\d{1,2}(nd|rd|th|st)?$/] (?=","? @Year)
       #added 'st' to allow for e.g. March 1st
 
   - name: "year"
@@ -34,7 +34,7 @@ rules:
       (?<=[tag=IN]) [word=/^\d{4}$/]
       | 
       # "12 2020" or August 2020
-      (?<=@Month|[word=/\d{1,2}(rd|th)?/] ","?) [word=/^\d{4}$/]
+      (?<=@Month|[word=/\d{1,2}(nd|rd|th|st)?/] ","?) [word=/^\d{4}$/]
 
   - name: "date"
     label: Date
@@ -42,7 +42,7 @@ rules:
     action: ${actionFlow}
     pattern: |
       # "August 2020" or "August 3 2020"
-      @Month @Day? ","? @Year
+      (?<month> @Month) (?<day> @Day)? ","? (?<year> @Year)
 
   - name: "date-slashed"
     label: Date
@@ -67,14 +67,14 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      [word=/^(?i)(start|starting|beginning|from|after|following|since|past)$/] @TimeExpression
+      [word=/^(?i)(start|starting|beginning|from|after|following|since|past)$/] (?<date> @TimeExpression)
 
   - name: "before-time-expression"
     label: BeforeTimeExpression
     type: token
     action: ${actionFlow}
     pattern: |
-      [lemma=/^(before|by|end|ending|until|to)$/] @TimeExpression
+      [lemma=/^(before|by|end|ending|until|to)$/] (?<date> @TimeExpression)
 
   - name: "interval-time-expression"
     label: IntervalTimeExpression
@@ -84,9 +84,9 @@ rules:
       [lemma=/^(since|until|during|through|throughout|over)$/] @TimeExpression
       #note that 'since', 'until' are both interval and after/before
       |
-      @AfterTimeExpression @BeforeTimeExpression
+      (?<start> @AfterTimeExpression) (?<end> @BeforeTimeExpression)
       |
-      [lemma=between] @TimeExpression [lemma=and] @TimeExpression
+      [lemma=between] (?<start> @TimeExpression) [lemma=and] (?<end> @TimeExpression)
       # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'
 
   - name: "time-unit"

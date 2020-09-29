@@ -106,6 +106,55 @@ class TestEvents extends FlatSpec with Matchers {
         hasEvent(tc, results) should be (true)
       }
     }
+
+    it should "find structured TimeExpressions" in {
+      val testCases = Seq(
+        EventTestCase(
+          labels = Seq("IntervalTimeExpression", "TimeExpression"),
+          text = "How many TEUs of frozen fish are heading to Dubai between September 30th 2020 and October 2nd 2020?",
+          args = List(
+            ArgTestCase(
+              role = "start",
+              labels = Seq("IntervalTimeExpression", "TimeExpression"),
+              text = "September 30th 2020"
+            ),
+            ArgTestCase(
+              role = "end",
+              labels = Seq("IntervalTimeExpression", "TimeExpression"),
+              text = "October 2nd 2020"
+            ),
+          )
+        ),
+        EventTestCase(
+          labels = Seq("BeforeTimeExpression", "TimeExpression"),
+          text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
+          args = List(
+            ArgTestCase(
+              role = "date",
+              labels = Seq("BeforeTimeExpression", "TimeExpression"),
+              text = "September 21st 2020"
+            )
+          )
+        ),
+        EventTestCase(
+          labels = Seq("AfterTimeExpression", "TimeExpression"),
+          text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
+          args = List(
+            ArgTestCase(
+              role = "date",
+              labels = Seq("AfterTimeExpression", "TimeExpression"),
+              text = "September 28th 2020"
+            )
+          )
+        )
+      )
+
+      testCases foreach { tc =>
+        val results = system.extract(tc.text)
+        results should not be empty
+        hasEvent(tc, results) should be (true)
+      }
+    }
 }
 // What cargo was shipped from Los Angeles on August 12 2014 and is heading to Hamburg?
 // What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?
