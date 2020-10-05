@@ -97,6 +97,27 @@ class TestEvents extends FlatSpec with Matchers {
               text = "before last week"
             )
           )
+        ),
+        EventTestCase(
+          labels = Seq("Query", "WhatQuery"),
+          text = "What are alternative ports with enough cargo capacity to handle shipments redirected from Hamburg?",
+          args = List(
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("ProximityConstraint", "Constraint"),
+              text = "from Hamburg"
+            ),
+            ArgTestCase(
+              role = "need",
+              labels = Seq("Concept"),
+              text = "shipments"
+            ),
+            ArgTestCase(
+              role = "topic",
+              labels = Seq("Concept"),
+              text = "alternative ports"
+            )
+          )
         )
       )
 
