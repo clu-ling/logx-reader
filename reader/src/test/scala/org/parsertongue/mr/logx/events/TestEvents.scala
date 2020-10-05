@@ -82,6 +82,11 @@ class TestEvents extends FlatSpec with Matchers {
           text = "Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg before last week.",
           args = List(
             ArgTestCase(
+              role = "need",
+              labels = Seq("Concept"),
+              text = "ports"
+            ),
+            ArgTestCase(
               role = "constraints",
               labels = Seq("ProximityConstraint", "Constraint"),
               text = "near Hamburg"
