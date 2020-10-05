@@ -89,7 +89,7 @@ class TestEvents extends FlatSpec with Matchers {
             ArgTestCase(
               role = "constraints",
               labels = Seq("QuantityConstraint", "Constraint"),
-              text = "excess cargo capacity"
+              text = "enough excess cargo capacity"
             ),
             ArgTestCase(
               role = "constraints",
