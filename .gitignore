@@ -10,4 +10,6 @@ core/*.iml
 .DS_Store
 Makefile
 
-
+.vscode/
+**/target/**
+.metals/

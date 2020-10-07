@@ -9,6 +9,15 @@ rules:
     pattern: |
       trigger = [lemma=/^(near)$/]
       location: Location = <case
+      #add: "within/less than <n> <dist-unit> of", "close to", "nearby", in the region/regional, 
+
+  - name: "origin-contraint-1"
+    label: ProximityConstraint
+    example: "from Hamburg"
+    priority: ${rulePriority}
+    pattern: |
+      trigger = [lemma=/^(from)$/]
+      location: Location = <case 
 
   - name: "quantity-contraint-1"
     label: QuantityConstraint
@@ -16,5 +25,7 @@ rules:
     example: "with enough excess cargo capacity"
     priority: ${rulePriority}
     pattern: |
-      (?<trigger> [lemma=/^(excess)$/])
-      (?<item> [mention=/./]+ [lemma=/^(capacity)/])
+      (?<modifier> [tag=/^(JJ|NN)/]+)?
+      (?<item> [mention=Concept]+) (?<trigger> [lemma=/^(capacity)/])
+      #add: extra, additional, uncommitted, surplus, redundant, 
+      #unused, leftover, reserve, ?emergency, overflow, spare

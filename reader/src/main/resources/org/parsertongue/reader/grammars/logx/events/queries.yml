@@ -13,8 +13,8 @@
   pattern: |
     trigger = [lemma=how] many|much
     unit:Unit? = <amod
-    topic:Entity? = <amod nmod_of | (<<|>>)+ [incoming=nsubj]
-    need:Entity? = (<<|>>)+ [incoming=dobj]
+    #topic:Entity? = <amod nmod_of | (<<|>>)+ [incoming=nsubj]
+    need:Entity? = (<<|>>)+ [incoming=/^(dobj|nsubj)/]
     predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
     constraints:Constraint* = (<<|>>)+
 
@@ -23,8 +23,8 @@
   example: "When will the freighter arrive in Hamburg?"
   pattern: |
     trigger = [lemma=when] | [lemma=what] [lemma=/time|day|hour|month/] | [lemma=how] [lemma=/often|frequently/]
-    topic:Entity? = (<<|>>)+ [incoming=nsubj]
-    need:Entity? = (<<|>>)+ [incoming=dobj]
+    #topic:Entity? = (<<|>>)+ [incoming=nsubj]
+    need:Entity? = (<<|>>)+ [incoming=/^(dobj|nsubj)/]
     predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
     constraints:Constraint* = (<<|>>)+
 
@@ -33,20 +33,21 @@
   priority: 2+
   example: "Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg."
   pattern: |
-    trigger = [lemma=/^(find)$/]
-    topic:Entity? = (<<|>>)+ [incoming=nsubj]
-    need:Entity? = (<<|>>)+ [incoming=dobj]
+    trigger = [lemma=/^(find|what)$/]
+    #topic:Entity? = (<<|>>)+ [incoming=nsubj]
+    need:Entity? = (<<|>>) [incoming=/^(dobj|nsubj)/] | (<<|>>)+ [incoming=/^(dobj|nsubj)/]
     #predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
     constraints:Constraint* = (<<|>>)+
-  
+ 
+# TODO: make WhereQuery
 - name: "query"
   label: Query
   priority: 2+
   example: "When will the freighter arrive?"
   pattern: |
     trigger = [tag=/^W/ & !mention=Query]
-    topic:Entity? = (<<|>>)+ [incoming=nsubj]
-    need:Entity? = (<<|>>)+ [incoming=dobj]
+    #topic:Entity? = (<<|>>)+ [incoming=nsubj]
+    need:Entity? = (<<|>>) [incoming=/^(dobj|nsubj)/] | (<<|>>)+ [incoming=/^(dobj|nsubj)/]
     predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
     constraints:Constraint* = (<<|>>)+
 
