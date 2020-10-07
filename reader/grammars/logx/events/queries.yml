@@ -35,7 +35,7 @@
   pattern: |
     trigger = [lemma=/^(find)$/]
     topic:Entity? = (<<|>>)+ [incoming=nsubj]
-    need:Entity? = (<<|>>) [incoming=dobj] | (<<|>>)+ [incoming=dobj]
+    need:Entity? = (<<|>>) [incoming=dobj] #| (<<|>>)+ [incoming=dobj]
     #predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
     constraints:Constraint* = (<<|>>)+
   

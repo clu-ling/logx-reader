@@ -79,7 +79,7 @@ class TestEvents extends FlatSpec with Matchers {
       val testCases = Seq(
         EventTestCase(
           labels = Seq("Query", "WhatQuery"),
-          text = "Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg before last week.",
+          text = "Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg before last week",
           args = List(
             ArgTestCase(
               role = "need",
@@ -105,7 +105,7 @@ class TestEvents extends FlatSpec with Matchers {
         ),
         EventTestCase(
           labels = Seq("Query", "WhatQuery"),
-          text = "What are alternative ports with enough cargo capacity to handle shipments redirected from Hamburg?",
+          text = "What are alternative ports with enough cargo capacity to handle shipments redirected from Hamburg",
           args = List(
             ArgTestCase(
               role = "constraints",
