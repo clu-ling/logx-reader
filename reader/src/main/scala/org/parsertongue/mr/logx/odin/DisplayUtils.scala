@@ -23,12 +23,12 @@ object DisplayUtils {
       val eventSummaries = events map summarizeMention
       val boundary = "=" * 50
 
+      //  |${syntacticDependenciesToString(s)}
       s"""
          |sentence #$i
          |TEXT:   ${s.getSentenceText}
          |TOKENS: ${(s.words.indices, s.words, s.tags.get).zipped.mkString(", ")}
          |ENTITY LABELS: ${(s.words, s.entities.get).zipped.mkString(", ")}
-         |${syntacticDependenciesToString(s)}
          |ENTITIES: ${sortedEntities.size}
          |${entitySummaries.mkString("\n")}
          |EVENTS:   ${events.size}
