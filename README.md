@@ -78,7 +78,7 @@ sbt web
 After building the docker image, launch a container using the following command:
 
 ```docker
-docker run --name="odinson-rest-api" \
+docker run --name="logx-reader" \
   -it \
   --restart "on-failure" \
   -e "HOME=/app" \

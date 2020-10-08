@@ -104,7 +104,8 @@ class TestEvents extends FlatSpec with Matchers {
           )
         ),
         EventTestCase(
-          labels = Seq("Query", "WhatQuery"),
+          foundBy = Some("query"),
+          labels = Seq("Query"),
           text = "What are alternative ports with enough cargo capacity to handle shipments redirected from Hamburg",
           args = List(
             ArgTestCase(
