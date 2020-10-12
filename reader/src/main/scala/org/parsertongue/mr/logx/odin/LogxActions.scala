@@ -40,6 +40,20 @@ class LogxActions extends OdinActions {
 
   }
 
+  def distinctArgs(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = mentions map { mention => 
+    val newArgs: Map[String, Seq[Mention]] = mention.arguments.keys.map{ arg => 
+      arg -> mention.arguments(arg).distinct
+    }.toMap
+
+    mention match {
+        // invoke copy constructor for Mention subtypes w/ args
+        case em: EventMention => em.copy(arguments = newArgs)
+        case rel: RelationMention => rel.copy(arguments = newArgs)
+        case cm: CrossSentenceMention => cm.copy(arguments = newArgs)
+        case m => m
+    }
+  }
+
   def cleanupEntities(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
     val validEntities  = MentionFilter.validEntities(mentions)
     val prunedEntities = keepLongestByLabel(validEntities, "TimeExpression")
@@ -48,6 +62,7 @@ class LogxActions extends OdinActions {
   }
 
   def finalSweep(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+    //mentions.foreach{ m => println(s"MENTION: text:\t${m.text}\t(${m.label})\t${m.foundBy}") }
     val shortEnough = MentionFilter.keepShortSpans(mentions)
     val longest = MentionFilter.keepLongestMentions(shortEnough)
     val filtered = longest.filter{ mn => (mn matches "VerbPhrase") == false }

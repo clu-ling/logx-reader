@@ -3,6 +3,7 @@ package org.parsertongue.mr
 import ai.lum.common.ConfigUtils._
 import com.typesafe.config.{ Config, ConfigFactory }
 import org.clulab.odin.{ Mention, TextBoundMention, RelationMention, EventMention, State }
+import org.parsertongue.mr.logx.odin._
 
 /**
   * Filtering utilities/checks for evaluating the quality of Mentions. <br>
@@ -97,28 +98,25 @@ object MentionFilter {
   def keepLongestMentions(ms: Seq[Mention], state: State): Seq[Mention] = {
     def detectBetters(ms: Seq[Mention], label: String): Seq[Mention] = {
       val state = State(ms)
-      //println(s"${ms.map(m => m.text + ": " + m.labels).mkString("\n")}")
       ms flatMap { m =>
         val overlapping: Seq[Mention] = state.mentionsFor(m.sentence, m.tokenInterval, label)
-        //println(s"overlapping sets: ${overlapping.map(_.text).mkString("""", """")}")
         if (overlapping.exists(o => betterThan(o, m))) {
           //val better = overlapping.find(o => betterThan(o, m))
           //println(s"${better.get.text} (${better.get.foundBy}) is better than ${m.text} (${m.foundBy})\n")
           None
         }
         else {
-          //println(s"${m.text} (${m.foundBy}) is good enough!\n")
           Option(m)
         }
       }
     }
-
     val (entities, events) = distinctBroad(ms) partition (_.matches("Entity"))
     val keepEntities = detectBetters(entities, "Entity")
-    // entities.foreach{ m => println(s"keep:\t${m.text}\t(${m.label})\t${m.foundBy}\t${keepEntities.contains(m)}") }
     //println(s"${events.length} events")
-    val keepEvents = detectBetters(events, "Event")
-    // events.foreach{ m => println(s"keep:\t${m.text}\t(${m.label})\t${m.foundBy}\t${keepEvents.contains(m)}") }
+    val keepEvents: Seq[Mention] = Seq("Event", "Query", "Constraint").map{ lbl =>
+      val subset = events.filter(_ matches lbl)
+      detectBetters(subset, lbl)
+    }.flatten
     keepEntities ++ keepEvents
   }
 
@@ -131,33 +129,34 @@ object MentionFilter {
   }
 
   /**
-    * Returns true if a has all of the arguments of b plus more
+    * Returns true if a has all of the arguments of b and possibly more
     */
-  def properSubsetArgs(a: Mention, b: Mention): Boolean = {
+  def subsetArgs(a: Mention, b: Mention): Boolean = {
     //println(s"A: ${a.label}\t(${a.arguments.values.flatten.map(_.text).mkString(", ")})")
     //println(s"B: ${b.label}\t(${b.arguments.values.flatten.map(_.text).mkString(", ")})")
     val aArgs = a.arguments.values.flatten.toSet
     val bArgs = b.arguments.values.flatten.toSet
     val aNotB = aArgs -- bArgs
     val bNotA = bArgs -- aArgs
-    //println(s"aNotB: ${aNotB.map(_.text).mkString(", ")}")
-    //println(s"bNotA: ${bNotA.map(_.text).mkString(", ")}")
+    // if ((a matches "Query") && (b matches "Query")) {
+    //   println(s"\taNotB: ${aNotB.map(_.text).mkString(", ")}")
+    //   println(s"\tbNotA: ${bNotA.map(_.text).mkString(", ")}")
+    // }
 
-    aNotB.nonEmpty && bNotA.isEmpty
+    //aNotB.nonEmpty && 
+    bNotA.isEmpty
   }
 
   /**
-    * Returns true if a is longer than b, or they're the same length and a's label is alphabetically
-    * earlier.
+    * Returns true if a is longer than b, or they're the same length and a's label is a hyponym of b
     */
   def betterThan(a: TextBoundMention, b: TextBoundMention): Boolean = (a, b) match {
     // longer span means better, even with different labels
     case longer if a.tokenInterval.length > b.tokenInterval.length => true
     // shorter span means worse, even with different labels
     case shorter if a.tokenInterval.length < b.tokenInterval.length => false
-    // if we have a tie, just break ties with label
-    // FIXME: if we make the taxonomy available via the conf, we could pick the mention with the most specific label
-    case alphabeticallyEarlier if a.label < b.label => true
+    // prefer hyponyms
+    case hyponym if taxonomy.isa(a.label, b.label) => true
     case _ => false
   }
 
@@ -165,25 +164,36 @@ object MentionFilter {
     * Returns true if a and b have the same label, and a has all of b's arguments and more.
     */
   def betterThan(a: RelationMention, b: RelationMention): Boolean = (a, b) match {
-    // if relations/events have different labels, don't compare
-    case diffLabel if a.label != b.label => false
-    // if a has all the args of b and more, a is better
-    case moreArgs if properSubsetArgs(a, b) => true
+    // if relations/events have different labels and A is not a hyponym of B, don't compare
+    case diffLabel if ((a.label != b.label) && (! taxonomy.isa(a.label, b.label))) => false
+    // if a has all the args of b, a is better
+    case moreArgs if subsetArgs(a, b) => true
     case _ => false
   }
 
+  def isHyponymOf(a: Mention, b: Mention): Boolean = {
+     (a.label == b.label) || taxonomy.isa(a.label, b.label)
+  }
   /**
     * Returns true if a and b have the same label and trigger, and a has all of b's arguments and
     * more.
     */
   def betterThan(a: EventMention, b: EventMention): Boolean = (a, b) match {
-    // if relations/events have different labels, don't compare
-    case diffLabel if a.label != b.label => false
+    // if relations/events have different labels and A is not a hyponym of B, don't compare
+    case diffLabel if ((a.label != b.label) && (! taxonomy.isa(a.label, b.label))) =>
+      //println(s"diffLabel: ${a.label}(${a.text}) not better than ${b.label}(${b.text})")
+      false
     // if the events have a different trigger, it's probably not comparable
-    case diffTrigger if a.trigger != b.trigger => false
-    // if a has all the args of b and more, a is better
-    case moreArgs if properSubsetArgs(a, b) => true
-    case _ => false
+    case diffTrigger if ( (! isHyponymOf(a, b)) && a.trigger != b.trigger ) => 
+      //println(s"diffTrigger: ${a.label}(${a.text}) not better than ${b.label}(${b.text})")
+      false
+    // if a has all the args of b, a is better
+    case moreArgs if subsetArgs(a, b) => true
+      //println(s"\t${a.label}(${a.text}) beats ${b.label}(${b.text})")
+      true
+    case _ => 
+      //println(s"fallthrough: ${a.label}(${a.text}) not better than ${b.label}(${b.text})")
+      false
   }
 
   /**
@@ -193,12 +203,10 @@ object MentionFilter {
   def betterThan(a: EventMention, b: RelationMention): Boolean = {
     //println("Comparing an EventMention to a RelationMention")
     (a, b) match {
-      // if relations/events have different labels, don't compare
-      case diffLabel if a.label != b.label =>
-        //println("Different label")
-        false
+      // if relations/events have different labels and A is not a hyponym of B, don't compare
+      case diffLabel if ((a.label != b.label) && (! taxonomy.isa(a.label, b.label))) => false
       // if b has all the args of a and more, b is better despite the missing trigger
-      case bMoreArgs if properSubsetArgs(b, a) =>
+      case bMoreArgs if subsetArgs(b, a) =>
         //println("b's got more arguments!")
         false
       case _ => true
@@ -213,11 +221,9 @@ object MentionFilter {
     //println("Comparing an EventMention to a RelationMention")
     (a, b) match {
       // if relations/events have different labels, don't compare
-      case diffLabel if a.label != b.label =>
-        //println("Different label")
-        false
+      case diffLabel if ((a.label != b.label) && (! taxonomy.isa(a.label, b.label))) => false
       // if b has all the args of a or more, b is better despite the missing trigger
-      case moreArgs if properSubsetArgs(a, b) =>
+      case moreArgs if subsetArgs(a, b) =>
         //println("a's got more arguments!")
         true
       case _ => false
