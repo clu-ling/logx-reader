@@ -48,6 +48,7 @@ class LogxActions extends OdinActions {
   }
 
   def finalSweep(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+    //mentions.foreach{ m => println(s"MENTION: text:\t${m.text}\t(${m.label})\t${m.foundBy}") }
     val shortEnough = MentionFilter.keepShortSpans(mentions)
     val longest = MentionFilter.keepLongestMentions(shortEnough)
     val filtered = longest.filter{ mn => (mn matches "VerbPhrase") == false }
