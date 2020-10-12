@@ -26,6 +26,6 @@ rules:
     priority: ${rulePriority}
     pattern: |
       (?<modifier> [tag=/^(JJ|NN)/]+)?
-      (?<item> [mention=Concept]+) (?<trigger> [lemma=/^(capacity)/])
+      (?<item> [mention=Concept]+ [lemma=/^(capacity)/])
       #add: extra, additional, uncommitted, surplus, redundant, 
       #unused, leftover, reserve, ?emergency, overflow, spare

@@ -13,5 +13,5 @@ class OdinEventFinder(
   rules = rules,
   actions = actions,
   globalAction = globalAction,
-  finalAction = identityAction
+  finalAction = finalAction
 ) with EventFinder { }

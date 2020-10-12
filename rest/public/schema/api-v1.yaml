@@ -36,12 +36,38 @@ paths:
         #  example:
       responses:
         '200':
-          description: Array of Mentions matching the criteria.
+          description: Mentions matching the criteria.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MentionData'
-
+                $ref: "#/components/schemas/MentionData"
+  /parse-query:
+    get:
+      tags:
+        - ie
+      summary: |
+        Representation of query intent.
+      description: |
+        Representation of query intent.
+      parameters:
+        - name: text
+          in: query
+          description: |
+            The text to be analyzed.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Array of Query parses matching the criteria.
+          content:
+            application/json:
+              schema:
+                type: array
+                description: |
+                  array of QueryParse results
+                items:
+                  $ref: "#/components/schemas/QueryParse"
   /annotate:
     get:
       tags:
@@ -65,7 +91,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Document'
+                $ref: "#/components/schemas/Document"
 
   # /buildinfo:
   #   get:
@@ -119,7 +145,7 @@ components:
           description: |
             array of org.clulab.processors.Sentence.
           items:
-            $ref: '#/components/schemas/Sentence'
+            $ref: "#/components/schemas/Sentence"
 
     Sentence:
       type: object
@@ -199,7 +225,7 @@ components:
           description: |
             A edges comprising this graph.
           items:
-            $ref: '#/components/schemas/Edge'
+            $ref: "#/components/schemas/Edge"
         roots:
           type: array
           description: |
@@ -239,12 +265,110 @@ components:
           type: integer
           format: int32
           description: |
-            Inclusive start of org.clulab.struc.Interval.
+            Inclusive start of org.clulab.struct.Interval.
         end:
           type: integer
           format: int32
           description: |
             Exclusive end of org.clulab.struct.Interval.
+    
+    QueryParse:
+      type: object
+      required:
+        - need
+        - labels
+      properties:
+        need:
+          $ref: "#/components/schemas/QueryNeed"
+        constraints:
+          type: array
+          description: |
+            array of constraints
+          items: 
+            $ref: "#/components/schemas/QueryConstraint"
+        labels:
+          type: array
+          description: |
+            array of Mention labels
+          items:
+            type: string
+        metadata:
+          $ref: "#/components/schemas/QueryMetadata"
+
+    QueryNeed:
+      type: object
+      required:
+        - text
+        - labels
+      properties:
+        text:
+          type: string
+          description: |
+            The span of text describing the information need.
+        labels:
+          type: array
+          description: |
+            array of Mention labels
+          items:
+            type: string
+  
+    QueryConstraint:
+      type: object
+      required:
+        - subtype
+        - arguments
+      properties:
+        subtype:
+          type: string
+          description: |
+            Label denoting the constraint's type
+          enum:
+            - "ProximityConstraint"
+            - "QuantityConstraint"
+            - "TimeConstraint"
+            - "UnknownConstraint"
+        arguments:
+          type: array
+          description: |
+            array of constraint Arguments
+          items:
+            $ref: "#/components/schemas/Argument"
+
+    Argument:
+      type: object
+      required:
+        - role
+        - text
+        - labels
+      properties:
+        role:
+          type: string
+          description: |
+            The argument's role (ex. theme)
+        text:
+          type: string
+          description: |
+            The text (span) corresponding to this argument
+        labels:
+          type: array
+          description: |
+            array of Mention labels
+          items: string
+
+    QueryMetadata:
+      type: object
+      required:
+        - foundBy
+        - id
+      properties:
+        foundBy:
+          type: string
+          description: |
+            The name of the extractor that produced this match
+        id:
+          type: string
+          description: |
+            ID corresponding to parent data structure.  Useful for debugging of reader output.
 
     MentionData:
       type: object
@@ -264,7 +388,7 @@ components:
           description: |
             array of org.clulab.odin.Mention.
           items:
-            $ref: '#/components/schemas/Mention'
+            $ref: "#/components/schemas/Mention"
 
     Mention:
       type: object

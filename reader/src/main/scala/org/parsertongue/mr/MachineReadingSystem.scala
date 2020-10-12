@@ -102,7 +102,7 @@ class MachineReadingSystem(val config: Config) extends LazyLogging {
 
       case "OdinEventFinder" =>
         val rules = RuleUtils.read(eventRulesPath)
-        println(rules)
+        println(s"${rules}")
         val actions: Actions = {
           val loader = ClassLoader.getSystemClassLoader
           Class.forName(config[String]("org.parsertongue.mr.events.eventFinder.actions")).newInstance().asInstanceOf[Actions]

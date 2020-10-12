@@ -15,6 +15,7 @@ GET     /api/config                     controllers.ApiController.configInfo(pre
 # API calls
 GET     /api/extract                    controllers.ApiController.extract(text: String, pretty: Option[Boolean])
 GET     /api/annotate                   controllers.ApiController.annotate(text: String, pretty: Option[Boolean])
+GET     /api/parse-query                controllers.ApiController.parseQuery(text: String, pretty: Option[Boolean])
 GET     /api/taxonomy/hyponyms-for                   controllers.ApiController.taxonomyHyponymsFor(term: String, pretty: Option[Boolean])
 GET     /api/taxonomy/hypernyms-for                   controllers.ApiController.taxonomyHypernymsFor(term: String, pretty: Option[Boolean])
 GET     /api                            controllers.ApiController.openAPI(version = "v1")
