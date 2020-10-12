@@ -9,6 +9,7 @@
 
 - name: "quanity-query-1"
   label: QuantityQuery
+  action: distinctArgs
   example: "How many TEUs of DoD frozen meat is heading to Hamburg?"
   pattern: |
     trigger = [lemma=how] many|much
@@ -20,6 +21,7 @@
 
 - name: "when-query-1"
   label: WhenQuery
+  action: distinctArgs
   example: "When will the freighter arrive in Hamburg?"
   pattern: |
     trigger = [lemma=when] | [lemma=what] [lemma=/time|day|hour|month/] | [lemma=how] [lemma=/often|frequently/]
@@ -30,6 +32,7 @@
 
 - name: "what-query-1"
   label: WhatQuery
+  action: distinctArgs
   priority: 2+
   example: "Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg."
   pattern: |
@@ -42,6 +45,7 @@
 # TODO: make WhereQuery
 - name: "query"
   label: Query
+  action: distinctArgs
   priority: 2+
   example: "When will the freighter arrive?"
   pattern: |
