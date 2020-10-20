@@ -7,12 +7,12 @@
 #   pattern: |
 #     (?<trigger> [tag=/^W/]) []*? (?<topic> [tag=/^N/ & incoming=/^nsubj|A1/])
 
-- name: "quanity-query-1"
+- name: "quantity-query-1"
   label: QuantityQuery
   action: distinctArgs
   example: "How many TEUs of DoD frozen meat is heading to Hamburg?"
   pattern: |
-    trigger = [lemma=how] many|much
+    trigger = [lemma=how] (many|much)
     unit:Unit? = <amod
     #topic:Entity? = <amod nmod_of | (<<|>>)+ [incoming=nsubj]
     need:Entity? = (<<|>>)+ [incoming=/^(dobj|nsubj)/]

@@ -149,7 +149,7 @@ class TestEvents extends FlatSpec with Matchers {
               role = "end",
               labels = Seq("IntervalTimeExpression", "TimeExpression"),
               text = "October 2nd 2020"
-            ),
+            )
           )
         ),
         EventTestCase(
