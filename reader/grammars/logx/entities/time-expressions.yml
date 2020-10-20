@@ -22,7 +22,7 @@ rules:
       # August 12
       (?<=@Month) [word=/^\d{1,2}(nd|rd|th|st)?$/]
       |
-      [word=/^\d{1,2}(nd|rd|th|st)?$/] (?=","? @Year)
+      [word=/^([0-2]\d|3[0-1])(nd|rd|th|st)$/] (?=","? @Year)
       #added 'st' to allow for e.g. March 1st
 
   - name: "year"
@@ -31,10 +31,12 @@ rules:
     action: ${actionFlow}
     pattern: |
       # in 2014
-      (?<=[tag=IN]) [word=/^\d{4}$/]
+      (?<=[tag=IN]) [word=/^(1[8-9]|2[0-1])?[0-9][0-9]$/]
       | 
       # "12 2020" or August 2020
-      (?<=@Month|[word=/\d{1,2}(nd|rd|th|st)?/] ","?) [word=/^\d{4}$/]
+      (?<=@Month|[word=/^([0-2]\d|3[0-1])(nd|rd|th|st)?$/] ","?) [word=/^(1[8-9]|2[0-1])?[0-9][0-9]$/]
+      |
+      (?<=[word=/^(0?[1-9]|1[0-2])$/] ","?) [word=/^(1[8-9]|2[0-1])?[0-9][0-9]$/]
 
   - name: "date"
     label: Date
@@ -42,7 +44,9 @@ rules:
     action: ${actionFlow}
     pattern: |
       # "August 2020" or "August 3 2020"
-      (?<month> @Month) (?<day> @Day)? ","? (?<year> @Year)
+      #(?<month> @Month) (?<day> @Day)? ","? (?<year> @Year)  
+      # code above generates "multi-dates"; code below a single date
+      @Month @CalendarDay? ","? @Year
 
   - name: "date-slashed"
     label: Date
@@ -50,10 +54,10 @@ rules:
     action: ${actionFlow}
     pattern: |
       # 01/05/1986
-      [word=/^([0-9]{1,2}\/[0-9]{1,2}\/([0-9][0-9]){1,2})/]
+      [word=/^[0-9]{1,2}\/[0-9]{1,2}\/(1[8-9]|2[0-1])?[0-9][0-9]/]
       |
       # 01/86
-      [word=/^([0-9]{1,2}\/([0-9][0-9]){1,2})/]
+      [word=/^([0-9]{1,2}\/[0-9][0-9])/]
 
   - name: "date-YYYY-MM-DD"
     label: Date
@@ -61,7 +65,7 @@ rules:
     action: ${actionFlow}
     pattern: |
       # 1986-12-21; 2021 11 30
-      # 2012 - 06 - 15 not yet; tag=punct??
+      # 2012 - 06 - 15 not handled yet; tag=punct?? something weird happening losing a space in parsing...
       [word=/^(1[8-9]|2[0-1])\d\d-?(0[1-9]|1[0-2])-?([0-2]\d|3[0-1])$/]
       |
       [word=/^(1[8-9]|2[0-1])\d\d$/] [word=/^(0[1-9]|1[0-2])$/] [word=/^([0-2]\d|3[0-1])$/]      
@@ -71,11 +75,13 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      # 12-JUN-2-21; 12 Jun 2021
+      # 12-JUN-2021; 12 Jun 2021
       [word=/^(?i)([0-2]\d|3[0-1])-(j(an|u[l,n])|a(ug|pr)|feb|mar|sep|oct|nov|dec)-(1[8-9]|2[0-1])\d\d$/]
       |
-      [word=/^([0-2]\d|3[0-1])$/] [word=/^(?i)(j(an|u[l,n])|a(ug|pr)|feb|mar|sep|oct|nov|dec)$/] [word=/^(1[8-9]|2[0-1])\d\d$/]
-      
+      [word=/^([0-2]\d|3[0-1])$/] [word=/^(?i)(j(an|u[l,n])|a(ug|pr)|feb|mar|sep|oct|nov|dec)$/] [word=/^(1[8-9]|2[0-1])\d\d$/] (?![word=/^(?i)hours$/])
+      #neg lookahead for 'hours': "DDDD hours" is common in military parlance; this check is to avoid reading as a date
+      #something like "12 Jun 2100 hours", i.e. 12 Jun 9 PM.
+
   - name: "on-time-expression"
     label: OnTimeExpression
     type: token
@@ -115,4 +121,15 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      [tag=DT]* [tag=JJ]* [lemma=/^(second|minute|hour|day|week|month|year|annum|decade)$/ & tag=/^N/]
+      [tag=DT]* [tag=JJ]* [lemma=/^(second|minute|hour|day|week|fortnight|month|year|annum|decade|century)$/ & tag=/^N/]
+
+  #- name: "clock-time"
+  #  label: ClockTimeExpression
+  #  type: token
+  #  action: ${actionFlow}
+  #  pattern: |
+  #    "3 AM"; "12 p.m."; 04:38:12 pm; 12:26 am"
+  #    [word=/^(0?[1-9]|1[0-2])(\:[0-5][0-9]){,2}$/] [word=/^(?i)am|pm|a\.m\.|p\.m\.$/]
+  #    |
+  #    "2100 hours; 0231 Hours"
+  #    [word=/^(0[0-9]|1[0-2])[0-5][0-9]$/] [word=/^(?i)hours$/]
