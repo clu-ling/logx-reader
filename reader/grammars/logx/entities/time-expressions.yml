@@ -113,7 +113,7 @@ rules:
       |
       (?<start> @AfterTimeExpression) (?<end> @BeforeTimeExpression)
       |
-      (?<trigger>[lemma=between]) (?<start> @TimeExpression) [lemma=and] (?<end> @TimeExpression)
+      (?<trigger> [lemma=between]) (?<start> @TimeExpression) [lemma=and] (?<end> @TimeExpression)
       # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'
 
   - name: "time-unit"
