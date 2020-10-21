@@ -113,7 +113,7 @@ rules:
       |
       (?<start> @AfterTimeExpression) (?<end> @BeforeTimeExpression)
       |
-      (?<trigger>[lemma=between]) (?<start> @TimeExpression) [lemma=and] (?<end> @TimeExpression)
+      (?<trigger> [lemma=between]) (?<start> @TimeExpression) [lemma=and] (?<end> @TimeExpression)
       # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'
 
   - name: "time-unit"
@@ -121,7 +121,10 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      [tag=DT]* [tag=JJ]* [lemma=/^(second|minute|hour|day|week|fortnight|month|year|annum|decade|century)$/ & tag=/^N/] ([word=of]? @TimeExpression+)?
+      [tag=DT]* 
+      [tag=JJ]* 
+      [lemma=/^(second|minute|hour|day|week|fortnight|month|year|annum|decade|century)$/ & tag=/^N/] 
+      ([word=of]? @TimeExpression+)?
 
   #- name: "clock-time"
   #  label: ClockTimeExpression
