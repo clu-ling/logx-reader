@@ -87,33 +87,33 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      [lemma=/^(on|at|around|about)$/] @TimeExpression+
+      (?<trigger> [lemma=/^(on|at|around|about)$/]) @TimeExpression
 
   - name: "after-time-expression"
     label: AfterTimeExpression
     type: token
     action: ${actionFlow}
     pattern: |
-      [word=/^(?i)(start|starting|beginning|from|after|following|since|past)$/] (?<date> @TimeExpression+)
+      [word=/^(?i)(start|starting|beginning|from|after|following|since|past)$/] (?<date> @TimeExpression)
 
   - name: "before-time-expression"
     label: BeforeTimeExpression
     type: token
     action: ${actionFlow}
     pattern: |
-      [lemma=/^(before|by|end|ending|until|to)$/] (?<date> @TimeExpression+)
+      (?<trigger> [lemma=/^(before|by|end|ending|until|to)$/]) (?<date> @TimeExpression)
 
   - name: "interval-time-expression"
     label: IntervalTimeExpression
     type: token
     action: ${actionFlow}
     pattern: |
-      [lemma=/^(since|until|during|through|throughout|over)$/] @TimeExpression+
+      (?<trigger> [lemma=/^(since|until|during|through|throughout|over)$/]) @TimeExpression
       #note that 'since', 'until' are both interval and after/before
       |
       (?<start> @AfterTimeExpression) (?<end> @BeforeTimeExpression)
       |
-      [lemma=between] (?<start> @TimeExpression+) [lemma=and] (?<end> @TimeExpression+)
+      (?<trigger>[lemma=between]) (?<start> @TimeExpression) [lemma=and] (?<end> @TimeExpression)
       # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'
 
   - name: "time-unit"
