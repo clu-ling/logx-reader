@@ -124,6 +124,28 @@ class TestEvents extends FlatSpec with Matchers {
               text = "alternative ports"
             )
           )
+        ),
+        EventTestCase(
+          foundBy = Some("quantity-query-1"),
+          labels = Seq("QuantityQuery"),
+          text = "How many TEUs of zebras are heading to Scotland from Zimbabwe?",
+          args = List(
+            ArgTestCase(
+              role = "need",
+              labels = Seq("QuantifiedConcept"),
+              text = "TEUs of zebras"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("OriginConstraint", "Constraint"),
+              text = "Zimbabwe"
+            ),
+            ArgTestCase(
+              role = "need",
+              labels = Seq("DestinationConstraint", "Constraint"),
+              text = "Scotland"
+            )
+          )
         )
       )
 

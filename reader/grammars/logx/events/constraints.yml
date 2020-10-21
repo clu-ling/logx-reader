@@ -12,13 +12,37 @@ rules:
       #add: "within/less than <n> <dist-unit> of", "close to", "nearby", in the region/regional, 
 
   - name: "origin-contraint-1"
-    label: ProximityConstraint
+    label: OriginConstraint
     example: "from Hamburg"
     priority: ${rulePriority}
+    type: token
     pattern: |
-      trigger = [lemma=/^(from)$/]
-      location: Location = <case 
+      (?<=[lemma=/^(from)$/]) @Location
 
+  - name: "origin-contraint-2"
+    label: OriginConstraint
+    example: "from Hamburg"
+    priority: ${rulePriority}
+    type: token
+    pattern: |
+      @Transport.origin
+
+  - name: "destination-contraint-1"
+    label: DestinationConstraint
+    example: "to Hamburg"
+    priority: ${rulePriority}
+    type: token
+    pattern: |
+      (?<=[lemma=/^(to)$/]) @Location
+  
+  - name: "destination-contraint-2"
+    label: DestinationConstraint
+    example: "to Hamburg"
+    priority: ${rulePriority}
+    type: token
+    pattern: |
+      @Transport.destination
+  
   - name: "quantity-contraint-1"
     label: QuantityConstraint
     type: token

@@ -41,9 +41,7 @@ rules:
     label: Unit
     type: token
     pattern: |
-      [lemma=/^(?i)TEU/]
-      |
-      [lemma=ton]
+      [lemma=/(?i)^(TEU|ton|pound|kg)s?$/]
 
   - name: "quantity"
     label: Quantity
@@ -51,6 +49,12 @@ rules:
     pattern: |
       [word=/^\d/] (?=@Unit)
 
+  - name: "quantified-concept"
+    label: QuantifiedConcept
+    type: token
+    pattern: |
+      @unit:Unit of @concept:Concept
+  
   # FIXME: introduce a more principled way of identify cargo
   - name: "cargo"
     label: Cargo

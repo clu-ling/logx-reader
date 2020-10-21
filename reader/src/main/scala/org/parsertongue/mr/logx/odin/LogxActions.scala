@@ -30,13 +30,29 @@ class LogxActions extends OdinActions {
 
   def mkCargoMention(m: Mention): Mention = m match {
       case cargo if cargo matches "Cargo" => m
-      case nonCargo => nonCargo match {
-          case tb: TextBoundMention     => tb.copy(labels = CARGO_LABELS)
-          // NOTE: these shouldn't be necessary
-          case em: EventMention         => em.copy(labels = CARGO_LABELS)
-          case rel: RelationMention     => rel.copy(labels = CARGO_LABELS)
-          case cm: CrossSentenceMention => cm.copy(labels = CARGO_LABELS)
-      }
+      // discard unit portion of any QuantifiedConcept
+      case qc if qc matches "QuantifiedConcept" => 
+        qc match {
+            case em: EventMention         => 
+              val arg = em.arguments.getOrElse("concept", Seq(em)).head
+              mkCargoMention(arg)
+            case rel: RelationMention     => 
+              val arg = rel.arguments.getOrElse("concept", Seq(rel)).head
+              mkCargoMention(arg)
+            // NOTE: this should never be encountered
+            case tb: TextBoundMention     => tb.copy(labels = CARGO_LABELS)
+            case cm: CrossSentenceMention => 
+              val arg = cm.arguments.getOrElse("concept", Seq(cm)).head
+              mkCargoMention(arg)
+        }
+      case nonCargo => 
+        nonCargo match {
+            case tb: TextBoundMention     => tb.copy(labels = CARGO_LABELS)
+            // NOTE: these shouldn't be necessary
+            case em: EventMention         => em.copy(labels = CARGO_LABELS)
+            case rel: RelationMention     => rel.copy(labels = CARGO_LABELS)
+            case cm: CrossSentenceMention => cm.copy(labels = CARGO_LABELS)
+        }
 
   }
 
