@@ -5,6 +5,7 @@ vars:
   # NOTE: change pathPrefix for development
   #pathPrefix: "org/parsertongue/reader/grammars/logx"
   pathPrefix: "file:///home/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
+  #pathPrefix: "file:///Users/davidmedeiros/repos/clu-ling/logx-reader/reader/grammars/logx"
   wh-words-en: "how|that|what|whatever|when|whenever|where|which|who|whoever|whom|whose|why"
 
 rules:
