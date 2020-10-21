@@ -22,18 +22,3 @@
     origin:Location? = <conj_and? nmod_from
     destination:Location? = <conj_and? nmod_to
     time:TimeExpression? = <conj_and?/^nmod_/
-
-      
-
-# - name: "query-1-syntax"
-#   example: "How many TEUs of DoD Frozen Meat are heading to Hamburg?"
-#   #priority: ${rulePriority}
-#   label: Transport
-#   action: handleTransportEvent
-#   pattern: |
-#     trigger = [lemma=how] [lemma=/^(many|much)$/ & tag=JJ]
-#     unit:Unit? = <amod
-#     element:Concept = <amod nmod_of?
-
-#     shipment:Concept = nsubj nmod_of
-#     destination:Location = nmod_to

@@ -17,9 +17,6 @@ object TestUtils {
 
   case class EventTestCase(labels: Seq[String], text: String, args: List[ArgTestCase], foundBy: Option[String] = None)
 
-  /**
-  * labels: labels to verify
-  */
   case class ArgTestCase(role: String, labels: Seq[String], text: String)
 
   case class EntityTestCase(labels: Seq[String], text: String)

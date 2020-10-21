@@ -13,9 +13,8 @@
   example: "How many TEUs of DoD frozen meat is heading to Hamburg?"
   pattern: |
     trigger = [lemma=how] (many|much)
-    unit:Unit? = <amod
-    #topic:Entity? = <amod nmod_of | (<<|>>)+ [incoming=nsubj]
-    need:Entity? = (<<|>>)+ [incoming=/^(dobj|nsubj)/]
+    unit:Unit? = <amod [mention=QuantifiedConcept.unit]
+    need:Entity? = <amod nmod_of [mention=QuantifiedConcept.concept]
     predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
     constraints:Constraint* = (<<|>>)+
 

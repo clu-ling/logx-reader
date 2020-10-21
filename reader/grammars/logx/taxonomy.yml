@@ -15,6 +15,7 @@
 
 - Entity:
   - Concept:
+    - QuantifiedConcept
     - Location
     - Organization
     - Cargo:
@@ -37,7 +38,10 @@
 - Coref
 
 - Constraint:
-  - ProximityConstraint
+  - LocationConstraint:
+    - ProximityConstraint
+    - OriginConstraint
+    - DestinationConstraint
   - QuantityConstraint
   - TimeConstraint:
     - TimeExpression:
