@@ -6,6 +6,7 @@ vars:
   #pathPrefix: "org/parsertongue/reader/grammars/logx"
   #pathPrefix: "org/parsertongue/reader/grammars/logx"
   pathPrefix: "org/parsertongue/reader/grammars/logx"
+  #pathPrefix: "org/parsertongue/reader/grammars/logx"
   wh-words-en: "how|that|what|whatever|when|whenever|where|which|who|whoever|whom|whose|why"
 
 rules:

@@ -6,6 +6,7 @@ vars:
   #pathPrefix: "org/parsertongue/reader/grammars/logx"
   #pathPrefix: "org/parsertongue/reader/grammars/logx"
   pathPrefix: "org/parsertongue/reader/grammars/logx"
+  #pathPrefix: "org/parsertongue/reader/grammars/logx"
 
   agents: "nsubj|'nsubj:xsubj'|'nsubjpass:xsubj'|nsubjpass|csubj|csubjpass|<acl|nmod_along_with"
 

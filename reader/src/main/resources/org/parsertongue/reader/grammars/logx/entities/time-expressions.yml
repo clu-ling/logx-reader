@@ -22,7 +22,7 @@ rules:
       # August 12
       (?<=@Month) [word=/^\d{1,2}(nd|rd|th|st)?$/]
       |
-      [word=/^([0-2]\d|3[0-1])(nd|rd|th|st)$/] (?=","? @Year)
+      [word=/^([0-2]?\d|3[0-1])(nd|rd|th|st)$/] (?=","? @Year)
       #added 'st' to allow for e.g. March 1st
 
   - name: "year"
@@ -34,7 +34,7 @@ rules:
       (?<=[tag=IN]) [word=/^(1[8-9]|2[0-1])?[0-9][0-9]$/]
       | 
       # "12 2020" or August 2020
-      (?<=@Month|[word=/^([0-2]\d|3[0-1])(nd|rd|th|st)?$/] ","?) [word=/^(1[8-9]|2[0-1])?[0-9][0-9]$/]
+      (?<=@Month|[word=/^([0-2]?\d|3[0-1])(nd|rd|th|st)?$/] ","?) [word=/^(1[8-9]|2[0-1])?[0-9][0-9]$/]
       |
       (?<=[word=/^(0?[1-9]|1[0-2])$/] ","?) [word=/^(1[8-9]|2[0-1])?[0-9][0-9]$/]
 
@@ -53,7 +53,7 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      # 01/05/1986
+      # 01/05/1986, 1/4/82
       [word=/^[0-9]{1,2}\/[0-9]{1,2}\/(1[8-9]|2[0-1])?[0-9][0-9]/]
       |
       # 01/86
@@ -87,7 +87,7 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      [lemma=/^(on|at|around|about)$/] @TimeExpression
+      (?<trigger> [lemma=/^(on|at|around|about)$/]) @TimeExpression
 
   - name: "after-time-expression"
     label: AfterTimeExpression
@@ -101,19 +101,19 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      [lemma=/^(before|by|end|ending|until|to)$/] (?<date> @TimeExpression)
+      (?<trigger> [lemma=/^(before|by|end|ending|until|to)$/]) (?<date> @TimeExpression)
 
   - name: "interval-time-expression"
     label: IntervalTimeExpression
     type: token
     action: ${actionFlow}
     pattern: |
-      [lemma=/^(since|until|during|through|throughout|over)$/] @TimeExpression
+      (?<trigger> [lemma=/^(since|until|during|through|throughout|over)$/]) @TimeExpression
       #note that 'since', 'until' are both interval and after/before
       |
       (?<start> @AfterTimeExpression) (?<end> @BeforeTimeExpression)
       |
-      [lemma=between] (?<start> @TimeExpression) [lemma=and] (?<end> @TimeExpression)
+      (?<trigger> [lemma=between]) (?<start> @TimeExpression) [lemma=and] (?<end> @TimeExpression)
       # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'
 
   - name: "time-unit"
@@ -121,7 +121,10 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      [tag=DT]* [tag=JJ]* [lemma=/^(second|minute|hour|day|week|fortnight|month|year|annum|decade|century)$/ & tag=/^N/] ([word=of]? @TimeExpression+)?
+      [tag=DT]* 
+      [tag=JJ]* 
+      [lemma=/^(second|minute|hour|day|week|fortnight|month|year|annum|decade|century)$/ & tag=/^N/] 
+      ([word=of]? @TimeExpression+)?
 
   #- name: "clock-time"
   #  label: ClockTimeExpression
