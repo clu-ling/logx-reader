@@ -49,6 +49,12 @@ rules:
     pattern: |
       [word=/^\d/] (?=@Unit)
 
+  - name: "quantifier-1"
+    label: Quantity
+    type: token
+    pattern: |
+      [lemma=/^(many|much)$/]
+  
   - name: "quantified-concept"
     label: QuantifiedConcept
     type: token
