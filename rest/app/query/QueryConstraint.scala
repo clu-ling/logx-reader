@@ -12,11 +12,11 @@ import org.json4s.JsonDSL._
   * Represents a query constraint
   */
 case class QueryConstraint(
-  subtype: String,
   text: String,
+  providedSubtype: Option[String] = None,
   labels: Seq[String],
   arguments: Option[Seq[Argument]]
-) extends JSONSerialization with WithArgs {
+) extends JSONSerialization with Args with Labels {
 
   implicit val formats = org.json4s.DefaultFormats
 
@@ -38,16 +38,16 @@ object QueryConstraint {
     m match {
       case constraint if constraint matches "Constraint" =>
         QueryConstraint(
-          subtype = m.label,
           text = m.text,
+          providedSubtype = Some(m.label),
           labels = m.labels,
           arguments = args
         )
       case other =>
         println(s"QueryConstraint with label '${other.label}' not implemented")
         QueryConstraint(
-          subtype = "UnknownConstraint",
           text = other.text,
+          providedSubtype = Some("UnknownConstraint"),
           labels = other.labels,
           arguments = args
         )
