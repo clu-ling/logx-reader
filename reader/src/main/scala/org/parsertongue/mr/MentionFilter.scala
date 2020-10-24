@@ -113,8 +113,9 @@ object MentionFilter {
     val (entities, events) = distinctBroad(ms) partition (_.matches("Entity"))
     val keepEntities = detectBetters(entities, "Entity")
     //println(s"${events.length} events")
-    val keepEvents: Seq[Mention] = Seq("Event", "Query", "Constraint").map{ lbl =>
-      val subset = events.filter(_ matches lbl)
+    // keep everything but those matching the provided label(s)
+    val keepEvents: Seq[Mention] = Seq("Avoid").map{ lbl =>
+      val subset = events.filterNot(_ matches lbl)
       detectBetters(subset, lbl)
     }.flatten
     keepEntities ++ keepEvents

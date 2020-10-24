@@ -52,8 +52,8 @@ class TestEvents extends FlatSpec with Matchers {
           args = List(
             ArgTestCase(
               role = "shipment", 
-              labels = Seq("Cargo"),
-              text = "DoD Frozen Meat"
+              labels = Seq("QuantifiedCargo"),
+              text = "TEUs of DoD Frozen Meat"
             ),
             ArgTestCase(
               role = "destination",
@@ -126,13 +126,12 @@ class TestEvents extends FlatSpec with Matchers {
           )
         ),
         EventTestCase(
-          foundBy = Some("quantity-query-1"),
           labels = Seq("QuantityQuery"),
           text = "How many TEUs of zebras are heading to Scotland from Zimbabwe?",
           args = List(
             ArgTestCase(
               role = "need",
-              labels = Seq("QuantifiedConcept"),
+              labels = Seq("QuantifiedCargo"),
               text = "TEUs of zebras"
             ),
             ArgTestCase(
@@ -141,9 +140,41 @@ class TestEvents extends FlatSpec with Matchers {
               text = "Zimbabwe"
             ),
             ArgTestCase(
-              role = "need",
+              role = "constraints",
               labels = Seq("DestinationConstraint", "Constraint"),
               text = "Scotland"
+            )
+          )
+        ),
+        EventTestCase(
+          text = "How much frozen meat is heading to Hamburg?",
+          labels = Seq("QuantityQuery"),
+          args = List(
+            ArgTestCase(
+              role = "need",
+              labels = Seq("Cargo"),
+              text = "frozen meat"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("DestinationConstraint", "Constraint"),
+              text = "Hamburg"
+            )
+          )
+        ),
+        EventTestCase(
+          text = "How many shipments of frozen meat are heading to Hamburg?",
+          labels = Seq("QuantityQuery"),
+          args = List(
+            ArgTestCase(
+              role = "need",
+              labels = Seq("ShipmentOf", "Cargo"),
+              text = "shipments of frozen meat"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("DestinationConstraint", "Constraint"),
+              text = "Hamburg"
             )
           )
         )

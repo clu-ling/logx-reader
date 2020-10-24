@@ -41,7 +41,7 @@ rules:
     label: Unit
     type: token
     pattern: |
-      [lemma=/(?i)^(TEU|ton|pound|kg)s?$/]
+      [lemma=metric]? [lemma=/(?i)^(TEU|ton|pound|kg)s?$/]
 
   - name: "quantity"
     label: Quantity
@@ -50,23 +50,46 @@ rules:
       [word=/^\d/] (?=@Unit)
 
   - name: "quantifier-1"
-    label: Quantity
+    label: Quantifier
     type: token
     pattern: |
-      [lemma=/^(many|much)$/]
+      [lemma=/^(many|much|few|some)$/]
+      |
+      [lemma=a]? [lemma=lot] of
   
-  - name: "quantified-concept"
-    label: QuantifiedConcept
+  - name: "quantified-cargo"
+    label: QuantifiedCargo
     type: token
+    # promotes Concept -> Cargo
+    # FIXME: assumes we're only quantifying cargo
+    action: handleQuantifiedCargo
     pattern: |
       @unit:Unit of @concept:Concept
   
-  # FIXME: introduce a more principled way of identify cargo
+  # FIXME: introduce a more principled way of identifying cargo
   - name: "cargo"
     label: Cargo
     type: token
     pattern: |
       [tag=/^N/] cargo
+  
+  - name: "shipment-of-trigger"
+    label: ShipmentOfTrigger
+    type: token
+    pattern: |
+      [lemma=shipment] of
+
+  - name: "shipment-of-cargo"
+    label: Cargo
+    type: token
+    pattern: |
+      (?<= @ShipmentOfTrigger) @Concept
+
+  - name: "shipment-of"
+    label: ShipmentOf
+    type: token
+    pattern: |
+      @trigger:ShipmentOfTrigger @cargo:Cargo
 
   - name: "unknown-cargo"
     label: UnspecifiedCargo

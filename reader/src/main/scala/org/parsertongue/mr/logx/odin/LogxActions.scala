@@ -28,23 +28,43 @@ class LogxActions extends OdinActions {
       }
   }
 
+  def mergeLabels(oldLabels: Seq[String], newLabels: Seq[String]): Seq[String] = {
+    (newLabels ++ oldLabels).distinct
+  }
+
+  def promoteArgTo(m: Mention, role: String, hyponym: String): Mention = {
+    val desiredLabels = taxonomy.hypernymsFor(hyponym)
+
+    val newArgs: Map[String, Seq[Mention]] = m.arguments match {
+      case hasArg if m.arguments.contains(role) =>
+        val newArgs: Seq[Mention] = m.arguments(role).map { 
+          case tb: TextBoundMention     => tb.copy(labels = mergeLabels(tb.labels, desiredLabels))
+          case em: EventMention         => em.copy(labels = mergeLabels(em.labels, desiredLabels))
+          case rel: RelationMention     => rel.copy(labels = mergeLabels(rel.labels, desiredLabels))
+          case cm: CrossSentenceMention => cm.copy(labels = mergeLabels(cm.labels, desiredLabels))
+        }
+        Map(role -> newArgs)
+      case _ => Map.empty[String, Seq[Mention]]
+    }
+
+    m match {
+      case tb: TextBoundMention     => tb
+      case em: EventMention         => em.copy(arguments = em.arguments ++ newArgs)
+      case rel: RelationMention     => rel.copy(arguments = rel.arguments ++ newArgs)
+      case cm: CrossSentenceMention => cm.copy(arguments = cm.arguments ++ newArgs)
+    }
+  }
+
+  def handleQuantifiedCargo(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = mentions.map {
+    case qc if qc matches "QuantifiedCargo" => promoteArgTo(qc, role = "concept", hyponym = "Cargo")
+    case other => other
+  }
+
   def mkCargoMention(m: Mention): Mention = m match {
       case cargo if cargo matches "Cargo" => m
-      // discard unit portion of any QuantifiedConcept
-      case qc if qc matches "QuantifiedConcept" => 
-        qc match {
-            case em: EventMention         => 
-              val arg = em.arguments.getOrElse("concept", Seq(em)).head
-              mkCargoMention(arg)
-            case rel: RelationMention     => 
-              val arg = rel.arguments.getOrElse("concept", Seq(rel)).head
-              mkCargoMention(arg)
-            // NOTE: this should never be encountered
-            case tb: TextBoundMention     => tb.copy(labels = CARGO_LABELS)
-            case cm: CrossSentenceMention => 
-              val arg = cm.arguments.getOrElse("concept", Seq(cm)).head
-              mkCargoMention(arg)
-        }
+      // discard unit portion of any QuantifiedCargo
+      case qc if qc matches "QuantifiedCargo" => 
+        promoteArgTo(m, role = "concept", hyponym = "Cargo")
       case nonCargo => 
         nonCargo match {
             case tb: TextBoundMention     => tb.copy(labels = CARGO_LABELS)
@@ -53,7 +73,6 @@ class LogxActions extends OdinActions {
             case rel: RelationMention     => rel.copy(labels = CARGO_LABELS)
             case cm: CrossSentenceMention => cm.copy(labels = CARGO_LABELS)
         }
-
   }
 
   def distinctArgs(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = mentions map { mention => 

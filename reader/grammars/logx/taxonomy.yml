@@ -8,19 +8,29 @@
     # NOTE: these are converted in an action to create Concepts
     - NounPhrase:
       - Noun
+  - Quantifier
 
 - Avoid:
   - Reference
   - PossibleTrigger
 
+- Trigger:
+  - ShipmentOfTrigger
+
 - Entity:
   - Concept:
     - QuantifiedConcept
-    - Location
+    - Location:
+      - Port
+      - Base
     - Organization
+    - Vessel
     - Cargo:
       # "the cargo"
       - UnspecifiedCargo
+      # TEUs of freeze-dried ice cream
+      - QuantifiedCargo
+    - ShipmentOf
 
 - Measurement:
   - Unit
@@ -62,9 +72,12 @@
 # See https://gitlab.logx.cloud/team/bbn/logx-reader/-/issues/1
 - Query:
   - WhoQuery
-  - WhatQuery
+  - WhatQuery:
+    - VesselQuery
+    - CargoQuery
   - WhyQuery
   - WhereQuery
+    - LocationQuery
   - WhenQuery
   - HowQuery
   - QuantityQuery
