@@ -15,19 +15,19 @@ class TestEntities extends FlatSpec with Matchers {
         text = "August 24th 2020"
       ),
       EntityTestCase(
-        labels = Seq("TimeExpression", "OnTimeExpression"),
+        labels = Seq("TimeExpression", "OnTime"),
         text = "on August 24th 2020" 
       ),
       EntityTestCase(
-        labels = Seq("TimeExpression", "AfterTimeExpression"),
+        labels = Seq("TimeExpression", "AfterTime"),
         text = "after August 24, 2020" 
       ),
       EntityTestCase(
-        labels = Seq("TimeExpression", "BeforeTimeExpression"),
+        labels = Seq("TimeExpression", "BeforeTime"),
         text = "by August 24th 2020" 
       ),
       EntityTestCase(
-        labels = Seq("TimeExpression", "IntervalTimeExpression"),
+        labels = Seq("TimeExpression", "IntervalTime"),
         text = "from August 12, 2020 to August 19, 2020" 
       ),
       // EntityTestCase(
@@ -35,11 +35,11 @@ class TestEntities extends FlatSpec with Matchers {
       //  text = "during the week of October 12"
       // ),
       EntityTestCase(
-        labels = Seq("TimeExpression", "IntervalTimeExpression"),
+        labels = Seq("TimeExpression", "IntervalTime"),
         text = "during the week"
       ),
       EntityTestCase(
-        labels = Seq("TimeExpression", "IntervalTimeExpression"),
+        labels = Seq("TimeExpression", "IntervalTime"),
         text = "throughout 1991"
       ),
       EntityTestCase(
@@ -87,11 +87,11 @@ class TestEntities extends FlatSpec with Matchers {
         text = "12-Jun-2021" 
       ),
       //EntityTestCase(
-      //  labels = Seq("TimeExpression", "IntervalTimeExpression"),
+      //  labels = Seq("TimeExpression", "IntervalTime"),
       //  text = "During the week of October 12" 
       //),
       //EntityTestCase(
-      //  labels = Seq("TimeExpression", "IntervalTimeExpression"),
+      //  labels = Seq("TimeExpression", "IntervalTime"),
       //  text = "During the week of October 12th" 
       //),
       EntityTestCase(

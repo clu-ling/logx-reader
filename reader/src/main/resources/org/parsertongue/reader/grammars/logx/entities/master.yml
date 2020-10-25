@@ -41,13 +41,19 @@ rules:
     label: Unit
     type: token
     pattern: |
-      [lemma=metric]? [lemma=/(?i)^(TEU|ton|pound|kg)s?$/]
+      [lemma=/(?i)^(metric)$/]? [lemma=/(?i)^(TEU|ton|pound|kg)s?$/]
 
-  - name: "quantity"
+  - name: "quantity-1"
     label: Quantity
     type: token
     pattern: |
       [word=/^\d/] (?=@Unit)
+
+  - name: "quantity-2"
+    label: Quantity
+    type: token
+    pattern: |
+      [tag=CD]
 
   - name: "quantifier-1"
     label: Quantifier
@@ -56,7 +62,29 @@ rules:
       [lemma=/^(many|much|few|some)$/]
       |
       [lemma=a]? [lemma=lot] of
+
+  - name: "unspecified-port-1"
+    label: UnspecifiedPort
+    #keep: false
+    type: token
+    pattern: |
+      [lemma=/(?i)^(port)$/ & tag=/^N/]
+
+  - name: "port-1"
+    label: Port
+    type: token
+    pattern: |
+      @location:Location @trigger:Port
+      |
+      (?<trigger> @Port of) @location:Location
   
+  # FIXME: add hasProperty?
+  - name: "vessel-1"
+    label: Vessel
+    type: token
+    pattern: |
+      @Concept? [lemma=/(?i)^(vessel|freighter|ship)$/ & tag=/^N/]
+
   - name: "quantified-cargo"
     label: QuantifiedCargo
     type: token
@@ -69,10 +97,27 @@ rules:
   # FIXME: introduce a more principled way of identifying cargo
   - name: "cargo"
     label: Cargo
+    priority: 4
     type: token
     pattern: |
-      [tag=/^N/] cargo
+      [tag=/^N/] [lemma=cargo & !mention=Vessel]
+      |
+      [mention=Concept & !mention=/^(Location|Vessel)$/]* food
   
+  - name: "cargo-2"
+    label: Cargo
+    type: token
+    pattern: |
+      (?<= [lemma=/(?i)^(much)$/]) [mention=Concept & !mention=/^(Location|Vessel)$/]+ (?= []{,3}? @TransportTrigger)
+  
+  - name: "transport-trigger-1"
+    label: TransportTrigger
+    type: token
+    pattern: |
+      [lemma=/^(head|ship|arriv|reach|redirect)/ & tag=/^VB/]
+      |
+      en route
+
   - name: "shipment-of-trigger"
     label: ShipmentOfTrigger
     type: token
@@ -96,7 +141,7 @@ rules:
     type: token
     pattern: |
       # "the cargo"
-      (?<=[!tag=/^N/]) cargo
+      (?<=[!tag=/^N/]) [lemma=cargo & !mention=Vessel]
 
     
   # - name: "concept"

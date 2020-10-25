@@ -347,7 +347,7 @@ components:
             array of constraints
           items: 
             $ref: "#/components/schemas/QueryConstraint"
-        labels:
+        subtype:
           type: string
           description: |
             The most specific label associated with this Query

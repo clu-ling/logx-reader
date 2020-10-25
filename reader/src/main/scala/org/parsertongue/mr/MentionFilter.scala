@@ -18,6 +18,16 @@ object MentionFilter {
 
   val exceptions: Set[String] = config[List[String]]("org.parsertongue.mr.mentionFilter.meetsMinLength.exceptions").toSet
 
+  // labels (categories) to retain
+  val CATEGORIES: Seq[String] = Seq(
+    "Constraint",
+    "Event",
+    "Measurement",
+    "Query", 
+    "Sentence", 
+    "Trigger"
+  )
+
   /** Assesses whether or not a mention meets the minimum length requirement (in number of chars) or if the violation is permitted. */
   def meetsMinLength(
     m: Mention,
@@ -96,27 +106,25 @@ object MentionFilter {
     * @param state the State (for searching for other mentions)
     */
   def keepLongestMentions(ms: Seq[Mention], state: State): Seq[Mention] = {
-    def detectBetters(ms: Seq[Mention], label: String): Seq[Mention] = {
-      val state = State(ms)
+
+    def detectBetters(ms: Seq[Mention], label: String, state: State): Seq[Mention] = {
       ms flatMap { m =>
         val overlapping: Seq[Mention] = state.mentionsFor(m.sentence, m.tokenInterval, label)
         if (overlapping.exists(o => betterThan(o, m))) {
-          //val better = overlapping.find(o => betterThan(o, m))
-          //println(s"${better.get.text} (${better.get.foundBy}) is better than ${m.text} (${m.foundBy})\n")
           None
         }
-        else {
-          Option(m)
+        else { 
+          Option(m) 
         }
       }
     }
     val (entities, events) = distinctBroad(ms) partition (_.matches("Entity"))
-    val keepEntities = detectBetters(entities, "Entity")
+    val keepEntities = detectBetters(entities, "Entity", State(state.allMentions ++ entities))
     //println(s"${events.length} events")
-    // keep everything but those matching the provided label(s)
-    val keepEvents: Seq[Mention] = Seq("Avoid").map{ lbl =>
-      val subset = events.filterNot(_ matches lbl)
-      detectBetters(subset, lbl)
+    // labels of interest
+    val keepEvents: Seq[Mention] = CATEGORIES.map{ lbl =>
+      val subset = events.filter(_ matches lbl)
+      detectBetters(subset, lbl, State(state.allMentions ++ subset))
     }.flatten
     keepEntities ++ keepEvents
   }
@@ -133,17 +141,10 @@ object MentionFilter {
     * Returns true if a has all of the arguments of b and possibly more
     */
   def subsetArgs(a: Mention, b: Mention): Boolean = {
-    //println(s"A: ${a.label}\t(${a.arguments.values.flatten.map(_.text).mkString(", ")})")
-    //println(s"B: ${b.label}\t(${b.arguments.values.flatten.map(_.text).mkString(", ")})")
     val aArgs = a.arguments.values.flatten.toSet
     val bArgs = b.arguments.values.flatten.toSet
     val aNotB = aArgs -- bArgs
     val bNotA = bArgs -- aArgs
-    // if ((a matches "Query") && (b matches "Query")) {
-    //   println(s"\taNotB: ${aNotB.map(_.text).mkString(", ")}")
-    //   println(s"\tbNotA: ${bNotA.map(_.text).mkString(", ")}")
-    // }
-
     //aNotB.nonEmpty && 
     bNotA.isEmpty
   }
@@ -234,7 +235,8 @@ object MentionFilter {
   /**
     * Applies preference heuristics based on Mention type. Returns true when a is preferred to b.
     */
-  def betterThan(a: Mention, b: Mention): Boolean = (a, b) match {
+  def betterThan(a: Mention, b: Mention): Boolean = {
+    (a, b) match {
     case same if a == b => false // should never be tripped, because distinctBroad should be used
     case (a: TextBoundMention, b: TextBoundMention) => betterThan(a, b)
     case (a: RelationMention, b: RelationMention) => betterThan(a, b)
@@ -242,6 +244,7 @@ object MentionFilter {
     case (a: EventMention, b: RelationMention) => betterThan(a, b)
     case (a: RelationMention, b: EventMention) => betterThan(a, b)
     case notComparable => false
+  }
   }
 
   /**

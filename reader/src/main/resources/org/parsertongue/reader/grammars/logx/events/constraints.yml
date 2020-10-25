@@ -27,6 +27,14 @@ rules:
     pattern: |
       @Transport.origin
 
+  - name: "origin-contraint-3"
+    label: OriginConstraint
+    example: "leave Hamburg"
+    priority: ${rulePriority}
+    pattern: |
+      trigger = [lemma=leave]
+      location: Location = >dobj
+
   - name: "destination-contraint-1"
     label: DestinationConstraint
     example: "to Hamburg"
@@ -42,7 +50,7 @@ rules:
     type: token
     pattern: |
       @Transport.destination
-  
+
   - name: "quantity-contraint-1"
     label: QuantityConstraint
     type: token

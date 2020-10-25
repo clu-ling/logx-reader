@@ -35,7 +35,7 @@
   example: "Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg."
   pattern: |
     trigger = [lemma=/^(find|what)$/]
-    need:Entity = (<<|>>) [incoming=/^(dobj|nsubj)/] | (<<|>>)+ [incoming=/^(dobj|nsubj)/]
+    need:Entity = dobj
     #predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
     constraints:Constraint* = (<<|>>)+
  

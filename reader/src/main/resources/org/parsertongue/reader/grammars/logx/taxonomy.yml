@@ -16,13 +16,16 @@
 
 - Trigger:
   - ShipmentOfTrigger
+  - TransportTrigger
 
 - Entity:
   - Concept:
     - QuantifiedConcept
     - Location:
-      - Port
-      - Base
+      - Port:
+        - UnspecifiedPort
+      - Base:
+        - UnspecifiedBase
     - Organization
     - Vessel
     - Cargo:
@@ -30,13 +33,12 @@
       - UnspecifiedCargo
       # TEUs of freeze-dried ice cream
       - QuantifiedCargo
-    - ShipmentOf
+      - ShipmentOf
+    - RiskOf
 
 - Measurement:
   - Unit
   - Quantity
-
-- RiskOf
 
 - Event:
   - Causal:
@@ -63,10 +65,10 @@
           # Monday, Tuesday, etc.
           - DayOfWeek
         - Year
-      - OnTimeExpression
-      - BeforeTimeExpression
-      - AfterTimeExpression
-      - IntervalTimeExpression
+      - OnTime
+      - BeforeTime
+      - AfterTime
+      - IntervalTime
       - TimeUnit
 
 # See https://gitlab.logx.cloud/team/bbn/logx-reader/-/issues/1
@@ -76,7 +78,7 @@
     - VesselQuery
     - CargoQuery
   - WhyQuery
-  - WhereQuery
+  - WhereQuery:
     - LocationQuery
   - WhenQuery
   - HowQuery

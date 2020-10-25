@@ -82,10 +82,10 @@ class LogxActions extends OdinActions {
 
     mention match {
         // invoke copy constructor for Mention subtypes w/ args
-        case em: EventMention => em.copy(arguments = newArgs)
-        case rel: RelationMention => rel.copy(arguments = newArgs)
+        case em: EventMention         => em.copy(arguments = newArgs)
+        case rel: RelationMention     => rel.copy(arguments = newArgs)
         case cm: CrossSentenceMention => cm.copy(arguments = newArgs)
-        case m => m
+        case m                        => m
     }
   }
 
@@ -100,9 +100,34 @@ class LogxActions extends OdinActions {
     //mentions.foreach{ m => println(s"MENTION: text:\t${m.text}\t(${m.label})\t${m.foundBy}") }
     val shortEnough = MentionFilter.keepShortSpans(mentions)
     val longest = MentionFilter.keepLongestMentions(shortEnough)
-    val filtered = longest.filter{ mn => (mn matches "VerbPhrase") == false }
-    val events = MentionFilter.disallowOverlappingArgs(filtered)
-    events
+    val filtered = longest.filterNot(_ matches "VerbPhrase")
+    //val events = MentionFilter.disallowOverlappingArgs(filtered)
+    val remaining = filtered
+
+    def relabelQuery(orig: String, need: Mention): String = need match {
+      case port   if port matches "Location" => "LocationQuery"
+      case vessel if vessel matches "Vessel" => "VesselQuery"
+      case cargo  if cargo matches "Cargo"   => "CargoQuery"
+      case other                             => orig
+    }
+
+    // relabel queries
+    remaining.map {
+      case q if q matches "Query" => 
+        q match {
+          case em: EventMention =>
+            val need = em.arguments("need").head 
+            val label = relabelQuery(em.label, need)
+            em.copy(labels = (Seq(label) ++ em.labels).distinct)
+          case rel: RelationMention =>
+            val need = rel.arguments("need").head 
+            val label = relabelQuery(rel.label, need)
+            rel.copy(labels = (Seq(label) ++ rel.labels).distinct)
+          // FIXME: we're assuming a Query can only be an event or relation mention.
+          case other => other
+        }
+      case other => other
+    }
   }
 
   def keepLongestByLabel(mentions: Seq[Mention], label: String, state: State = new State()): Seq[Mention] = {
