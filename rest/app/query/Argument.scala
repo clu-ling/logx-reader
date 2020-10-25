@@ -11,12 +11,14 @@ import org.json4s.JsonDSL._
 case class Argument(
   role: String,
   text: String,
+  providedSubtype: Option[String] = None,
   labels: Seq[String]
-) extends JSONSerialization { 
+) extends JSONSerialization with Labels { 
 
   def jsonAST: JValue = {
     ("role" -> role) ~
     ("text" -> text) ~
+    ("subtype" -> subtype) ~
     ("labels" -> labels)
   }
 }

@@ -15,19 +15,19 @@ class TestEntities extends FlatSpec with Matchers {
         text = "August 24th 2020"
       ),
       EntityTestCase(
-        labels = Seq("TimeExpression", "OnTimeExpression"),
+        labels = Seq("TimeExpression", "OnTime"),
         text = "on August 24th 2020" 
       ),
       EntityTestCase(
-        labels = Seq("TimeExpression", "AfterTimeExpression"),
+        labels = Seq("TimeExpression", "AfterTime"),
         text = "after August 24, 2020" 
       ),
       EntityTestCase(
-        labels = Seq("TimeExpression", "BeforeTimeExpression"),
+        labels = Seq("TimeExpression", "BeforeTime"),
         text = "by August 24th 2020" 
       ),
       EntityTestCase(
-        labels = Seq("TimeExpression", "IntervalTimeExpression"),
+        labels = Seq("TimeExpression", "IntervalTime"),
         text = "from August 12, 2020 to August 19, 2020" 
       ),
       // EntityTestCase(
@@ -35,11 +35,11 @@ class TestEntities extends FlatSpec with Matchers {
       //  text = "during the week of October 12"
       // ),
       EntityTestCase(
-        labels = Seq("TimeExpression", "IntervalTimeExpression"),
+        labels = Seq("TimeExpression", "IntervalTime"),
         text = "during the week"
       ),
       EntityTestCase(
-        labels = Seq("TimeExpression", "IntervalTimeExpression"),
+        labels = Seq("TimeExpression", "IntervalTime"),
         text = "throughout 1991"
       ),
       EntityTestCase(
@@ -87,11 +87,11 @@ class TestEntities extends FlatSpec with Matchers {
         text = "12-Jun-2021" 
       ),
       //EntityTestCase(
-      //  labels = Seq("TimeExpression", "IntervalTimeExpression"),
+      //  labels = Seq("TimeExpression", "IntervalTime"),
       //  text = "During the week of October 12" 
       //),
       //EntityTestCase(
-      //  labels = Seq("TimeExpression", "IntervalTimeExpression"),
+      //  labels = Seq("TimeExpression", "IntervalTime"),
       //  text = "During the week of October 12th" 
       //),
       EntityTestCase(
@@ -106,51 +106,41 @@ class TestEntities extends FlatSpec with Matchers {
       hasEntity(tc, results) should be (true)
     }  
   }
+  it should "identify Vessel mentions" in {
+
+    val testCases = Seq(
+      EntityTestCase(
+        labels = Seq("Vessel"),
+        text = "cargo vessel"
+      )
+    )
+
+    testCases foreach { tc =>
+      val results = system.extract(tc.text)
+      results should not be empty
+      hasEntity(tc, results) should be (true)
+    }  
+  }
+
+  it should "identify Cargo mentions" in {
+
+    val testCases = Seq(
+      EntityTestCase(
+        labels = Seq("QuantifiedCargo"),
+        text = "TEUs of ostrich feathers"
+      ),
+      EntityTestCase(
+        labels = Seq("QuantifiedCargo"),
+        text = "Metric tons of preserved duck eggs"
+      )
+    )
+
+    testCases foreach { tc =>
+      val results = system.extract(tc.text)
+      results should not be empty
+      hasEntity(tc, results) should be (true)
+    }  
+  }
 }
-//     val text1 = "How many TEUs of DoD frozen meat is heading to Hamburg?"
-
-//     // "How many TEUs" with "Query" as a label.
-//     val LABEL_OF_INTEREST = "Query"
-//     val mns1 = system.extract(text1).filter(_ matches LABEL_OF_INTEREST)
-    
-//     mns1.size should be (1)
-
-//     mns1.head.text should equal ("How many TEUs")
 
 //     val text2 = "What is the probability that Hamburgers and Mustard will be in the same container in a port in Germany?"
-
-//     // "What is the probability" as a label
-//     val mns2 = system.extract(text2).filter(_ matches LABEL_OF_INTEREST)
-
-//     mns2.size should be (1)
-
-//     mns2.head.text should equal ("What is the probability")
-
-
-//   }
-//   // WhatQuery -> "What cargo was shipped from Los Angeles on August 12, 2014?"
-//   // Date -> "August 12, 2014"
-//   // Date -> "August 12 2014"
-//   // Date -> "August 2014"
-//   // Date -> 8/12/2014
-//   // Date -> 8/12/14
-//   // Date -> 8/14
-//   // UnspecifiedCargo -> "What cargo was shipped from Los Angeles on August 12, 2014?"
-// }
-
-
-//   "MachineReadingSystem" should "find ????" in {
-//     val ms = system.extract("????")
-//     // Ensure correct taxonomic label is assigned
-//     val label = "???"
-//     val results = ms filter (_.matches(label))
-//     results should not be empty
-//     results map (_.text) should contain (label)
-//   }
-
-//   it should "ignore ???" in {
-//     val results = system.extract("???")
-//     results map (_.text) should not contain "???"
-//   }
-
-// }

@@ -25,7 +25,7 @@ class TestEvents extends FlatSpec with Matchers {
             ),
             ArgTestCase(
               role = "time",
-              labels = Seq("TimeExpression", "OnTimeExpression"),
+              labels = Seq("TimeExpression", "OnTime"),
               text = "on August 24th 2020"
             )
           )
@@ -52,13 +52,29 @@ class TestEvents extends FlatSpec with Matchers {
           args = List(
             ArgTestCase(
               role = "shipment", 
-              labels = Seq("Cargo"),
-              text = "DoD Frozen Meat"
+              labels = Seq("QuantifiedCargo"),
+              text = "TEUs of DoD Frozen Meat"
             ),
             ArgTestCase(
               role = "destination",
               labels = Seq("Location"),
               text  = "Hamburg"
+            )
+          )
+        ),
+        EventTestCase(
+          labels = Seq("Transport"),
+          text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
+          args = List(
+            ArgTestCase(
+              role = "time",
+              labels = Seq("BeforeTime", "TimeExpression"),
+              text = "before September 21st 2020"
+            ),
+            ArgTestCase(
+              role = "time",
+              labels = Seq("AfterTime", "TimeExpression"),
+              text = "after September 28th 2020"
             )
           )
         )
@@ -83,7 +99,7 @@ class TestEvents extends FlatSpec with Matchers {
           args = List(
             ArgTestCase(
               role = "need",
-              labels = Seq("Concept"),
+              labels = Seq("UnspecifiedPort", "Location"),
               text = "ports"
             ),
             ArgTestCase(
@@ -98,20 +114,45 @@ class TestEvents extends FlatSpec with Matchers {
             ),
             ArgTestCase(
               role = "constraints",
-              labels = Seq("TimeConstraint", "TimeExpression", "BeforeTimeExpression"),
+              labels = Seq("TimeConstraint", "BeforeTime"),
               text = "before last week"
             )
           )
         ),
         EventTestCase(
-          foundBy = Some("what-query-1"),
-          labels = Seq("WhatQuery"),
+          labels = Seq("Query", "WhatQuery"),
+          text = "Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg since February 12",
+          args = List(
+            ArgTestCase(
+              role = "need",
+              labels = Seq("UnspecifiedPort", "Location"),
+              text = "ports"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("ProximityConstraint", "Constraint"),
+              text = "near Hamburg"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("QuantityConstraint", "Constraint"),
+              text = "enough excess cargo capacity"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("AfterTime", "TimeConstraint"),
+              text = "since February 12"
+            )
+          )
+        ),
+        EventTestCase(
+          labels = Seq("LocationQuery"),
           text = "What are alternative ports with enough cargo capacity to handle shipments redirected from Hamburg",
           args = List(
             ArgTestCase(
               role = "constraints",
-              labels = Seq("ProximityConstraint", "Constraint"),
-              text = "from Hamburg"
+              labels = Seq("OriginConstraint", "Constraint"),
+              text = "Hamburg"
             ),
             ArgTestCase(
               role = "constraints",
@@ -121,18 +162,17 @@ class TestEvents extends FlatSpec with Matchers {
             ArgTestCase(
               role = "need",
               labels = Seq("Concept"),
-              text = "alternative ports"
+              text = "ports"
             )
           )
         ),
         EventTestCase(
-          foundBy = Some("quantity-query-1"),
-          labels = Seq("QuantityQuery"),
+          labels = Seq("CargoQuery", "QuantityQuery"),
           text = "How many TEUs of zebras are heading to Scotland from Zimbabwe?",
           args = List(
             ArgTestCase(
               role = "need",
-              labels = Seq("QuantifiedConcept"),
+              labels = Seq("QuantifiedCargo"),
               text = "TEUs of zebras"
             ),
             ArgTestCase(
@@ -141,9 +181,73 @@ class TestEvents extends FlatSpec with Matchers {
               text = "Zimbabwe"
             ),
             ArgTestCase(
-              role = "need",
+              role = "constraints",
               labels = Seq("DestinationConstraint", "Constraint"),
               text = "Scotland"
+            )
+          )
+        ),
+        EventTestCase(
+          text = "How much frozen meat is heading to Hamburg?",
+          labels = Seq("CargoQuery", "QuantityQuery"),
+          args = List(
+            ArgTestCase(
+              role = "need",
+              labels = Seq("Cargo"),
+              text = "frozen meat"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("DestinationConstraint", "Constraint"),
+              text = "Hamburg"
+            )
+          )
+        ),
+        EventTestCase(
+          text = "How many shipments of frozen meat are heading to Hamburg?",
+          labels = Seq("CargoQuery", "QuantityQuery"),
+          args = List(
+            ArgTestCase(
+              role = "need",
+              labels = Seq("ShipmentOf", "Cargo"),
+              text = "shipments of frozen meat"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("DestinationConstraint", "Constraint"),
+              text = "Hamburg"
+            )
+          )
+        ),
+        EventTestCase(
+          text = "Which vessel left on Thursday?",
+          labels = Seq("VesselQuery", "Query"),
+          args = List(
+            ArgTestCase(
+              role = "need",
+              labels = Seq("Vessel"),
+              text = "vessel"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("OnTime"),
+              text = "on Thursday"
+            )
+          )
+        ),
+        EventTestCase(
+          text = "What cargo left Los Angeles last week?",
+          labels = Seq("CargoQuery"),
+          args = List(
+            ArgTestCase(
+              role = "need",
+              labels = Seq("UnspecifiedCargo"),
+              text = "cargo"
+            ),
+            ArgTestCase(
+              role = "constraints",
+              labels = Seq("TimeConstraint"),
+              text = "last week"
             )
           )
         )
@@ -159,40 +263,18 @@ class TestEvents extends FlatSpec with Matchers {
     it should "find structured TimeExpressions" in {
       val testCases = Seq(
         EventTestCase(
-          labels = Seq("IntervalTimeExpression", "TimeExpression"),
+          labels = Seq("IntervalTime", "TimeExpression"),
           text = "How many TEUs of frozen fish are heading to Dubai between September 30th 2020 and October 2nd 2020?",
           args = List(
             ArgTestCase(
               role = "start",
-              labels = Seq("IntervalTimeExpression", "TimeExpression"),
+              labels = Seq("IntervalTime", "TimeExpression"),
               text = "September 30th 2020"
             ),
             ArgTestCase(
               role = "end",
-              labels = Seq("IntervalTimeExpression", "TimeExpression"),
+              labels = Seq("IntervalTime", "TimeExpression"),
               text = "October 2nd 2020"
-            )
-          )
-        ),
-        EventTestCase(
-          labels = Seq("BeforeTimeExpression", "TimeExpression"),
-          text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
-          args = List(
-            ArgTestCase(
-              role = "date",
-              labels = Seq("BeforeTimeExpression", "TimeExpression"),
-              text = "September 21st 2020"
-            )
-          )
-        ),
-        EventTestCase(
-          labels = Seq("AfterTimeExpression", "TimeExpression"),
-          text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
-          args = List(
-            ArgTestCase(
-              role = "date",
-              labels = Seq("AfterTimeExpression", "TimeExpression"),
-              text = "September 28th 2020"
             )
           )
         )
@@ -207,36 +289,6 @@ class TestEvents extends FlatSpec with Matchers {
 }
 // What cargo was shipped from Los Angeles on August 12 2014 and is heading to Hamburg?
 // What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?
-
-// class TestEvents extends FlatSpec with Matchers {
-//
-//   "MachineReadingSystem" should "find ???" in {
-//     val s1 = "???"
-//     // TODO: load AnnotatedDocument JSON from resources.
-//     val doc: AnnotatedDocument
-//     val results = system.extract(doc)
-//     m1 should not be empty
-//     val events = m1 filter (_.matches("???"))
-//     events should have length 2
-//     hasEventWithArguments("Label1", Seq("?", "??"), decreases) should be (true)
-//   }
-
-//   it should "split events into ??? events" in {
-//     val results = system.extract("Pseudomonas fluorescens and Trichoderma harzianum suppressed M. incognita and M. arenaria.")
-//     results should not be empty
-//     val label = "????"
-//     val events = ms filter (_.matches(label))
-//     events should have length 4
-//     for {
-//       arg1 <- Seq("?", "?")
-//       arg2 <- Seq("?", "?")
-//     } {
-//       hasEventWithArguments(label, Seq(arg1, arg2), events) should be (true)
-//     }
-//   }
-
-// }
-
 
 // What time will the freighter arrive in Hamburg?
 

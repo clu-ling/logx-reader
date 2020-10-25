@@ -12,10 +12,10 @@ import org.json4s.JsonDSL._
   */
 case class QueryNeed(
   text: String,
-  subtype: String,
+  providedSubtype: Option[String] = None,
   labels: Seq[String],
   arguments: Option[Seq[Argument]]
-) extends JSONSerialization with WithArgs {
+) extends JSONSerialization with Args with Labels {
 
   def jsonAST: JValue = {
     ("text" -> text) ~
@@ -34,7 +34,7 @@ object QueryNeed {
     val args = QueryUtils.convertArgs(m.arguments)
     QueryNeed(
       text = m.text,
-      subtype = m.label,
+      providedSubtype = Some(m.label),
       labels = m.labels,
       arguments = args
     )

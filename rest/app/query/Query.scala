@@ -10,16 +10,23 @@ import org.json4s.JsonDSL._
   * Represents a Query
   */
 case class Query(
-  need: Option[QueryNeed],
+  need: QueryNeed,
+  providedSubtype: Option[String] = None,
   labels: Seq[String],
   constraints: Seq[QueryConstraint],
   metadata: QueryMetadata
-) extends JSONSerialization {
+) extends JSONSerialization with Labels {
+
+  val constraintsJdata: JValue = constraints match {
+    case Nil => JNothing
+    case _   => constraints.map(_.jsonAST).toList
+  }
 
   def jsonAST: JValue = {
-    ("need" -> need.map(_.jsonAST)) ~
+    ("need" -> need.jsonAST) ~
+    ("subtype" -> subtype) ~
     ("labels" -> labels) ~
-    ("constraints" -> constraints.map(_.jsonAST).toList) ~
+    ("constraints" -> constraintsJdata) ~
     ("metadata" -> metadata.jsonAST)
   }
 

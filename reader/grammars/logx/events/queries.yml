@@ -11,21 +11,20 @@
   label: QuantityQuery
   action: distinctArgs
   example: "How many TEUs of DoD frozen meat is heading to Hamburg?"
+  example: "How many shipments of frozen meat are heading to Hamburg?"
   pattern: |
-    trigger = [lemma=how] (many|much)
-    unit:Unit? = <amod [mention=QuantifiedConcept.unit]
-    need:Entity? = <amod nmod_of [mention=QuantifiedConcept.concept]
+    trigger = [lemma=how] @Quantifier
+    need:Entity = <amod nmod_of?
     predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
     constraints:Constraint* = (<<|>>)+
-
+  
 - name: "when-query-1"
   label: WhenQuery
   action: distinctArgs
   example: "When will the freighter arrive in Hamburg?"
   pattern: |
     trigger = [lemma=when] | [lemma=what] [lemma=/time|day|hour|month/] | [lemma=how] [lemma=/often|frequently/]
-    #topic:Entity? = (<<|>>)+ [incoming=nsubj]
-    need:Entity? = (<<|>>)+ [incoming=/^(dobj|nsubj)/]
+    need:Entity = (<<|>>)+ [incoming=/^(dobj|nsubj)/]
     predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
     constraints:Constraint* = (<<|>>)+
 
@@ -36,8 +35,7 @@
   example: "Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg."
   pattern: |
     trigger = [lemma=/^(find|what)$/]
-    #topic:Entity? = (<<|>>)+ [incoming=nsubj]
-    need:Entity? = (<<|>>) [incoming=/^(dobj|nsubj)/] | (<<|>>)+ [incoming=/^(dobj|nsubj)/]
+    need:Entity = dobj
     #predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
     constraints:Constraint* = (<<|>>)+
  
@@ -49,8 +47,7 @@
   example: "When will the freighter arrive?"
   pattern: |
     trigger = [tag=/^W/ & !mention=Query]
-    #topic:Entity? = (<<|>>)+ [incoming=nsubj]
-    need:Entity? = (<<|>>) [incoming=/^(dobj|nsubj)/] | (<<|>>)+ [incoming=/^(dobj|nsubj)/]
+    need:Entity = (<<|>>) [incoming=/^(dobj|nsubj)/] | (<<|>>)+ [incoming=/^(dobj|nsubj)/]
     predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
     constraints:Constraint* = (<<|>>)+
 

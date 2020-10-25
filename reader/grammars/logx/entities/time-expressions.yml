@@ -7,6 +7,13 @@ vars:
   actionFlow: identityAction
 
 rules:
+  - name: "weekday"
+    label: DayOfWeek
+    type: token
+    action: ${actionFlow}
+    pattern: |
+      [lemma=/(?i)^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$/]
+  
   - name: "month"
     label: Month
     type: token
@@ -46,7 +53,9 @@ rules:
       # "August 2020" or "August 3 2020"
       #(?<month> @Month) (?<day> @Day)? ","? (?<year> @Year)  
       # code above generates "multi-dates"; code below a single date
-      @Month @CalendarDay? ","? @Year
+      @month:Month @day:CalendarDay? ","? @year:Year
+      |
+      @month:Month @day:CalendarDay
 
   - name: "date-slashed"
     label: Date
@@ -83,35 +92,44 @@ rules:
       #something like "12 Jun 2100 hours", i.e. 12 Jun 9 PM.
 
   - name: "on-time-expression"
-    label: OnTimeExpression
+    label: OnTime
     type: token
     action: ${actionFlow}
     pattern: |
-      (?<trigger> [lemma=/^(on|at|around|about)$/]) @TimeExpression
+      (?<trigger> [lemma=/^(on|at|around|about)$/]) @time:TimeExpression
 
   - name: "after-time-expression"
-    label: AfterTimeExpression
-    type: token
+    label: AfterTime
     action: ${actionFlow}
     pattern: |
-      [word=/^(?i)(start|starting|beginning|from|after|following|since|past)$/] (?<date> @TimeExpression)
+      trigger = [word=/^(?i)(start|starting|beginning|from|after|following|since|past)$/] 
+      count:Quantity? = <amod nummod
+      time:TimeExpression = <amod | <case
 
   - name: "before-time-expression"
-    label: BeforeTimeExpression
+    label: BeforeTime
+    action: ${actionFlow}
+    pattern: |
+      trigger = [lemma=/^(before|by|end|ending|until|to)$/]
+      count:Quantity? = <amod nummod
+      time:TimeExpression = <amod | <case
+
+  - name: "before-time-expression-surface-1"
+    label: BeforeTime
     type: token
     action: ${actionFlow}
     pattern: |
-      (?<trigger> [lemma=/^(before|by|end|ending|until|to)$/]) (?<date> @TimeExpression)
-
+      (?<trigger> [lemma=/^(before|by|end|ending|until|to)$/]) (?<time> @TimeExpression)
+  
   - name: "interval-time-expression"
-    label: IntervalTimeExpression
+    label: IntervalTime
     type: token
     action: ${actionFlow}
     pattern: |
       (?<trigger> [lemma=/^(since|until|during|through|throughout|over)$/]) @TimeExpression
       #note that 'since', 'until' are both interval and after/before
       |
-      (?<start> @AfterTimeExpression) (?<end> @BeforeTimeExpression)
+      (?<start> @AfterTime) (?<end> @BeforeTime)
       |
       (?<trigger> [lemma=between]) (?<start> @TimeExpression) [lemma=and] (?<end> @TimeExpression)
       # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'

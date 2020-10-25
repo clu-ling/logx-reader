@@ -28,23 +28,43 @@ class LogxActions extends OdinActions {
       }
   }
 
+  def mergeLabels(oldLabels: Seq[String], newLabels: Seq[String]): Seq[String] = {
+    (newLabels ++ oldLabels).distinct
+  }
+
+  def promoteArgTo(m: Mention, role: String, hyponym: String): Mention = {
+    val desiredLabels = taxonomy.hypernymsFor(hyponym)
+
+    val newArgs: Map[String, Seq[Mention]] = m.arguments match {
+      case hasArg if m.arguments.contains(role) =>
+        val newArgs: Seq[Mention] = m.arguments(role).map { 
+          case tb: TextBoundMention     => tb.copy(labels = mergeLabels(tb.labels, desiredLabels))
+          case em: EventMention         => em.copy(labels = mergeLabels(em.labels, desiredLabels))
+          case rel: RelationMention     => rel.copy(labels = mergeLabels(rel.labels, desiredLabels))
+          case cm: CrossSentenceMention => cm.copy(labels = mergeLabels(cm.labels, desiredLabels))
+        }
+        Map(role -> newArgs)
+      case _ => Map.empty[String, Seq[Mention]]
+    }
+
+    m match {
+      case tb: TextBoundMention     => tb
+      case em: EventMention         => em.copy(arguments = em.arguments ++ newArgs)
+      case rel: RelationMention     => rel.copy(arguments = rel.arguments ++ newArgs)
+      case cm: CrossSentenceMention => cm.copy(arguments = cm.arguments ++ newArgs)
+    }
+  }
+
+  def handleQuantifiedCargo(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = mentions.map {
+    case qc if qc matches "QuantifiedCargo" => promoteArgTo(qc, role = "concept", hyponym = "Cargo")
+    case other => other
+  }
+
   def mkCargoMention(m: Mention): Mention = m match {
       case cargo if cargo matches "Cargo" => m
-      // discard unit portion of any QuantifiedConcept
-      case qc if qc matches "QuantifiedConcept" => 
-        qc match {
-            case em: EventMention         => 
-              val arg = em.arguments.getOrElse("concept", Seq(em)).head
-              mkCargoMention(arg)
-            case rel: RelationMention     => 
-              val arg = rel.arguments.getOrElse("concept", Seq(rel)).head
-              mkCargoMention(arg)
-            // NOTE: this should never be encountered
-            case tb: TextBoundMention     => tb.copy(labels = CARGO_LABELS)
-            case cm: CrossSentenceMention => 
-              val arg = cm.arguments.getOrElse("concept", Seq(cm)).head
-              mkCargoMention(arg)
-        }
+      // discard unit portion of any QuantifiedCargo
+      case qc if qc matches "QuantifiedCargo" => 
+        promoteArgTo(m, role = "concept", hyponym = "Cargo")
       case nonCargo => 
         nonCargo match {
             case tb: TextBoundMention     => tb.copy(labels = CARGO_LABELS)
@@ -53,7 +73,6 @@ class LogxActions extends OdinActions {
             case rel: RelationMention     => rel.copy(labels = CARGO_LABELS)
             case cm: CrossSentenceMention => cm.copy(labels = CARGO_LABELS)
         }
-
   }
 
   def distinctArgs(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = mentions map { mention => 
@@ -63,10 +82,10 @@ class LogxActions extends OdinActions {
 
     mention match {
         // invoke copy constructor for Mention subtypes w/ args
-        case em: EventMention => em.copy(arguments = newArgs)
-        case rel: RelationMention => rel.copy(arguments = newArgs)
+        case em: EventMention         => em.copy(arguments = newArgs)
+        case rel: RelationMention     => rel.copy(arguments = newArgs)
         case cm: CrossSentenceMention => cm.copy(arguments = newArgs)
-        case m => m
+        case m                        => m
     }
   }
 
@@ -81,9 +100,34 @@ class LogxActions extends OdinActions {
     //mentions.foreach{ m => println(s"MENTION: text:\t${m.text}\t(${m.label})\t${m.foundBy}") }
     val shortEnough = MentionFilter.keepShortSpans(mentions)
     val longest = MentionFilter.keepLongestMentions(shortEnough)
-    val filtered = longest.filter{ mn => (mn matches "VerbPhrase") == false }
-    val events = MentionFilter.disallowOverlappingArgs(filtered)
-    events
+    val filtered = longest.filterNot(_ matches "VerbPhrase")
+    //val events = MentionFilter.disallowOverlappingArgs(filtered)
+    val remaining = filtered
+
+    def relabelQuery(orig: String, need: Mention): String = need match {
+      case port   if port matches "Location" => "LocationQuery"
+      case vessel if vessel matches "Vessel" => "VesselQuery"
+      case cargo  if cargo matches "Cargo"   => "CargoQuery"
+      case other                             => orig
+    }
+
+    // relabel queries
+    remaining.map {
+      case q if q matches "Query" => 
+        q match {
+          case em: EventMention =>
+            val need = em.arguments("need").head 
+            val label = relabelQuery(em.label, need)
+            em.copy(labels = (Seq(label) ++ em.labels).distinct)
+          case rel: RelationMention =>
+            val need = rel.arguments("need").head 
+            val label = relabelQuery(rel.label, need)
+            rel.copy(labels = (Seq(label) ++ rel.labels).distinct)
+          // FIXME: we're assuming a Query can only be an event or relation mention.
+          case other => other
+        }
+      case other => other
+    }
   }
 
   def keepLongestByLabel(mentions: Seq[Mention], label: String, state: State = new State()): Seq[Mention] = {

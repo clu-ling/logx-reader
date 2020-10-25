@@ -9,7 +9,7 @@ import org.json4s.JsonDSL._
 /**
  * serialization for arguments
  */
-trait WithArgs {
+trait Args {
 
   val arguments: Option[Seq[Argument]]
 

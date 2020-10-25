@@ -13,10 +13,70 @@ tags:
   - name: "ie"
     description: |
       Operations related to information extraction.
+  - name: "taxo"
+    description: |
+      Operations related to the taxonomy.
   - name: "config"
     description: |
       Endpoints for inspecting project config.
 paths:
+  /taxonomy/hyponyms-for:
+    get:
+      tags:
+        - taxo
+      summary: |
+        Hyponyms for the given label.
+      description: |
+        Hyponyms for the given label.
+      parameters: 
+        - name: term
+          in: query
+          description: |
+            Parent label.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Hyponyms of the provided label.
+          content:
+            application/json:
+              schema:
+                type: array
+                description: |
+                  The hyponyms of the provided label.  Final element is the provided label.
+                items:
+                  type: string
+
+  /taxonomy/hypernyms-for:
+    get:
+      tags:
+        - taxo
+      summary: |
+        Hypernyms of the given label.
+      description: |
+        Hypernyms of the given label.
+      parameters: 
+        - name: term
+          in: query
+          description: |
+            Child's label.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Hypernyms of the provided label.  First element is the provided label.
+          content:
+            application/json:
+              schema:
+                type: array
+                description: |
+                  The hypernyms of the provided label.
+                items:
+                  type: string
+
+          
   /extract:
     get:
       tags:
@@ -276,6 +336,7 @@ components:
       type: object
       required:
         - need
+        - subtype
         - labels
       properties:
         need:
@@ -286,6 +347,10 @@ components:
             array of constraints
           items: 
             $ref: "#/components/schemas/QueryConstraint"
+        subtype:
+          type: string
+          description: |
+            The most specific label associated with this Query
         labels:
           type: array
           description: |

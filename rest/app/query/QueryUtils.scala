@@ -29,14 +29,19 @@ object QueryUtils {
 
     val constraints: Seq[QueryConstraint] = mention.arguments.getOrElse("constraints", Nil).map(QueryConstraint.apply).distinct
 
-    Some(
-      Query(
-        need = need,
-        labels = mention.labels,
-        constraints = constraints,
-        metadata = metadata 
-      )
-    )
+    // All queries must have a `need`
+    need match {
+      case Some(qn) => 
+          Some(
+            Query(
+              need = qn,
+              labels = mention.labels,
+              constraints = constraints,
+              metadata = metadata 
+            )
+          )
+      case None => None
+    }
   }
 
   /**

@@ -8,25 +8,37 @@
     # NOTE: these are converted in an action to create Concepts
     - NounPhrase:
       - Noun
+  - Quantifier
 
 - Avoid:
   - Reference
   - PossibleTrigger
 
+- Trigger:
+  - ShipmentOfTrigger
+  - TransportTrigger
+
 - Entity:
   - Concept:
     - QuantifiedConcept
-    - Location
+    - Location:
+      - Port:
+        - UnspecifiedPort
+      - Base:
+        - UnspecifiedBase
     - Organization
+    - Vessel
     - Cargo:
       # "the cargo"
       - UnspecifiedCargo
+      # TEUs of freeze-dried ice cream
+      - QuantifiedCargo
+      - ShipmentOf
+    - RiskOf
 
 - Measurement:
   - Unit
   - Quantity
-
-- RiskOf
 
 - Event:
   - Causal:
@@ -53,18 +65,21 @@
           # Monday, Tuesday, etc.
           - DayOfWeek
         - Year
-      - OnTimeExpression
-      - BeforeTimeExpression
-      - AfterTimeExpression
-      - IntervalTimeExpression
+      - OnTime
+      - BeforeTime
+      - AfterTime
+      - IntervalTime
       - TimeUnit
 
 # See https://gitlab.logx.cloud/team/bbn/logx-reader/-/issues/1
 - Query:
   - WhoQuery
-  - WhatQuery
+  - WhatQuery:
+    - VesselQuery
+    - CargoQuery
   - WhyQuery
-  - WhereQuery
+  - WhereQuery:
+    - LocationQuery
   - WhenQuery
   - HowQuery
   - QuantityQuery

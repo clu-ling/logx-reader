@@ -87,7 +87,7 @@ class ApiController @Inject() (
 
   def taxonomyHypernymsFor(term: String, pretty: Option[Boolean] = None) = Action.async {
     Future{
-      Json.toJson(ieSystem.taxonomy.hyponymsFor(term)).format(pretty)
+      Json.toJson(ieSystem.taxonomy.hypernymsFor(term)).format(pretty)
     }
   }
 
