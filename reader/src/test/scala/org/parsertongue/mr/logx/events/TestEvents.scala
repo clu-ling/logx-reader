@@ -9,53 +9,53 @@ class TestEvents extends FlatSpec with Matchers {
     "MachineReadingSystem" should "find Transport events" in {
 
       val testCases = Seq(
-        EventTestCase(
+        PositiveEventTestCase(
           labels = Seq("Transport"), 
           text = "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?", 
           args = List(
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "shipment", 
               labels = Seq("Cargo"),
               text = "frozen fish"
             ),
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "destination",
               labels = Seq("Location"),
               text  = "Dubai"
             ),
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "time",
               labels = Seq("TimeExpression", "OnTimeExpression"),
               text = "on August 24th 2020"
             )
           )
         ),
-        EventTestCase(
+        PositiveEventTestCase(
           labels = Seq("Transport"),
           text = "How many F16 engines are heading to Dubai?",
           args = List(
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "shipment", 
               labels = Seq("Cargo"),
               text = "F16 engines"
             ),
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "destination",
               labels = Seq("Location"),
               text  = "Dubai"
             )
           )
         ),
-        EventTestCase(
+        PositiveEventTestCase(
           labels = Seq("Transport"),
           text = "How many TEUs of DoD Frozen Meat are heading to Hamburg?",
           args = List(
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "shipment", 
               labels = Seq("Cargo"),
               text = "DoD Frozen Meat"
             ),
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "destination",
               labels = Seq("Location"),
               text  = "Hamburg"
@@ -70,55 +70,55 @@ class TestEvents extends FlatSpec with Matchers {
       testCases foreach { tc =>
         val results = system.extract(tc.text)
         results should not be empty
-        hasEvent(tc, results) should be (true)
+        checkEvent(tc, results) should be (true)
       }
     }
     
     it should "find Query events" in {
 
       val testCases = Seq(
-        EventTestCase(
+        PositiveEventTestCase(
           labels = Seq("Query", "WhatQuery"),
           text = "Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg before last week",
           args = List(
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "need",
               labels = Seq("Concept"),
               text = "ports"
             ),
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "constraints",
               labels = Seq("ProximityConstraint", "Constraint"),
               text = "near Hamburg"
             ),
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "constraints",
               labels = Seq("QuantityConstraint", "Constraint"),
               text = "enough excess cargo capacity"
             ),
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "constraints",
               labels = Seq("TimeConstraint", "TimeExpression", "BeforeTimeExpression"),
               text = "before last week"
             )
           )
         ),
-        EventTestCase(
+        PositiveEventTestCase(
           foundBy = Some("what-query-1"),
           labels = Seq("WhatQuery"),
           text = "What are alternative ports with enough cargo capacity to handle shipments redirected from Hamburg",
           args = List(
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "constraints",
               labels = Seq("ProximityConstraint", "Constraint"),
               text = "from Hamburg"
             ),
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "constraints",
               labels = Seq("QuantityConstraint", "Constraint"),
               text = "enough cargo capacity"
             ),
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "need",
               labels = Seq("Concept"),
               text = "alternative ports"
@@ -130,44 +130,44 @@ class TestEvents extends FlatSpec with Matchers {
       testCases foreach { tc =>
         val results = system.extract(tc.text)
         results should not be empty
-        hasEvent(tc, results) should be (true)
+        checkEvent(tc, results) should be (true)
       }
     }
 
     it should "find structured TimeExpressions" in {
       val testCases = Seq(
-        EventTestCase(
+        PositiveEventTestCase(
           labels = Seq("IntervalTimeExpression", "TimeExpression"),
           text = "How many TEUs of frozen fish are heading to Dubai between September 30th 2020 and October 2nd 2020?",
           args = List(
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "start",
               labels = Seq("IntervalTimeExpression", "TimeExpression"),
               text = "September 30th 2020"
             ),
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "end",
               labels = Seq("IntervalTimeExpression", "TimeExpression"),
               text = "October 2nd 2020"
             )
           )
         ),
-        EventTestCase(
+        PositiveEventTestCase(
           labels = Seq("BeforeTimeExpression", "TimeExpression"),
           text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
           args = List(
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "date",
               labels = Seq("BeforeTimeExpression", "TimeExpression"),
               text = "September 21st 2020"
             )
           )
         ),
-        EventTestCase(
+        PositiveEventTestCase(
           labels = Seq("AfterTimeExpression", "TimeExpression"),
           text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
           args = List(
-            ArgTestCase(
+            PositiveArgTestCase(
               role = "date",
               labels = Seq("AfterTimeExpression", "TimeExpression"),
               text = "September 28th 2020"
@@ -179,7 +179,7 @@ class TestEvents extends FlatSpec with Matchers {
       testCases foreach { tc =>
         val results = system.extract(tc.text)
         results should not be empty
-        hasEvent(tc, results) should be (true)
+        checkEvent(tc, results) should be (true)
       }
     }
 }

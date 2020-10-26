@@ -10,23 +10,23 @@ class TestEntities extends FlatSpec with Matchers {
   "LogX MachineReadingSystem" should "identify TimeExpression mentions" in {
 
     val testCases = Seq(
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression"),
         text = "August 24th 2020"
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "OnTimeExpression"),
         text = "on August 24th 2020" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "AfterTimeExpression"),
         text = "after August 24, 2020" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "BeforeTimeExpression"),
         text = "by August 24th 2020" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "IntervalTimeExpression"),
         text = "from August 12, 2020 to August 19, 2020" 
       ),
@@ -34,55 +34,55 @@ class TestEntities extends FlatSpec with Matchers {
       //  labels = Seq("TimeExpression", "IntervalTimeExpression"),
       //  text = "during the week of October 12"
       // ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "IntervalTimeExpression"),
         text = "during the week"
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "IntervalTimeExpression"),
         text = "throughout 1991"
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "TimeUnit"),
         text = "the next few days" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "Date"),
         text = "August 2020" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "Date"),
         text = "August 12 2020" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "Date"),
         text = "12/02/1986" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "Date"),
         text = "05/1986" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "Date"),
         text = "05/86" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "Date"),
         text = "1986-12-21" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "Date"),
         text = "2012 11 30" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "Date"),
         text = "12 JUN 2021" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "Date"),
         text = "12 Jun 2021" 
       ),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "Date"),
         text = "12-Jun-2021" 
       ),
@@ -94,7 +94,7 @@ class TestEntities extends FlatSpec with Matchers {
       //  labels = Seq("TimeExpression", "IntervalTimeExpression"),
       //  text = "During the week of October 12th" 
       //),
-      EntityTestCase(
+      PositiveEntityTestCase(
         labels = Seq("TimeExpression", "TimeUnit"),
         text = "The week ending October 12th" 
       )
@@ -103,7 +103,7 @@ class TestEntities extends FlatSpec with Matchers {
     testCases foreach { tc =>
       val results = system.extract(tc.text)
       results should not be empty
-      hasEntity(tc, results) should be (true)
+      checkEntity(tc, results) should be (true)
     }  
   }
 }
