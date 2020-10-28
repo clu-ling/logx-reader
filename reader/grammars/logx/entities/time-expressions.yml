@@ -126,13 +126,13 @@ rules:
       [lemma=/^(second|minute|hour|day|week|fortnight|month|year|annum|decade|century)$/ & tag=/^N/] 
       ([word=of]? @TimeExpression+)?
 
-  #- name: "clock-time"
-  #  label: ClockTimeExpression
-  #  type: token
-  #  action: ${actionFlow}
-  #  pattern: |
-  #    "3 AM"; "12 p.m."; 04:38:12 pm; 12:26 am"
-  #    [word=/^(0?[1-9]|1[0-2])(\:[0-5][0-9]){,2}$/] [word=/^(?i)am|pm|a\.m\.|p\.m\.$/]
-  #    |
-  #    "2100 hours; 0231 Hours"
-  #    [word=/^(0[0-9]|1[0-2])[0-5][0-9]$/] [word=/^(?i)hours$/]
+  - name: "clock-time"
+    label: ClockTimeExpression
+    type: token
+    action: ${actionFlow}
+    pattern: |
+      # "3 AM"; "12 p.m."; 04:38:12 pm; 12:26 am"
+      [word=/^(0?[1-9]|1[0-2])(\:[0-5][0-9])?(\:[0-5][0-9])?$/] [word=/^(?i)am|pm|a\.m\.|p\.m\.$/]
+      |
+      # "2100 hours; 0231 Hours"
+      [word=/^([0-1][0-9]|2[0-3])[0-5][0-9]$/] [word=/^(?i)hours$/]
