@@ -45,7 +45,7 @@ rules:
     label: Unit
     type: token
     pattern: |
-      [lemma=/(?i)^(metric)$/]? [lemma=/(?i)^(TEU|ton|pound|kg)s?$/]
+      [lemma=/(?i)^(metric)$/]? [lemma=/(?i)^(TEU|ton(ne)?|pound|kg)s?$/]
 
   - name: "quantity-1"
     label: Quantity

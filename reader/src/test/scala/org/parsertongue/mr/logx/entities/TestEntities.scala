@@ -86,6 +86,10 @@ class TestEntities extends FlatSpec with Matchers {
         labels = Seq("TimeExpression", "Date"),
         text = "12-Jun-2021" 
       ),
+      NegativeEntityTestCase(
+        labels = Seq("TimeExpression", "Date"),
+        text = "2100" 
+      ),
       //PositiveEntityTestCase(
       //  labels = Seq("TimeExpression", "IntervalTime"),
       //  text = "During the week of October 12" 
@@ -131,7 +135,11 @@ class TestEntities extends FlatSpec with Matchers {
       ),
       NegativeEntityTestCase(
         labels = Seq("QuantifiedCargo"),
-        text = "TUs of ostrich feathers" // currently accepts anything, good or bad
+        text = "of ostrich feathers" // currently accepts anything, good or bad
+      ),
+      NegativeEntityTestCase(
+        labels = Seq("QuantifiedCargo"),
+        text = "TEUs of ostrich feathers" // currently accepts anything, good or bad
       ),
       PositiveEntityTestCase(
         labels = Seq("QuantifiedCargo"),
