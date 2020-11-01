@@ -1,16 +1,12 @@
-#taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
+taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
 #taxonomy: file:///home/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
-taxonomy: file:///Users/davidmedeiros/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
-# for upload: uncomment org/ path; delete last
 
 vars:
   # NOTE: change pathPrefix for development
   #pathPrefix: "org/parsertongue/reader/grammars/logx"
+  pathPrefix: "org/parsertongue/reader/grammars/logx"
   #pathPrefix: "org/parsertongue/reader/grammars/logx"
-  #pathPrefix: "org/parsertongue/reader/grammars/logx"
-  pathPrefix: "file:///Users/davidmedeiros/repos/clu-ling/logx-reader/reader/grammars/logx"
   wh-words-en: "how|that|what|whatever|when|whenever|where|which|who|whoever|whom|whose|why"
-#for upload: uncomment one org/ path; delete my local
 
 rules:
 
@@ -45,7 +41,7 @@ rules:
     label: Unit
     type: token
     pattern: |
-      [lemma=/(?i)^(metric)$/]? [lemma=/(?i)^(TEU|ton(ne)?|pound|kg)s?$/]
+      [lemma=/(?i)^(metric)$/]? [lemma=/(?i)^(TEU|ton|pound|kg)s?$/]
 
   - name: "quantity-1"
     label: Quantity

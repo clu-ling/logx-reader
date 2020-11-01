@@ -86,10 +86,10 @@ class TestEntities extends FlatSpec with Matchers {
         labels = Seq("TimeExpression", "Date"),
         text = "12-Jun-2021" 
       ),
-      NegativeEntityTestCase(
-        labels = Seq("TimeExpression", "Date"),
-        text = "2100" 
-      ),
+      // NegativeEntityTestCase(
+      //   labels = Seq("TimeExpression", "AfterTime"),
+      //   text = "June 12 2100" //wrong behavior: this passes as tho postestcase. segregate in own "should not find mentions" block?
+      // ),
       //PositiveEntityTestCase(
       //  labels = Seq("TimeExpression", "IntervalTime"),
       //  text = "During the week of October 12" 
@@ -110,6 +110,7 @@ class TestEntities extends FlatSpec with Matchers {
       checkEntity(tc, results) should be (true)
     }  
   }
+
   it should "identify Vessel mentions" in {
 
     val testCases = Seq(
@@ -135,15 +136,43 @@ class TestEntities extends FlatSpec with Matchers {
       ),
       NegativeEntityTestCase(
         labels = Seq("QuantifiedCargo"),
-        text = "of ostrich feathers" // currently accepts anything, good or bad
+        text = "TUs of ostrich feathers"
       ),
       NegativeEntityTestCase(
         labels = Seq("QuantifiedCargo"),
-        text = "TEUs of ostrich feathers" // currently accepts anything, good or bad
+        text = "of ostrich feathers"
       ),
       PositiveEntityTestCase(
         labels = Seq("QuantifiedCargo"),
         text = "Metric tons of preserved duck eggs"
+      )
+    )
+
+    testCases foreach { tc =>
+      val results = system.extract(tc.text)
+      results should not be empty
+      checkEntity(tc, results) should be (true)
+    }  
+  }
+
+  it should "not identify Cargo mentions" in {
+
+    val testCases = Seq(
+      NegativeEntityTestCase(
+        labels = Seq("QuantifiedCargo"),
+        text = "of ostrich feathers"
+      ),
+      NegativeEntityTestCase(
+        labels = Seq("QuantifiedCargo"),
+        text = "TUs of ostrich feathers"
+      ),
+      // NegativeEntityTestCase(
+      //   labels = Seq("Vessel"),
+      //   text = "week"
+      // ),
+      NegativeEntityTestCase(
+        labels = Seq("QuantifiedCargo"),
+        text = "despite metric tons of preserved duck eggs"
       )
     )
 

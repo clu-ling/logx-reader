@@ -187,6 +187,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
+
         PositiveEventTestCase(
           text = "How much frozen meat is heading to Hamburg?",
           labels = Seq("CargoQuery", "QuantityQuery"),
@@ -253,6 +254,39 @@ class TestEvents extends FlatSpec with Matchers {
         )
       )
 
+      testCases foreach { tc =>
+        val results = system.extract(tc.text)
+        results should not be empty
+        checkEvent(tc, results) should be (true)
+      }
+    }
+
+    it should "not find Query events" in {
+
+      val testCases = Seq(
+        NegativeEventTestCase(
+          labels = Seq("CargoQuery", "QuantityQuery"),
+          text = "Many zebras are galloping to Scotland from Zimbabwe?",
+          args = Nil
+          // List(
+          //   NegativeArgTestCase(
+          //     role = "need",
+          //     labels = Seq("QuantifiedCargo"),
+          //     text = "zebras"
+          //   ),
+          //   NegativeArgTestCase(
+          //     role = "constraints",
+          //     labels = Seq("OriginConstraint", "Constraint"),
+          //     text = "Zimbabwe"
+          //   ),
+          //   NegativeArgTestCase(
+          //     role = "constraints",
+          //     labels = Seq("DestinationConstraint", "Constraint"),
+          //     text = "Scotland"
+          //   )
+          // )
+        )
+      )
       testCases foreach { tc =>
         val results = system.extract(tc.text)
         results should not be empty

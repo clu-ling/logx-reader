@@ -73,15 +73,19 @@ object TestUtils {
   ) extends EntityTestCase
 
   def checkEntity(testCase: EntityTestCase, mentions: Seq[Mention]): Boolean = {
-    val success = mentions.exists{ m =>
+    val success = {
       // check labels found
       testCase match {
         case pc: PositiveEntityTestCase =>
-          checkLabels(pc.labels, m) &&
-          m.text == pc.text
+          mentions.exists{ m =>
+            checkLabels(pc.labels, m) &&
+            m.text == pc.text
+          }
         case nc: NegativeEntityTestCase =>
-          (checkLabels(nc.labels, m) == false) &&
-          m.text != nc.text
+          mentions.forall{ m =>
+            !( checkLabels(nc.labels, m) &&
+            m.text == nc.text)
+          }
       }
       //checkLabels(testCase.labels, m) &&
       //m.text == testCase.text
@@ -133,17 +137,21 @@ object TestUtils {
   }
 
   def checkEvent(testCase: EventTestCase, mentions: Seq[Mention]): Boolean = {
-    val success = mentions.exists{ m => 
+    val success = {
       // check foundBy (if present)
       testCase match {  
         case pc: PositiveEventTestCase => 
-          (pc.foundBy.getOrElse(m.foundBy) == m.foundBy) && 
-          (checkLabels(pc.labels, m) == true) && 
-          pc.args.forall{ tcArg => checkArg(tcArg, m) }
+          mentions.exists{ m => 
+            (pc.foundBy.getOrElse(m.foundBy) == m.foundBy) && 
+            (checkLabels(pc.labels, m) == true) && 
+            pc.args.forall{ tcArg => checkArg(tcArg, m) }
+          }
         case nc: NegativeEventTestCase => 
-          (nc.foundBy.getOrElse(m.foundBy) != m.foundBy) && 
-          (checkLabels(nc.labels, m) == false) && 
-          nc.args.forall{ tcArg => checkArg(tcArg, m) }
+          mentions.forall{ m =>
+            !((nc.foundBy.getOrElse(m.foundBy) == m.foundBy) && 
+            checkLabels(nc.labels, m) && 
+            nc.args.forall{ tcArg => checkArg(tcArg, m) })
+          }
       } // && 
       // testCase.args.forall{ tcArg => checkArg(tcArg, m) }
     }
@@ -182,7 +190,7 @@ object TestUtils {
           }
         case nc: NegativeEventTestCase =>
           println(s"${Console.RED} NegativeTestCase failed for '${nc.text}'${Console.RESET}")
-          if ( mentions.exists{ m => nc.foundBy.getOrElse(m.foundBy) == m.foundBy } ) {
+          if ((nc.foundBy.nonEmpty) && ( mentions.exists{ m => nc.foundBy.getOrElse(m.foundBy) == m.foundBy } ) ){
             println(s"\t${Console.RED} Mention incorrectly found by '${nc.foundBy.get}'${Console.RESET}")
           }
           //fill in rest
