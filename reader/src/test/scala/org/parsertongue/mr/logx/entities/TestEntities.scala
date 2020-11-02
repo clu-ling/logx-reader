@@ -117,6 +117,22 @@ class TestEntities extends FlatSpec with Matchers {
       PositiveEntityTestCase(
         labels = Seq("Vessel"),
         text = "cargo vessel"
+      ),
+      PositiveEntityTestCase(
+        labels = Seq("Vessel"),
+        text = "SS Bandirma"
+      ),
+      PositiveEntityTestCase(
+        labels = Seq("Vessel"),
+        text = "MV Colombo Express"
+      ),
+      PositiveEntityTestCase(
+        labels = Seq("Vessel"),
+        text = "CMA CGM Thalassa"
+      ),
+      PositiveEntityTestCase(
+        labels = Seq("Vessel"),
+        text = "LNG Finima"
       )
     )
 
@@ -154,6 +170,36 @@ class TestEntities extends FlatSpec with Matchers {
       checkEntity(tc, results) should be (true)
     }  
   }
+
+
+  // it should "identify Concept mentions" in {
+
+  //   val testCases = Seq(
+  //     PositiveEntityTestCase(
+  //       labels = Seq("Vessel"),
+  //       text = "SS Bandirma"
+  //     ),
+  //     PositiveEntityTestCase(
+  //       labels = Seq("Vessel"),
+  //       text = "MV Colombo Express"
+  //     ),
+  //     PositiveEntityTestCase(
+  //       labels = Seq("Vessel"),
+  //       text = "CMA CGM Thalassa"
+  //     ),
+  //     PositiveEntityTestCase(
+  //       labels = Seq("Vessel"),
+  //       text = "LNG Finima"
+  //     )
+  //   )
+
+  //   testCases foreach { tc =>
+  //     val results = system.extract(tc.text)
+  //     results should not be empty
+  //     checkEntity(tc, results) should be (true)
+  //   }  
+  // }
+
 
   it should "not identify Cargo mentions" in {
 

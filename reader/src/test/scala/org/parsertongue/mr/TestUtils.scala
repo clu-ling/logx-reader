@@ -128,12 +128,18 @@ object TestUtils {
         checkLabels(pc.labels, mentionArg) &&
         mentionArg.text == pc.text
       }  
+    // case nc: NegativeArgTestCase =>
+    //   (! m.arguments.contains(nc.role)) &&
+    //   m.arguments(nc.role).forall{ mentionArg =>
+    //     (! checkLabels(nc.labels, mentionArg)) &&
+    //     mentionArg.text != nc.text   
+    //   } 
     case nc: NegativeArgTestCase =>
-      (! m.arguments.contains(nc.role)) &&
+      !( m.arguments.contains(nc.role) &&
       m.arguments(nc.role).forall{ mentionArg =>
-        (! checkLabels(nc.labels, mentionArg)) &&
-        mentionArg.text != nc.text   
-      }
+        checkLabels(nc.labels, mentionArg) &&
+        mentionArg.text == nc.text   
+      } )
   }
 
   def checkEvent(testCase: EventTestCase, mentions: Seq[Mention]): Boolean = {

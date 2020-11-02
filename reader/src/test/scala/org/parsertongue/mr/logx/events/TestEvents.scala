@@ -43,7 +43,27 @@ class TestEvents extends FlatSpec with Matchers {
               role = "destination",
               labels = Seq("Location"),
               text  = "Dubai"
-            )
+            )//,
+            // NegativeArgTestCase( // trying: negative argtestcase within positive event
+            //   role = "destination",
+            //   labels = Seq("Location"),
+            //   text  = "Tucson" // correct role and label, wrong text
+            // ),
+            // NegativeArgTestCase( // trying: negative argtestcase within positive event
+            //   role = "destination",
+            //   labels = Seq("Unit"), // wrong label only
+            //   text  = "Dubai"
+            // ),
+            // NegativeArgTestCase( // trying: negative argtestcase within positive event
+            //   role = "shipment", // wrong role
+            //   labels = Seq("Location"),
+            //   text  = "Dubai"
+            // ),
+            // NegativeArgTestCase( // trying: negative argtestcase within positive event
+            //   role = "destination",  //feeding correct everything; should fail
+            //   labels = Seq("Location"),
+            //   text  = "Dubai"
+            // )
           )
         ),
         PositiveEventTestCase(
@@ -285,6 +305,27 @@ class TestEvents extends FlatSpec with Matchers {
           //     text = "Scotland"
           //   )
           // )
+        ),
+        NegativeEventTestCase(
+          labels = Seq("CargoQuery", "QuantityQuery"),
+          text = "Some zebras are galloping to Scotland from Zimbabwe",
+          args = List( // this works -- ie passing in negargtestcase list, not just Nil as above
+             NegativeArgTestCase(
+              role = "need",
+              labels = Seq("QuantifiedCargo"),
+              text = "zebras"
+            ),
+            NegativeArgTestCase(
+              role = "constraints",
+              labels = Seq("OriginConstraint", "Constraint"),
+              text = "Zimbabwe"
+            ),
+            NegativeArgTestCase(
+              role = "constraints",
+              labels = Seq("DestinationConstraint", "Constraint"),
+              text = "Scotland"
+            )
+          )
         )
       )
       testCases foreach { tc =>
