@@ -103,7 +103,7 @@ object TestUtils {
   }
   
   def checkMention(testCase: MentionTestCase, mentions: Seq[Mention]): Boolean = {
-    val success = mentions.exists { m => testCase.check(m) }
+    val success = mentions.forall { m => testCase.check(m) } //changed from mentions.exists...
 
     // if (! success) {
     //   testCase match {

@@ -84,14 +84,14 @@ rules:
     type: token
     pattern: |
       @Concept? [lemma=/(?i)^(vessel|freighter|ship)$/ & tag=/^N/]
-      |
-      [word=/^(U?SS|MV|MS|CS|MCP|MSC)$/] [word=/^[A-Z][a-z]+$/] [word=/^[A-Z][a-z]+$/]?
-      |
-      [word=/^L(N|P)G$/] [word=/^Tanker$/]? [word=/^[A-Z][a-z]+$/] [word=/^[A-Z][a-z]+$/]?
-      |
-      [word=/^CMA$/] [word=/^CGM$/] [word=/^[A-Z][a-z]+$/] [word=/^[A-Z][a-z]+$/]?
-      |
-      [word=/^[A-Z][a-z]+$/] [word=/^Maersk$/]
+      # |
+      # [word=/^(U?SS|MV|MS|CS|MCP|MSC)$/] [word=/^[A-Z][a-z]+$/] [word=/^[A-Z][a-z]+$/]?
+      # |
+      # [word=/^L(N|P)G$/] [word=/^Tanker$/]? [word=/^[A-Z][a-z]+$/] [word=/^[A-Z][a-z]+$/]?
+      # |
+      # [word=/^CMA$/] [word=/^CGM$/] [word=/^[A-Z][a-z]+$/] [word=/^[A-Z][a-z]+$/]?
+      # |
+      # [word=/^[A-Z][a-z]+$/] [word=/^Maersk$/]
 
 
   - name: "quantified-cargo"

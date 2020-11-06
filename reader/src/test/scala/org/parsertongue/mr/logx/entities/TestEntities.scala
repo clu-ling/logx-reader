@@ -49,10 +49,6 @@ class TestEntities extends FlatSpec with Matchers {
         mentionSpan = PositiveMentionTextTestCase("from August 12, 2020 to August 19, 2020"),
         text = "from August 12, 2020 to August 19, 2020" 
       ),
-      // // EntityTestCase(
-      // //  labels = Seq(PositiveLabelTestCase("TimeExpression"), "IntervalTimeExpression"),
-      // //  text = "during the week of October 12"
-      // // ),
       MentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
@@ -156,10 +152,6 @@ class TestEntities extends FlatSpec with Matchers {
         mentionSpan = PositiveMentionTextTestCase("12-Jun-2021"),
         text = "12-Jun-2021" 
       ),
-      // // NegativeEntityTestCase(
-      // //   labels = Seq(PositiveLabelTestCase("TimeExpression"), "AfterTime"),
-      // //   text = "June 12 2100" //wrong behavior: this passes as tho postestcase. segregate in own "should not find mentions" block?
-      // // ),
       MentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
@@ -225,7 +217,7 @@ class TestEntities extends FlatSpec with Matchers {
   it should "not identify Cargo mentions" in {
 
     val testCases = Seq(
-      // MentionTestCase(
+      // MentionTestCase( // point: check behavior of positive tests in should-not-identify block
       //   labels = Seq(PositiveLabelTestCase("QuantifiedCargo")),
       //   mentionSpan = PositiveMentionTextTestCase("TEUs of ostrich feathers"),
       //   text = "TEUs of ostrich feathers"
@@ -235,6 +227,11 @@ class TestEntities extends FlatSpec with Matchers {
         mentionSpan = NegativeMentionTextTestCase("TUs of ostrich feathers"),
         text = "TUs of ostrich feathers"
       ),
+      // MentionTestCase( //point here; this test should fail; conditions for pos test to succeed.
+      //   labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
+      //   mentionSpan = NegativeMentionTextTestCase("TEUs of ostrich feathers"),
+      //   text = "TEUs of ostrich feathers" // this passes as 'TEUs' - should fail
+      // ),
       MentionTestCase(
         labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
         mentionSpan = NegativeMentionTextTestCase("of ostrich feathers"),
@@ -245,11 +242,21 @@ class TestEntities extends FlatSpec with Matchers {
       //   mentionSpan = PositiveMentionTextTestCase("Metric tons of preserved duck eggs"),
       //   text = "Metric tons of preserved duck eggs"
       // ),
-      MentionTestCase(
+      MentionTestCase( //this example: mentionSpan doesn't match text
         labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
-        mentionSpan = NegativeMentionTextTestCase("TEUs of ostrich feathers"), //this should cause fail
+        mentionSpan = NegativeMentionTextTestCase("TEUs of ostrich feathers"), 
         text = "of ostrich feathers"
       ),
+      MentionTestCase( //point of this example: what happens if passing pos test for different mention?
+        labels = Seq(PositiveLabelTestCase("Vessel")),
+        mentionSpan = PositiveMentionTextTestCase("LNG Finima"),
+        text = "LNG Finima"
+      ) //commented out trying to find failing case
+      // MentionTestCase(
+      //   labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
+      //   mentionSpan = NegativeMentionTextTestCase("despite metric tons of preserved duck eggs"),
+      //   text = "despite metric tons of preserved duck eggs"
+      // ) //now rerunning with this knocked out
     )
 
     testCases foreach { tc =>
@@ -289,33 +296,7 @@ class TestEntities extends FlatSpec with Matchers {
   // // }
 
 
-  // it should "not identify Cargo mentions" in {
-
-  //   val testCases = Seq(
-  //     NegativeEntityTestCase(
-  //       labels = Seq("QuantifiedCargo"),
-  //       text = "of ostrich feathers"
-  //     ),
-  //     NegativeEntityTestCase(
-  //       labels = Seq("QuantifiedCargo"),
-  //       text = "TUs of ostrich feathers"
-  //     ),
-  //     // NegativeEntityTestCase(
-  //     //   labels = Seq("Vessel"),
-  //     //   text = "week"
-  //     // ),
-  //     NegativeEntityTestCase(
-  //       labels = Seq("QuantifiedCargo"),
-  //       text = "despite metric tons of preserved duck eggs"
-  //     )
-  //   )
-
-  //   testCases foreach { tc =>
-  //     val results = system.extract(tc.text)
-  //     results should not be empty
-  //     checkEntity(tc, results) should be (true)
-  //   }  
-  // }
+  
 }
 
 //     val text2 = "What is the probability that Hamburgers and Mustard will be in the same container in a port in Germany?"
