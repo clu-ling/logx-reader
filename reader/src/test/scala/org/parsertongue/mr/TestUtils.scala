@@ -14,15 +14,12 @@ object TestUtils {
   val system: MachineReadingSystem = MachineReadingSystem()
 
   //val proc: Processor = new ProxiedProcessor()
-
- 
-  case class MentionTestCase(
-    labels: Seq[LabelTestCase], 
-    text: String,
-    mentionSpan: MentionTextTestCase, 
-    args: List[ArgTestCase] = Nil, 
-    foundBy: Option[String] = None
-  ) {
+  trait MentionTestCase {
+    val labels: Seq[LabelTestCase] 
+    val text: String
+    val mentionSpan: TextTestCase 
+    val args: List[ArgTestCase] 
+    val foundBy: Option[String]
     def check(m: Mention): Boolean = {
       // check mentionSpan
       mentionSpan.check(m) &&
@@ -34,11 +31,27 @@ object TestUtils {
       args.forall { arg => arg.check(m) }
     }
   }
+ 
+  case class GeneralMentionTestCase(
+    labels: Seq[LabelTestCase], 
+    text: String,
+    mentionSpan: TextTestCase, 
+    args: List[ArgTestCase] = Nil, 
+    foundBy: Option[String] = None
+  ) extends MentionTestCase
+
+  case class NegativeMentionTestCase(
+    labels: Seq[NegativeLabelTestCase], 
+    text: String,
+    mentionSpan: NegativeTextTestCase, 
+    args: List[ArgTestCase] = Nil, 
+    foundBy: Option[String] = None
+  ) extends MentionTestCase
 
   case class ArgTestCase(
     role: RoleTestCase, 
     labels: Seq[LabelTestCase], 
-    text: MentionTextTestCase
+    text: TextTestCase
   ) {
     def check(parent: Mention): Boolean = {
       role.check(parent) && 
@@ -51,20 +64,20 @@ object TestUtils {
     } 
   }
 
-  trait MentionTextTestCase {
+  trait TextTestCase {
     val text: String
     def check(m: Mention): Boolean
   }
 
-  case class PositiveMentionTextTestCase(
+  case class PositiveTextTestCase(
     text: String
-  ) extends MentionTextTestCase {
+  ) extends TextTestCase {
     def check(m: Mention): Boolean = m.text == text
   }
 
-  case class NegativeMentionTextTestCase(
+  case class NegativeTextTestCase(
     text: String
-  ) extends MentionTextTestCase {
+  ) extends TextTestCase {
     def check(m: Mention): Boolean = m.text != text
   }
 
@@ -103,7 +116,12 @@ object TestUtils {
   }
   
   def checkMention(testCase: MentionTestCase, mentions: Seq[Mention]): Boolean = {
-    val success = mentions.forall { m => testCase.check(m) } //changed from mentions.exists...
+    val success = testCase match {
+      case nm: NegativeMentionTestCase =>
+        mentions.forall { m => nm.check(m) }
+      case generic =>
+        mentions.exists { m => generic.check(m) }
+    }
 
     // if (! success) {
     //   testCase match {

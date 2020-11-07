@@ -10,162 +10,162 @@ class TestEntities extends FlatSpec with Matchers {
   "LogX MachineReadingSystem" should "identify TimeExpression mentions" in {
 
     val testCases = Seq(
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression")
         ),
-        mentionSpan = PositiveMentionTextTestCase("August 24th 2020"),
+        mentionSpan = PositiveTextTestCase("August 24th 2020"),
         text = "August 24th 2020"
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"),
           PositiveLabelTestCase("OnTime")
         ),
-        mentionSpan = PositiveMentionTextTestCase("on August 24th 2020"),
+        mentionSpan = PositiveTextTestCase("on August 24th 2020"),
         text = "on August 24th 2020" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"),
           PositiveLabelTestCase("AfterTime")
         ),
-        mentionSpan = PositiveMentionTextTestCase("after August 24, 2020"),
+        mentionSpan = PositiveTextTestCase("after August 24, 2020"),
         text = "after August 24, 2020" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("BeforeTime")
         ),
-        mentionSpan = PositiveMentionTextTestCase("by August 24th 2020"),
+        mentionSpan = PositiveTextTestCase("by August 24th 2020"),
         text = "by August 24th 2020" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("IntervalTime")
         ),
-        mentionSpan = PositiveMentionTextTestCase("from August 12, 2020 to August 19, 2020"),
+        mentionSpan = PositiveTextTestCase("from August 12, 2020 to August 19, 2020"),
         text = "from August 12, 2020 to August 19, 2020" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("IntervalTime")
         ),
-        mentionSpan = PositiveMentionTextTestCase("during the week"),
+        mentionSpan = PositiveTextTestCase("during the week"),
         text = "during the week"
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("IntervalTime")
         ),
-        mentionSpan = PositiveMentionTextTestCase("throughout 1991"),
+        mentionSpan = PositiveTextTestCase("throughout 1991"),
         text = "throughout 1991"
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("TimeUnit")
         ),
-        mentionSpan = PositiveMentionTextTestCase("the next few days"),
+        mentionSpan = PositiveTextTestCase("the next few days"),
         text = "the next few days" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("Date")
         ),
-        mentionSpan = PositiveMentionTextTestCase("August 2020"),
+        mentionSpan = PositiveTextTestCase("August 2020"),
         text = "August 2020" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(PositiveLabelTestCase("TimeExpression"), 
         PositiveLabelTestCase("Date")
         ),
-        mentionSpan = PositiveMentionTextTestCase("August 12 2020"),
+        mentionSpan = PositiveTextTestCase("August 12 2020"),
         text = "August 12 2020" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("Date")
         ),
-        mentionSpan = PositiveMentionTextTestCase("12/02/1986"),
+        mentionSpan = PositiveTextTestCase("12/02/1986"),
         text = "12/02/1986" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("Date")
         ),
-        mentionSpan = PositiveMentionTextTestCase("05/1986"),
+        mentionSpan = PositiveTextTestCase("05/1986"),
         text = "05/1986" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("Date")
         ),
-        mentionSpan = PositiveMentionTextTestCase("05/86"),
+        mentionSpan = PositiveTextTestCase("05/86"),
         text = "05/86" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("Date")
         ),
-        mentionSpan = PositiveMentionTextTestCase("1986-12-21"),
+        mentionSpan = PositiveTextTestCase("1986-12-21"),
         text = "1986-12-21" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("Date")
         ),
-        mentionSpan = PositiveMentionTextTestCase("2012 11 30"),
+        mentionSpan = PositiveTextTestCase("2012 11 30"),
         text = "2012 11 30" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("Date")
         ),
-        mentionSpan = PositiveMentionTextTestCase("12 JUN 2021"),
+        mentionSpan = PositiveTextTestCase("12 JUN 2021"),
         text = "12 JUN 2021" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("Date")
         ),
-        mentionSpan = PositiveMentionTextTestCase("12 Jun 2021"),
+        mentionSpan = PositiveTextTestCase("12 Jun 2021"),
         text = "12 Jun 2021" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("Date")
         ),
-        mentionSpan = PositiveMentionTextTestCase("12-Jun-2021"),
+        mentionSpan = PositiveTextTestCase("12-Jun-2021"),
         text = "12-Jun-2021" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"), 
           PositiveLabelTestCase("IntervalTime")
         ),
-        mentionSpan = PositiveMentionTextTestCase("During the week of October 12"),
+        mentionSpan = PositiveTextTestCase("During the week of October 12"),
         text = "During the week of October 12" 
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(
           PositiveLabelTestCase("TimeExpression"),
           PositiveLabelTestCase("TimeUnit")
         ),
-        mentionSpan = PositiveMentionTextTestCase("The week ending October 12th"),
+        mentionSpan = PositiveTextTestCase("The week ending October 12th"),
         text = "The week ending October 12th" 
       )
     )
@@ -180,29 +180,29 @@ class TestEntities extends FlatSpec with Matchers {
   it should "identify Vessel mentions" in {
 
     val testCases = Seq(
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(PositiveLabelTestCase("Vessel")),
-        mentionSpan = PositiveMentionTextTestCase("cargo vessel"),
+        mentionSpan = PositiveTextTestCase("cargo vessel"),
         text = "cargo vessel"
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(PositiveLabelTestCase("Vessel")),
-        mentionSpan = PositiveMentionTextTestCase("SS Bandirma"),
+        mentionSpan = PositiveTextTestCase("SS Bandirma"),
         text = "SS Bandirma"
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(PositiveLabelTestCase("Vessel")),
-        mentionSpan = PositiveMentionTextTestCase("MV Colombo Express"),
+        mentionSpan = PositiveTextTestCase("MV Colombo Express"),
         text = "MV Colombo Express"
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(PositiveLabelTestCase("Vessel")),
-        mentionSpan = PositiveMentionTextTestCase("CMA CGM Thalassa"),
+        mentionSpan = PositiveTextTestCase("CMA CGM Thalassa"),
         text = "CMA CGM Thalassa"
       ),
-      MentionTestCase(
+      GeneralMentionTestCase(
         labels = Seq(PositiveLabelTestCase("Vessel")),
-        mentionSpan = PositiveMentionTextTestCase("LNG Finima"),
+        mentionSpan = PositiveTextTestCase("LNG Finima"),
         text = "LNG Finima"
       )
     )
@@ -217,44 +217,44 @@ class TestEntities extends FlatSpec with Matchers {
   it should "not identify Cargo mentions" in {
 
     val testCases = Seq(
-      // MentionTestCase( // point: check behavior of positive tests in should-not-identify block
+      // GeneralMentionTestCase( // point: check behavior of positive tests in should-not-identify block
       //   labels = Seq(PositiveLabelTestCase("QuantifiedCargo")),
-      //   mentionSpan = PositiveMentionTextTestCase("TEUs of ostrich feathers"),
+      //   mentionSpan = PositiveTextTestCase("TEUs of ostrich feathers"),
       //   text = "TEUs of ostrich feathers"
       // ),
-      MentionTestCase(
+      NegativeMentionTestCase(
         labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
-        mentionSpan = NegativeMentionTextTestCase("TUs of ostrich feathers"),
+        mentionSpan = NegativeTextTestCase("TUs of ostrich feathers"),
         text = "TUs of ostrich feathers"
       ),
-      // MentionTestCase( //point here; this test should fail; conditions for pos test to succeed.
+      // NegativeMentionTestCase( //point here; this test should fail; conditions for pos test to succeed.
       //   labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
-      //   mentionSpan = NegativeMentionTextTestCase("TEUs of ostrich feathers"),
+      //   mentionSpan = NegativeTextTestCase("TEUs of ostrich feathers"),
       //   text = "TEUs of ostrich feathers" // this passes as 'TEUs' - should fail
       // ),
-      MentionTestCase(
-        labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
-        mentionSpan = NegativeMentionTextTestCase("of ostrich feathers"),
+      NegativeMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("QuantifiedCargo")), //straightforward neg test
+        mentionSpan = NegativeTextTestCase("of ostrich feathers"),
         text = "of ostrich feathers"
       ),
-      // MentionTestCase(
+      // GeneralMentionTestCase(
       //   labels = Seq(PositiveLabelTestCase("QuantifiedCargo")),
-      //   mentionSpan = PositiveMentionTextTestCase("Metric tons of preserved duck eggs"),
+      //   mentionSpan = PositiveTextTestCase("Metric tons of preserved duck eggs"),
       //   text = "Metric tons of preserved duck eggs"
       // ),
-      MentionTestCase( //this example: mentionSpan doesn't match text
+      GeneralMentionTestCase( //this example: mentionSpan doesn't match text
         labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
-        mentionSpan = NegativeMentionTextTestCase("TEUs of ostrich feathers"), 
+        mentionSpan = NegativeTextTestCase("TEUs of ostrich feathers"), 
         text = "of ostrich feathers"
       ),
-      MentionTestCase( //point of this example: what happens if passing pos test for different mention?
+      GeneralMentionTestCase( //point of this example: what happens if passing pos test for different mention?
         labels = Seq(PositiveLabelTestCase("Vessel")),
-        mentionSpan = PositiveMentionTextTestCase("LNG Finima"),
+        mentionSpan = PositiveTextTestCase("LNG Finima"),
         text = "LNG Finima"
       ) //commented out trying to find failing case
-      // MentionTestCase(
+      // GeneralMentionTestCase(
       //   labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
-      //   mentionSpan = NegativeMentionTextTestCase("despite metric tons of preserved duck eggs"),
+      //   mentionSpan = NegativeTextTestCase("despite metric tons of preserved duck eggs"),
       //   text = "despite metric tons of preserved duck eggs"
       // ) //now rerunning with this knocked out
     )
@@ -270,19 +270,19 @@ class TestEntities extends FlatSpec with Matchers {
   // // it should "identify Concept mentions" in {
 
   // //   val testCases = Seq(
-  // //     MentionTestCase(
+  // //     GeneralMentionTestCase(
   // //       labels = Seq("Vessel"),
   // //       text = "SS Bandirma"
   // //     ),
-  // //     MentionTestCase(
+  // //     GeneralMentionTestCase(
   // //       labels = Seq("Vessel"),
   // //       text = "MV Colombo Express"
   // //     ),
-  // //     MentionTestCase(
+  // //     GeneralMentionTestCase(
   // //       labels = Seq("Vessel"),
   // //       text = "CMA CGM Thalassa"
   // //     ),
-  // //     MentionTestCase(
+  // //     GeneralMentionTestCase(
   // //       labels = Seq("Vessel"),
   // //       text = "LNG Finima"
   // //     )
