@@ -5,52 +5,54 @@ import org.scalatest.{ FlatSpec, Matchers }
 
 
 class TestEvents extends FlatSpec with Matchers {
-  "PlaceHolder" should "return true" in {
-    true should be (true)
-  }
-    // "MachineReadingSystem" should "find Transport events" in {
+  // "PlaceHolder" should "return true" in {
+  //   true should be (true)
+  // }
+    "MachineReadingSystem" should "find Transport events" in {
 
-    //   val testCases = Seq(
-    //     PositiveEventTestCase(
-    //       labels = Seq("Transport"), 
-    //       text = "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?", 
-    //       args = List(
-    //         PositiveArgTestCase(
-    //           role = "shipment", 
-    //           labels = Seq("Cargo"),
-    //           text = "frozen fish"
-    //         ),
-    //         PositiveArgTestCase(
-    //           role = "destination",
-    //           labels = Seq("Location"),
-    //           text  = "Dubai"
-    //         ),
-    //         PositiveArgTestCase(
-    //           role = "time",
-    //           labels = Seq("TimeExpression", "OnTime"),
-    //           text = "on August 24th 2020"
-    //         )
-    //       )
-    //     ),
-    //     PositiveEventTestCase(
-    //       labels = Seq("Transport"),
-    //       text = "How many F16 engines are heading to Dubai?",
-    //       args = List(
-    //         PositiveArgTestCase(
-    //           role = "shipment", 
-    //           labels = Seq("Cargo"),
-    //           text = "F16 engines"
-    //         ),
-    //         PositiveArgTestCase(
-    //           role = "destination",
-    //           labels = Seq("Location"),
-    //           text  = "Dubai"
-    //         ),
-    //         NegativeArgTestCase(
-    //           role = "shipment", 
-    //           labels = Seq("Cargo"),
-    //           text = "F16"
-    //         )//,
+      val testCases = Seq(
+        GeneralMentionTestCase(
+          labels = Seq(PositiveLabelTestCase("Transport")),
+          mentionSpan = PositiveTextTestCase("frozen fish heading to Dubai on August 24th 2020"), //note: trimmed
+          text = "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?",
+          args = List(
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("shipment"), 
+              labels = Seq(PositiveLabelTestCase("Cargo")),
+              text = PositiveTextTestCase("frozen fish")
+            ),
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("destination"),
+              labels = Seq(PositiveLabelTestCase("Location")),
+              text  = PositiveTextTestCase("Dubai")
+            ),
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("time"),
+              labels = Seq(PositiveLabelTestCase("TimeExpression"), PositiveLabelTestCase("OnTime")),
+              text = PositiveTextTestCase("on August 24th 2020")
+            )
+          )
+        ),
+        GeneralMentionTestCase(
+          labels = Seq(PositiveLabelTestCase("Transport")),
+          mentionSpan = PositiveTextTestCase("F16 engines are heading to Dubai"),
+          text = "How many F16 engines are heading to Dubai?",
+          args = List(
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("shipment"), 
+              labels = Seq(PositiveLabelTestCase("Cargo")),
+              text = PositiveTextTestCase("F16 engines")
+            ),
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("destination"),
+              labels = Seq(PositiveLabelTestCase("Location")),
+              text  = PositiveTextTestCase("Dubai")
+            ),
+            // NegativeArgTestCase(
+            //   role = PositiveRoleTestCase("shipment"), 
+            //   labels = Seq(PositiveLabelTestCase("Cargo")),
+            //   text = PositiveTextTestCase("F16")
+            // ),
     //         // NegativeArgTestCase( // trying: negative argtestcase within positive event
     //         //   role = "destination",
     //         //   labels = Seq("Location"),
@@ -71,8 +73,8 @@ class TestEvents extends FlatSpec with Matchers {
     //         //   labels = Seq("Location"),
     //         //   text  = "Dubai"
     //         // )
-    //       )
-    //     ),
+          )
+        ),
     //     PositiveEventTestCase(
     //       labels = Seq("Transport"),
     //       text = "How many TEUs of DoD Frozen Meat are heading to Hamburg?",
@@ -105,17 +107,17 @@ class TestEvents extends FlatSpec with Matchers {
     //         )
     //       )
     //     )
-    //   )
+      )
 
     //   // TODO: load AnnotatedDocument JSON from resources.
     //   //val doc: AnnotatedDocument
 
-    //   testCases foreach { tc =>
-    //     val results = system.extract(tc.text)
-    //     results should not be empty
-    //     checkEvent(tc, results) should be (true)
-    //   }
-    // }
+      testCases foreach { tc =>
+        val results = system.extract(tc.text)
+        results should not be empty
+        checkMention(tc, results) should be (true)
+      }
+    }
     
     // it should "find Query events" in {
 

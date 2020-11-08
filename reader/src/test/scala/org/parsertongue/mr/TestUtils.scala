@@ -17,7 +17,7 @@ object TestUtils {
   trait MentionTestCase {
     val labels: Seq[LabelTestCase] 
     val text: String
-    val mentionSpan: TextTestCase 
+    val mentionSpan: TextTestCase
     val args: List[ArgTestCase] 
     val foundBy: Option[String]
     def check(m: Mention): Boolean = {
@@ -35,7 +35,7 @@ object TestUtils {
   case class GeneralMentionTestCase(
     labels: Seq[LabelTestCase], 
     text: String,
-    mentionSpan: TextTestCase, 
+    mentionSpan: TextTestCase,
     args: List[ArgTestCase] = Nil, 
     foundBy: Option[String] = None
   ) extends MentionTestCase
@@ -43,16 +43,23 @@ object TestUtils {
   case class NegativeMentionTestCase(
     labels: Seq[NegativeLabelTestCase], 
     text: String,
-    mentionSpan: NegativeTextTestCase, 
+    mentionSpan: NegativeTextTestCase,
     args: List[ArgTestCase] = Nil, 
     foundBy: Option[String] = None
   ) extends MentionTestCase
 
-  case class ArgTestCase(
+  trait ArgTestCase {
+    val role: RoleTestCase
+    val labels: Seq[LabelTestCase]
+    val text: TextTestCase
+    def check(m: Mention): Boolean
+  }
+
+  case class PositiveArgTestCase(
     role: RoleTestCase, 
     labels: Seq[LabelTestCase], 
     text: TextTestCase
-  ) {
+  ) extends ArgTestCase {
     def check(parent: Mention): Boolean = {
       role.check(parent) && 
       parent.arguments.getOrElse(role.role, Nil).forall{ arg =>
@@ -61,6 +68,22 @@ object TestUtils {
         //check text
         text.check(arg)
       } 
+    } 
+  }
+
+  case class NegativeArgTestCase(
+    role: RoleTestCase, 
+    labels: Seq[LabelTestCase], 
+    text: TextTestCase
+  ) extends ArgTestCase {
+    def check(parent: Mention): Boolean = {
+      ! (role.check(parent) && 
+      parent.arguments.getOrElse(role.role, Nil).forall{ arg =>
+        //check labels
+        labels.forall { lbl => lbl.check(arg) } && 
+        //check text
+        text.check(arg) 
+      } )
     } 
   }
 
@@ -119,18 +142,18 @@ object TestUtils {
     val success = testCase match {
       case nm: NegativeMentionTestCase =>
         mentions.forall { m => nm.check(m) }
-      case generic =>
-        mentions.exists { m => generic.check(m) }
+      case gm: GeneralMentionTestCase =>
+        mentions.exists { m => gm.check(m) }
     }
 
     // if (! success) {
     //   testCase match {
-    //     case pc: PositiveEventTestCase =>
-    //       println(s"${Console.RED} PositiveTestCase failed for '${pc.text}'${Console.RESET}")
-    //       if ( ! mentions.exists{ m => pc.foundBy.getOrElse(m.foundBy) == m.foundBy } ) {
-    //         println(s"\t${Console.RED} No Mention found by '${pc.foundBy.get}'${Console.RESET}")
+    //     case gm: GeneralMentionTestCase =>
+    //       println(s"${Console.RED} Positive Mention test failed for '${gm.text}'${Console.RESET}")
+    //       if ( ! mentions.exists{ m => gm.foundBy.getOrElse(m.foundBy) == m.foundBy } ) {
+    //         println(s"\t${Console.RED} No Mention found by '${gm.foundBy.get}'${Console.RESET}")
     //       }
-    //       if (! mentions.exists{ m => checkLabels(pc.labels, m) } ) {
+    //       if (! mentions.exists{ m => PositiveLabelTestCase(pc.labels, m) } ) {
     //         println(s"\t${Console.RED} Labels (${pc.labels.mkString(",")}) missing${Console.RESET}")
     //       }
     //       pc.args.foreach{ tcArg => 
