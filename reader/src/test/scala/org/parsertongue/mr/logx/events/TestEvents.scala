@@ -48,61 +48,68 @@ class TestEvents extends FlatSpec with Matchers {
               labels = Seq(PositiveLabelTestCase("Location")),
               text  = PositiveTextTestCase("Dubai")
             ),
-            NegativeArgTestCase( //just added this; all above good. this passes; not sure it should.
+            NegativeArgTestCase( //This behaves as desired. passes because pos subtest fails
               role = PositiveRoleTestCase("shipment"), 
               labels = Seq(PositiveLabelTestCase("Cargo")),
-              text = PositiveTextTestCase("F16")
+              text = PositiveTextTestCase("F16") //note, missing ' engines'
+            ),
+            NegativeArgTestCase( //This behaves as desired. passes because neg subtest fails
+              role = PositiveRoleTestCase("shipment"), 
+              labels = Seq(PositiveLabelTestCase("Cargo")),
+              text = NegativeTextTestCase("F16 engines") //right text, makes false.
+            ),
+            NegativeArgTestCase( // trying: negative argtestcase within positive event
+              role = PositiveRoleTestCase("destination"),
+              labels = Seq(PositiveLabelTestCase("Location")),
+              text  = PositiveTextTestCase("Tucson") // correct role and label, wrong text
             ),
     //         // NegativeArgTestCase( // trying: negative argtestcase within positive event
-    //         //   role = "destination",
-    //         //   labels = Seq("Location"),
-    //         //   text  = "Tucson" // correct role and label, wrong text
-    //         // ),
-    //         // NegativeArgTestCase( // trying: negative argtestcase within positive event
-    //         //   role = "destination",
-    //         //   labels = Seq("Unit"), // wrong label only
+    //         //   role = PositiveRoleTestCase("destination"),
+    //         //   labels = Seq(PositiveLabelTestCase("Unit")), // wrong label only
     //         //   text  = "Dubai"
     //         // ),
     //         // NegativeArgTestCase( // trying: negative argtestcase within positive event
-    //         //   role = "shipment", // wrong role
-    //         //   labels = Seq("Location"),
+    //         //   role = PositiveRoleTestCase("shipment"), // wrong role
+    //         //   labels = Seq(PositiveLabelTestCase("Location")),
     //         //   text  = "Dubai"
     //         // ),
     //         // NegativeArgTestCase( // trying: negative argtestcase within positive event
-    //         //   role = "destination",  //feeding correct everything; should fail
-    //         //   labels = Seq("Location"),
+    //         //   role = PositiveRoleTestCase("destination"),  //feeding correct everything; should fail
+    //         //   labels = Seq(PositiveLabelTestCase("Location")),
     //         //   text  = "Dubai"
     //         // )
           )
         ),
-    //     PositiveEventTestCase(
-    //       labels = Seq("Transport"),
-    //       text = "How many TEUs of DoD Frozen Meat are heading to Hamburg?",
-    //       args = List(
-    //         PositiveArgTestCase(
-    //           role = "shipment", 
-    //           labels = Seq("QuantifiedCargo"),
-    //           text = "TEUs of DoD Frozen Meat"
-    //         ),
-    //         PositiveArgTestCase(
-    //           role = "destination",
-    //           labels = Seq("Location"),
-    //           text  = "Hamburg"
-    //         )
-    //       )
-    //     ),
-    //     PositiveEventTestCase(
-    //       labels = Seq("Transport"),
+        GeneralMentionTestCase(
+          labels = Seq(PositiveLabelTestCase("Transport")),
+          mentionSpan = PositiveTextTestCase("TEUs of DoD Frozen Meat are heading to Hamburg"),
+          text = "How many TEUs of DoD Frozen Meat are heading to Hamburg?",
+          args = List(
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("shipment"), 
+              labels = Seq(PositiveLabelTestCase("QuantifiedCargo")),
+              text = PositiveTextTestCase("TEUs of DoD Frozen Meat")
+            ),
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("destination"),
+              labels = Seq(PositiveLabelTestCase("Location")),
+              text  = PositiveTextTestCase("Hamburg")
+            )
+          )
+        ),
+    //     GeneralMentionTestCase(
+    //       labels = Seq(PositiveLabelTestCase("Transport")),
     //       text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
+
     //       args = List(
     //         PositiveArgTestCase(
-    //           role = "time",
-    //           labels = Seq("BeforeTime", "TimeExpression"),
+    //           role = PositiveRoleTestCase("time"),
+    //           labels = Seq(PositiveLabelTestCase("BeforeTime", PositiveLabelTestCase("TimeExpression")),
     //           text = "before September 21st 2020"
     //         ),
     //         PositiveArgTestCase(
-    //           role = "time",
-    //           labels = Seq("AfterTime", "TimeExpression"),
+    //           role = PositiveRoleTestCase("time"),
+    //           labels = Seq(PositiveLabelTestCase("AfterTime", PositiveLabelTestCase("TimeExpression")),
     //           text = "after September 28th 2020"
     //         )
     //       )
@@ -143,16 +150,26 @@ class TestEvents extends FlatSpec with Matchers {
             //   labels = Seq(PositiveLabelTestCase("ProximityConstraint"), PositiveLabelTestCase("Constraint")),
             //   text = PositiveTextTestCase("near Hamburg")
             // ),
-          //   PositiveArgTestCase(
-          //     role = PositiveRoleTestCase("constraints"),
-          //     labels = Seq(PositiveLabelTestCase("QuantityConstraint"), PositiveLabelTestCase("Constraint")),
-          //     text = PositiveTextTestCase("enough excess cargo capacity")
-          //   ),
-          //   PositiveArgTestCase(
-          //     role = PositiveRoleTestCase("constraints"),
-          //     labels = Seq(PositiveLabelTestCase("TimeConstraint"), PositiveLabelTestCase("BeforeTime")),
-          //     text = PositiveTextTestCase("before last week")
-          //   )
+            // PositiveArgTestCase( //this fails
+            //   role = PositiveRoleTestCase("constraints"),
+            //   labels = Seq(PositiveLabelTestCase("QuantityConstraint"), PositiveLabelTestCase("Constraint")),
+            //   text = PositiveTextTestCase("enough excess cargo capacity")
+            // ),
+            // PositiveArgTestCase( //still fails
+            //   role = PositiveRoleTestCase("constraints"),
+            //   labels = Seq(PositiveLabelTestCase("QuantityConstraint"), PositiveLabelTestCase("Constraint")),
+            //   text = PositiveTextTestCase("cargo capacity") //Qc-within-QC conflict causes above to fail?
+            // ),
+            // PositiveArgTestCase( //still fails
+            //   role = PositiveRoleTestCase("constraints"),
+            //   labels = Seq(PositiveLabelTestCase("QuantityConstraint"), PositiveLabelTestCase("Constraint")),
+            //   text = PositiveTextTestCase("enough excess") //Qc-within-QC conflict causes above to fail?
+            // ),
+            // PositiveArgTestCase( //fails
+            //   role = PositiveRoleTestCase("constraints"),
+            //   labels = Seq(PositiveLabelTestCase("TimeConstraint"), PositiveLabelTestCase("BeforeTime")),
+            //   text = PositiveTextTestCase("before last week")
+            // )
           )
         ),
         GeneralMentionTestCase(
@@ -187,105 +204,106 @@ class TestEvents extends FlatSpec with Matchers {
           mentionSpan = PositiveTextTestCase("What are alternative ports with enough cargo capacity to handle shipments redirected from Hamburg"),
           text = "What are alternative ports with enough cargo capacity to handle shipments redirected from Hamburg",
           args = List(
-            // PositiveArgTestCase(
-            //   role = PositiveRoleTestCase("constraints"),
-            //   labels = Seq(PositiveLabelTestCase("OriginConstraint"), PositiveLabelTestCase("Constraint")),
-            //   text = PositiveTextTestCase("Hamburg")
-            // ),
-            // PositiveArgTestCase(
-            //   role = PositiveRoleTestCase("constraints"),
-            //   labels = Seq(PositiveLabelTestCase("QuantityConstraint"), PositiveLabelTestCase("Constraint")),
-            //   text = PositiveTextTestCase("enough cargo capacity")
-            // ),
-    //         PositiveArgTestCase(
-    //           role = "need",
-    //           labels = Seq("Concept"),
-    //           text = "ports"
-    //         )
+            PositiveArgTestCase( //fails
+              role = PositiveRoleTestCase("constraints"),
+              labels = Seq(PositiveLabelTestCase("OriginConstraint"), PositiveLabelTestCase("Constraint")),
+              text = PositiveTextTestCase("Hamburg") 
+            ),
+            PositiveArgTestCase( //fails
+              role = PositiveRoleTestCase("constraints"),
+              labels = Seq(PositiveLabelTestCase("QuantityConstraint"), PositiveLabelTestCase("Constraint")),
+              text = PositiveTextTestCase("enough cargo capacity")
+            ),
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("need"),
+              labels = Seq(PositiveLabelTestCase("Concept")),
+              text = PositiveTextTestCase("ports")
+            )
           )
         ),
-    //     PositiveEventTestCase(
-    //       labels = Seq("CargoQuery", "QuantityQuery"),
-    //       text = "How many TEUs of zebras are heading to Scotland from Zimbabwe?",
-    //       args = List(
+        GeneralMentionTestCase(
+          labels = Seq(PositiveLabelTestCase("CargoQuery"), PositiveLabelTestCase("QuantityQuery")),
+          text = "How many TEUs of zebras are heading to Scotland from Zimbabwe?",
+          mentionSpan = PositiveTextTestCase("How many TEUs of zebras are heading to Scotland from Zimbabwe"),
+          args = List(
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("need"),
+              labels = Seq(PositiveLabelTestCase("QuantifiedCargo")),
+              text = PositiveTextTestCase("TEUs of zebras")
+            ),
     //         PositiveArgTestCase(
-    //           role = "need",
-    //           labels = Seq("QuantifiedCargo"),
-    //           text = "TEUs of zebras"
-    //         ),
-    //         PositiveArgTestCase(
-    //           role = "constraints",
-    //           labels = Seq("OriginConstraint", "Constraint"),
+    //           role = PositiveRoleTestCase("constraints"),
+    //           labels = Seq(PositiveLabelTestCase("OriginConstraint", PositiveLabelTestCase("Constraint")),
     //           text = "Zimbabwe"
     //         ),
     //         PositiveArgTestCase(
-    //           role = "constraints",
-    //           labels = Seq("DestinationConstraint", "Constraint"),
+    //           role = PositiveRoleTestCase("constraints"),
+    //           labels = Seq(PositiveLabelTestCase("DestinationConstraint", PositiveLabelTestCase("Constraint")),
     //           text = "Scotland"
     //         )
-    //       )
-    //     ),
+          )
+        ),
 
-    //     PositiveEventTestCase(
+    //     GeneralMentionTestCase(
     //       text = "How much frozen meat is heading to Hamburg?",
-    //       labels = Seq("CargoQuery", "QuantityQuery"),
+    //       labels = Seq(PositiveLabelTestCase("CargoQuery", PositiveLabelTestCase("QuantityQuery")),
     //       args = List(
     //         PositiveArgTestCase(
-    //           role = "need",
-    //           labels = Seq("Cargo"),
+    //           role = PositiveRoleTestCase("need"),
+    //           labels = Seq(PositiveLabelTestCase("Cargo")),
     //           text = "frozen meat"
     //         ),
     //         PositiveArgTestCase(
-    //           role = "constraints",
-    //           labels = Seq("DestinationConstraint", "Constraint"),
+    //           role = PositiveRoleTestCase("constraints"),
+    //           labels = Seq(PositiveLabelTestCase("DestinationConstraint", PositiveLabelTestCase("Constraint")),
     //           text = "Hamburg"
     //         )
     //       )
     //     ),
-    //     PositiveEventTestCase(
+    //     GeneralMentionTestCase(
     //       text = "How many shipments of frozen meat are heading to Hamburg?",
-    //       labels = Seq("CargoQuery", "QuantityQuery"),
+    //       labels = Seq(PositiveLabelTestCase("CargoQuery", PositiveLabelTestCase("QuantityQuery")),
     //       args = List(
     //         PositiveArgTestCase(
-    //           role = "need",
-    //           labels = Seq("ShipmentOf", "Cargo"),
+    //           role = PositiveRoleTestCase("need"),
+    //           labels = Seq(PositiveLabelTestCase("ShipmentOf", PositiveLabelTestCase("Cargo")),
     //           text = "shipments of frozen meat"
     //         ),
     //         PositiveArgTestCase(
-    //           role = "constraints",
-    //           labels = Seq("DestinationConstraint", "Constraint"),
+    //           role = PositiveRoleTestCase("constraints"),
+    //           labels = Seq(PositiveLabelTestCase("DestinationConstraint", PositiveLabelTestCase("Constraint")),
     //           text = "Hamburg"
     //         )
     //       )
     //     ),
-    //     PositiveEventTestCase(
+    //     GeneralMentionTestCase(
     //       text = "Which vessel left on Thursday?",
-    //       labels = Seq("VesselQuery", "Query"),
+    //       labels = Seq(PositiveLabelTestCase("VesselQuery", PositiveLabelTestCase("Query")),
     //       args = List(
     //         PositiveArgTestCase(
-    //           role = "need",
-    //           labels = Seq("Vessel"),
+    //           role = PositiveRoleTestCase("need"),
+    //           labels = Seq(PositiveLabelTestCase("Vessel")),
     //           text = "vessel"
     //         ),
     //         PositiveArgTestCase(
-    //           role = "constraints",
-    //           labels = Seq("OnTime"),
+    //           role = PositiveRoleTestCase("constraints"),
+    //           labels = Seq(PositiveLabelTestCase("OnTime")),
     //           text = "on Thursday"
     //         )
     //       )
     //     ),
-    //     PositiveEventTestCase(
+    //     GeneralMentionTestCase(
     //       text = "What cargo left Los Angeles last week?",
-    //       labels = Seq("CargoQuery"),
+    //       labels = Seq(PositiveLabelTestCase("CargoQuery")),
     //       args = List(
     //         PositiveArgTestCase(
-    //           role = "need",
-    //           labels = Seq("UnspecifiedCargo"),
+    //           role = PositiveRoleTestCase("need"),
+    //           labels = Seq(PositiveLabelTestCase("UnspecifiedCargo")),
     //           text = "cargo"
     //         ),
     //         PositiveArgTestCase(
-    //           role = "constraints",
-    //           labels = Seq("TimeConstraint"),
+    //           role = PositiveRoleTestCase("constraints"),
+    //           labels = Seq(PositiveLabelTestCase("TimeConstraint")),
     //           text = "last week"
     //         )
     //       )
@@ -299,86 +317,88 @@ class TestEvents extends FlatSpec with Matchers {
       }
     }
 
-    // it should "not find Query events" in {
+    it should "not find Query events" in {
 
-    //   val testCases = Seq(
-    //     NegativeEventTestCase(
-    //       labels = Seq("CargoQuery", "QuantityQuery"),
+      val testCases = Seq(
+        NegativeMentionTestCase(
+          labels = Seq(NegativeLabelTestCase("CargoQuery"), NegativeLabelTestCase("QuantityQuery")),
+          text = "Some zebras are galloping to Scotland from Zimbabwe",
+          mentionSpan = NegativeTextTestCase("Some zebras are heading to Scotland from Zimbabwe"),
+          args = List( // this works -- ie passing in negargtestcase list, not just Nil as above
+             NegativeArgTestCase(
+              role = PositiveRoleTestCase("need"),
+              labels = Seq(PositiveLabelTestCase("QuantifiedCargo")),
+              text = PositiveTextTestCase("zebras")
+            ),
+            NegativeArgTestCase(
+              role = PositiveRoleTestCase("constraints"),
+              labels = Seq(PositiveLabelTestCase("OriginConstraint"), PositiveLabelTestCase("Constraint")),
+              text = PositiveTextTestCase("Zimbabwe")
+            ),
+            NegativeArgTestCase(
+              role = PositiveRoleTestCase("constraints"),
+              labels = Seq(PositiveLabelTestCase("DestinationConstraint"), PositiveLabelTestCase("Constraint")),
+              text = PositiveTextTestCase("Scotland")
+            )
+          )
+        ),
+    //     NegativeMentionTestCase(
+    //       labels = Seq(PositiveLabelTestCase("CargoQuery", PositiveLabelTestCase("QuantityQuery")),
     //       text = "Many zebras are galloping to Scotland from Zimbabwe?",
     //       args = Nil
     //       // List(
     //       //   NegativeArgTestCase(
-    //       //     role = "need",
-    //       //     labels = Seq("QuantifiedCargo"),
+    //       //     role = PositiveRoleTestCase("need"),
+    //       //     labels = Seq(PositiveLabelTestCase("QuantifiedCargo")),
     //       //     text = "zebras"
     //       //   ),
     //       //   NegativeArgTestCase(
-    //       //     role = "constraints",
-    //       //     labels = Seq("OriginConstraint", "Constraint"),
+    //       //     role = PositiveRoleTestCase("constraints"),
+    //       //     labels = Seq(PositiveLabelTestCase("OriginConstraint", PositiveLabelTestCase("Constraint")),
     //       //     text = "Zimbabwe"
     //       //   ),
     //       //   NegativeArgTestCase(
-    //       //     role = "constraints",
-    //       //     labels = Seq("DestinationConstraint", "Constraint"),
+    //       //     role = PositiveRoleTestCase("constraints"),
+    //       //     labels = Seq(PositiveLabelTestCase("DestinationConstraint", PositiveLabelTestCase("Constraint")),
     //       //     text = "Scotland"
     //       //   )
     //       // )
     //     ),
-    //     NegativeEventTestCase(
-    //       labels = Seq("CargoQuery", "QuantityQuery"),
-    //       text = "Some zebras are galloping to Scotland from Zimbabwe",
-    //       args = List( // this works -- ie passing in negargtestcase list, not just Nil as above
-    //          NegativeArgTestCase(
-    //           role = "need",
-    //           labels = Seq("QuantifiedCargo"),
-    //           text = "zebras"
-    //         ),
-    //         NegativeArgTestCase(
-    //           role = "constraints",
-    //           labels = Seq("OriginConstraint", "Constraint"),
-    //           text = "Zimbabwe"
-    //         ),
-    //         NegativeArgTestCase(
-    //           role = "constraints",
-    //           labels = Seq("DestinationConstraint", "Constraint"),
-    //           text = "Scotland"
-    //         )
-    //       )
-    //     )
-    //   )
-    //   testCases foreach { tc =>
-    //     val results = system.extract(tc.text)
-    //     results should not be empty
-    //     checkEvent(tc, results) should be (true)
-    //   }
-    // }
+      )
+      testCases foreach { tc =>
+        val results = system.extract(tc.text)
+        results should not be empty
+        checkMention(tc, results) should be (true)
+      }
+    }
 
-    // it should "find structured TimeExpressions" in {
-    //   val testCases = Seq(
-    //     PositiveEventTestCase(
-    //       labels = Seq("IntervalTime", "TimeExpression"),
-    //       text = "How many TEUs of frozen fish are heading to Dubai between September 30th 2020 and October 2nd 2020?",
-    //       args = List(
-    //         PositiveArgTestCase(
-    //           role = "start",
-    //           labels = Seq("IntervalTime", "TimeExpression"),
-    //           text = "September 30th 2020"
-    //         ),
-    //         PositiveArgTestCase(
-    //           role = "end",
-    //           labels = Seq("IntervalTime", "TimeExpression"),
-    //           text = "October 2nd 2020"
-    //         )
-    //       )
-    //     )
-    //   )
+    it should "find structured TimeExpressions" in {
+      val testCases = Seq(
+        GeneralMentionTestCase(
+          labels = Seq(PositiveLabelTestCase("IntervalTime"), PositiveLabelTestCase("TimeExpression")),
+          text = "How many TEUs of frozen fish are heading to Dubai between September 30th 2020 and October 2nd 2020?",
+          mentionSpan = PositiveTextTestCase("between September 30th 2020 and October 2nd 2020"),
+          args = List(
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("start"),
+              labels = Seq(PositiveLabelTestCase("IntervalTime"), PositiveLabelTestCase("TimeExpression")),
+              text = PositiveTextTestCase("September 30th 2020")
+            ),
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("end"),
+              labels = Seq(PositiveLabelTestCase("IntervalTime"), PositiveLabelTestCase("TimeExpression")),
+              text = PositiveTextTestCase("October 2nd 2020")
+            )
+          )
+        )
+      )
 
-    //   testCases foreach { tc =>
-    //     val results = system.extract(tc.text)
-    //     results should not be empty
-    //     checkEvent(tc, results) should be (true)
-    //   }
-    // }
+      testCases foreach { tc =>
+        val results = system.extract(tc.text)
+        results should not be empty
+        checkMention(tc, results) should be (true)
+      }
+    }
 }
 // What cargo was shipped from Los Angeles on August 12 2014 and is heading to Hamburg?
 // What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?
