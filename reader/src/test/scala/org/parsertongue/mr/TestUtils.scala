@@ -184,32 +184,32 @@ object TestUtils {
           if ((nm.foundBy.nonEmpty) && ( mentions.exists{ m => nm.foundBy.getOrElse(m.foundBy) == m.foundBy } ) ){
             println(s"\t${Console.RED} Mention incorrectly found by '${nm.foundBy.get}'${Console.RESET}")
           }
-    //       //fill in rest
-    //       if (mentions.exists{ m => checkLabels(nm.labels, m) } ) {
-    //         println(s"\t${Console.RED} Labels (${nm.labels.mkString(",")}) incorrectly present${Console.RESET}")
-    //       }
-    //       nm.args.foreach{ tcArg => 
-    //         // check for role
-    //         if (mentions.exists{ m => m.arguments.contains(tcArg.role) } ) {
-    //           println(s"\t${Console.RED} Role '${tcArg.role}' incorrectly present${Console.RESET}")
-    //         }
-    //         // check arg labels
-    //         if (mentions.exists{ m => 
-    //               m.arguments.getOrElse(tcArg.role, Nil)
-    //                 .exists{ ma => checkLabels(tcArg.labels, ma) }
-    //             } // not sure what to do in above block in neg case
-    //           ) {
-    //           println(s"\t${Console.RED} Arg labels '${tcArg.labels.mkString(", ")}' incorrectly found${Console.RESET}")
-    //         }
-    //         // check arg text
-    //         if (mentions.exists{ m => 
-    //                 m.arguments.getOrElse(tcArg.role, Nil)
-    //                   .exists{ ma => ma.text == tcArg.text }
-    //               } 
-    //           ) {
-    //           println(s"\t${Console.RED} Arg text '${tcArg.text}' incorrectly found${Console.RESET}")
-    //         }
-    //       } 
+          //fill in rest
+          if (mentions.exists{ m => nm.labels.forall { lbl => lbl.check(m) } } ) {
+            println(s"\t${Console.RED} Labels (${nm.labels.mkString(",")}) incorrectly present${Console.RESET}")
+          }
+          nm.args.foreach{ tcArg => 
+            // check for role
+            if (mentions.exists{ m => m.arguments.contains(tcArg.role.role) } ) {
+              println(s"\t${Console.RED} Role '${tcArg.role.role}' incorrectly present${Console.RESET}")
+            }
+            // check arg labels
+            if (mentions.exists{ m => 
+                  m.arguments.getOrElse(tcArg.role.role, Nil)
+                    .exists{ ma => tcArg.labels.forall { lbl => lbl.check(ma) } }
+                } 
+              ) {
+              println(s"\t${Console.RED} Arg labels '${tcArg.labels.mkString(", ")}' incorrectly found${Console.RESET}")
+            }
+            // check arg text
+            if (mentions.exists{ m => 
+                    m.arguments.getOrElse(tcArg.role.role, Nil)
+                      .exists{ ma => tcArg.check(ma) }
+                  } 
+              ) {
+              println(s"\t${Console.RED} Arg text '${tcArg.text}' incorrectly found${Console.RESET}")
+            }
+          } 
       }  
     }
     success

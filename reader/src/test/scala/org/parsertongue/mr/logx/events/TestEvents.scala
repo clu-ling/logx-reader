@@ -434,6 +434,23 @@ class TestEvents extends FlatSpec with Matchers {
               text = PositiveTextTestCase("October 2nd 2020")
             )
           )
+        ),
+        NegativeMentionTestCase(//added to test failure output
+          labels = Seq(PositiveLabelTestCase("IntervalTime"), PositiveLabelTestCase("TimeExpression")),
+          text = "How many TEUs of frozen fish are heading to Dubai between September 30th 2020 and October 2nd 2020?",
+          mentionSpan = PositiveTextTestCase("between September 30th 2020 and October 2nd 2020"),
+          args = List(
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("start"),
+              labels = Seq(PositiveLabelTestCase("IntervalTime"), PositiveLabelTestCase("TimeExpression")),
+              text = PositiveTextTestCase("September 30th 2020")
+            ),
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("end"),
+              labels = Seq(PositiveLabelTestCase("IntervalTime"), PositiveLabelTestCase("TimeExpression")),
+              text = PositiveTextTestCase("October 2nd 2020")
+            )
+          )
         )
       )
 
