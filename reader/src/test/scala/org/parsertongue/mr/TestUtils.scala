@@ -159,24 +159,25 @@ object TestUtils {
           gm.args.foreach{ tcArg => 
             // check for role
             if (! mentions.exists{ m => m.arguments.contains(tcArg.role.role) } ) { //added .role; compile error without, works with.
-              println(s"\t${Console.RED} Role '${tcArg.role.role}' missing${Console.RESET}")
+              println(s"\t${Console.RED} Role '${tcArg.role.role}' missing${Console.RESET}") // role --> role.role here too
             }
-    //         // check arg labels
-    //         if (! mentions.exists{ m => 
-    //               m.arguments.getOrElse(tcArg.role, Nil)
-    //                 .exists{ ma => checkLabels(tcArg.labels, ma) }
-    //             } 
-    //           ) {
-    //           println(s"\t${Console.RED} Arg labels '${tcArg.labels.mkString(", ")}' missing${Console.RESET}")
-    //         }
-    //         // check arg text
-    //         if (! mentions.exists{ m => 
-    //                 m.arguments.getOrElse(tcArg.role, Nil)
-    //                   .exists{ ma => ma.text == tcArg.text }
-    //               } 
-    //           ) {
-    //           println(s"\t${Console.RED} Arg text '${tcArg.text}' missing${Console.RESET}")
-    //         }
+            // check arg labels
+            if (! mentions.exists{ m => 
+                  m.arguments.getOrElse(tcArg.role.role, Nil)
+                    .exists{ ma => tcArg.labels.forall { lbl => lbl.check(ma) } 
+                    }
+                } 
+              ) {
+              println(s"\t${Console.RED} Arg labels '${tcArg.labels.mkString(", ")}' missing${Console.RESET}")
+            }
+            // check arg text
+            if (! mentions.exists{ m => 
+                    m.arguments.getOrElse(tcArg.role.role, Nil)
+                      .exists{ ma => tcArg.check(ma) }
+                  } 
+              ) {
+              println(s"\t${Console.RED} Arg text '${tcArg.text}' missing${Console.RESET}")
+            }
           }
         case nm: NegativeMentionTestCase =>
           println(s"${Console.RED} NegativeTestCase failed for '${nm.text}'${Console.RESET}")
