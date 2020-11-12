@@ -156,11 +156,11 @@ object TestUtils {
     //       if (! mentions.exists{ m => PositiveLabelTestCase(gm.labels, m) } ) {
     //         println(s"\t${Console.RED} Labels (${gm.labels.mkString(",")}) missing${Console.RESET}")
     //       }
-    //       gm.args.foreach{ tcArg => 
-    //         // check for role
-    //         if (! mentions.exists{ m => m.arguments.contains(tcArg.role) } ) {
-    //           println(s"\t${Console.RED} Role '${tcArg.role}' missing${Console.RESET}")
-    //         }
+          gm.args.foreach{ tcArg => 
+            // check for role
+            if (! mentions.exists{ m => m.arguments.contains(tcArg.role.role) } ) { //added .role; compile error without, works with.
+              println(s"\t${Console.RED} Role '${tcArg.role.role}' missing${Console.RESET}")
+            }
     //         // check arg labels
     //         if (! mentions.exists{ m => 
     //               m.arguments.getOrElse(tcArg.role, Nil)
@@ -177,7 +177,7 @@ object TestUtils {
     //           ) {
     //           println(s"\t${Console.RED} Arg text '${tcArg.text}' missing${Console.RESET}")
     //         }
-    //       }
+          }
         case nm: NegativeMentionTestCase =>
           println(s"${Console.RED} NegativeTestCase failed for '${nm.text}'${Console.RESET}")
           if ((nm.foundBy.nonEmpty) && ( mentions.exists{ m => nm.foundBy.getOrElse(m.foundBy) == m.foundBy } ) ){

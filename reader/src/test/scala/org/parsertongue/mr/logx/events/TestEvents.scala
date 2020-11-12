@@ -5,9 +5,7 @@ import org.scalatest.{ FlatSpec, Matchers }
 
 
 class TestEvents extends FlatSpec with Matchers {
-  // "PlaceHolder" should "return true" in {
-  //   true should be (true)
-  // }
+
     "MachineReadingSystem" should "find Transport events" in {
 
       val testCases = Seq(
@@ -113,7 +111,24 @@ class TestEvents extends FlatSpec with Matchers {
               text = PositiveTextTestCase("after September 28th 2020")
             )
           )
-        )
+        ),
+        // NegativeMentionTestCase( //just added; identical to above except neg/gen mention. This fails, as desired.
+        //   labels = Seq(PositiveLabelTestCase("Transport")),
+        //   mentionSpan = PositiveTextTestCase("Frozen food that arrived before September 21st 2020 but after September 28th 2020"),
+        //   text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
+        //   args = List(
+        //     PositiveArgTestCase(
+        //       role = PositiveRoleTestCase("time"),
+        //       labels = Seq(PositiveLabelTestCase("BeforeTime"), PositiveLabelTestCase("TimeExpression")),
+        //       text = PositiveTextTestCase("before September 21st 2020")
+        //     ),
+        //     PositiveArgTestCase(
+        //       role = PositiveRoleTestCase("time"),
+        //       labels = Seq(PositiveLabelTestCase("AfterTime"), PositiveLabelTestCase("TimeExpression")),
+        //       text = PositiveTextTestCase("after September 28th 2020")
+        //     )
+        //   )
+        // )
       )
 
     //   // TODO: load AnnotatedDocument JSON from resources.
@@ -327,7 +342,7 @@ class TestEvents extends FlatSpec with Matchers {
           labels = Seq(NegativeLabelTestCase("CargoQuery"), NegativeLabelTestCase("QuantityQuery")),
           text = "Some zebras are galloping to Scotland from Zimbabwe",
           mentionSpan = NegativeTextTestCase("Some zebras are heading to Scotland from Zimbabwe"),
-          args = List( // this works -- ie passing in negargtestcase list, not just Nil as above
+          args = List( 
              NegativeArgTestCase(
               role = PositiveRoleTestCase("need"),
               labels = Seq(PositiveLabelTestCase("QuantifiedCargo")),
