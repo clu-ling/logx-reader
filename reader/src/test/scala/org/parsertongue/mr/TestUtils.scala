@@ -141,7 +141,7 @@ object TestUtils {
   def checkMention(testCase: MentionTestCase, mentions: Seq[Mention]): Boolean = {
     val success = testCase match {
       case nm: NegativeMentionTestCase =>
-        mentions.forall { m => nm.check(m) }
+        mentions.forall { m => nm.check(m) } //identical with below. 
       case gm: GeneralMentionTestCase =>
         mentions.exists { m => gm.check(m) }
     }
@@ -153,9 +153,9 @@ object TestUtils {
           if ( ! mentions.exists{ m => gm.foundBy.getOrElse(m.foundBy) == m.foundBy } ) {
             println(s"\t${Console.RED} No Mention found by '${gm.foundBy.get}'${Console.RESET}")
           }
-    //       if (! mentions.exists{ m => PositiveLabelTestCase(gm.labels, m) } ) {
-    //         println(s"\t${Console.RED} Labels (${gm.labels.mkString(",")}) missing${Console.RESET}")
-    //       }
+          if (! mentions.exists{ m => gm.labels.forall { lbl => lbl.check(m) } } ) {
+            println(s"\t${Console.RED} Labels (${gm.labels.mkString(",")}) missing${Console.RESET}")
+          }
           gm.args.foreach{ tcArg => 
             // check for role
             if (! mentions.exists{ m => m.arguments.contains(tcArg.role.role) } ) { //added .role; compile error without, works with.
