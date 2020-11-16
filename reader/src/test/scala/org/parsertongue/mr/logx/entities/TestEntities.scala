@@ -219,17 +219,17 @@ class TestEntities extends FlatSpec with Matchers {
     val testCases = Seq(
       ForAllMentionTestCase(
         labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
-        mentionSpan = NegativeTextTestCase("TUs of ostrich feathers"), //check - Posi
+        mentionSpan = NegativeTextTestCase("TUs of ostrich feathers"), 
         text = "TUs of ostrich feathers"
       ),
       ForAllMentionTestCase(
-        labels = Seq(NegativeLabelTestCase("QuantifiedCargo")), //wrong label
-        mentionSpan = NegativeTextTestCase("of ostrich feathers"), // **** check - Posi
+        labels = Seq(NegativeLabelTestCase("QuantifiedCargo")), 
+        mentionSpan = NegativeTextTestCase("of ostrich feathers"), 
         text = "of ostrich feathers"
       ),
       ForAllMentionTestCase(
-        labels = Seq(NegativeLabelTestCase("QuantifiedCargo")), //right label
-        mentionSpan = NegativeTextTestCase("of ostrich feathers"), // wrong mentionSpan
+        labels = Seq(NegativeLabelTestCase("WhatQuery")), 
+        mentionSpan = NegativeTextTestCase("of ostrich feathers"), 
         text = "TEUs of ostrich feathers"
       ),
     )
