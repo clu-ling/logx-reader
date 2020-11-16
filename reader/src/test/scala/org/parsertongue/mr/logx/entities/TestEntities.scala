@@ -217,27 +217,17 @@ class TestEntities extends FlatSpec with Matchers {
   it should "not identify Cargo mentions" in {
 
     val testCases = Seq(
-      // ExistsMentionTestCase( // point: check behavior of positive tests in should-not-identify block
-      //   labels = Seq(PositiveLabelTestCase("QuantifiedCargo")),
-      //   mentionSpan = PositiveTextTestCase("TEUs of ostrich feathers"),
-      //   text = "TEUs of ostrich feathers"
-      // ),
       ForAllMentionTestCase(
         labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
         mentionSpan = NegativeTextTestCase("TUs of ostrich feathers"), //changed to Neg: ForALL(-, -, -)
         text = "TUs of ostrich feathers"
       ),
-      // ForAllMentionTestCase( //point here; this test should fail; conditions for pos test to succeed.
-      //   labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
-      //   mentionSpan = NegativeTextTestCase("TEUs of ostrich feathers"),
-      //   text = "TEUs of ostrich feathers" // this passes as 'TEUs' - should fail
-      // ),
       ForAllMentionTestCase(
         labels = Seq(NegativeLabelTestCase("QuantifiedCargo")), //straightforward neg test
         mentionSpan = NegativeTextTestCase("of ostrich feathers"),
         text = "of ostrich feathers"
       ),
-      // ExistsMentionTestCase(
+      // ExistsMentionTestCase( //passes
       //   labels = Seq(PositiveLabelTestCase("QuantifiedCargo")),
       //   mentionSpan = PositiveTextTestCase("Metric tons of preserved duck eggs"),
       //   text = "Metric tons of preserved duck eggs"
@@ -247,7 +237,7 @@ class TestEntities extends FlatSpec with Matchers {
         mentionSpan = NegativeTextTestCase("TEUs of ostrich feathers"), 
         text = "of ostrich feathers"
       ),
-      ExistsMentionTestCase( //point of this example: what happens if passing pos test for different mention?
+      ExistsMentionTestCase( 
         labels = Seq(PositiveLabelTestCase("Vessel")),
         mentionSpan = PositiveTextTestCase("LNG Finima"),
         text = "LNG Finima"
@@ -266,6 +256,47 @@ class TestEntities extends FlatSpec with Matchers {
     }  
   }
 
+  it should "identify Concept mentions" in {
+    //systematic: all allowed cases.
+    val testCases = Seq(
+      // ForAll(NegLbl, NegTxt)
+      ForAllMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
+        mentionSpan = NegativeTextTestCase("TUs of ostrich feathers"), //changed to Neg: ForALL(-, -, -)
+        text = "TUs of ostrich feathers"
+      ),
+      // Exists(PosL, PosT)
+      ExistsMentionTestCase( 
+        labels = Seq(PositiveLabelTestCase("Vessel")),
+        mentionSpan = PositiveTextTestCase("LNG Finima"),
+        text = "LNG Finima"
+      ),
+      // Exists(NegL, NegT) <- dubious usefulness.
+      ExistsMentionTestCase( //this example: mentionSpan doesn't match text
+        labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
+        mentionSpan = NegativeTextTestCase("TEUs of ostrich feathers"), 
+        text = "of ostrich feathers"
+      ),
+      // Exists(NegL, PosT)
+      ExistsMentionTestCase( 
+        labels = Seq(NegativeLabelTestCase("Date")),
+        mentionSpan = PositiveTextTestCase("LNG Finima"),
+        text = "LNG Finima"
+      ),
+      // Exists(PosL, NegT)
+      ExistsMentionTestCase( 
+        labels = Seq(PositiveLabelTestCase("Vessel")),
+        mentionSpan = NegativeTextTestCase("Finima"),
+        text = "LNG Finima"
+      )
+    )
+
+    testCases foreach { tc =>
+      val results = system.extract(tc.text)
+      results should not be empty
+      checkMention(tc, results) should be (true)
+    }  
+  }
 
   // // it should "identify Concept mentions" in {
 
@@ -291,7 +322,7 @@ class TestEntities extends FlatSpec with Matchers {
   // //   testCases foreach { tc =>
   // //     val results = system.extract(tc.text)
   // //     results should not be empty
-  // //     checkEntity(tc, results) should be (true)
+  // //     checkMention(tc, results) should be (true)
   // //   }  
   // // }
 
