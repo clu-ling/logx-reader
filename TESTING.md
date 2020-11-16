@@ -7,8 +7,10 @@ Both TestEntities and TestEvents call the same boolean function, checkMention.
 checkMention operates on two inputs: a sequence of Mentions (extracted by the MachineReadingSystem using the Odin rules in logx-reader), and a MentionTestCase.
 MentionTestCase is split into two cases; ExistsMentionTestCase, and ForAllMentionTestCase. The names of the two cases indicate the quantifier applying to evaluation of the sequence of Mentions, i.e. find at least one Mention such that..., or insure that for all Mentions ... .
 This different quantification is directly reflected in the evaluation procedure at the level of checkMention:
-    ExistsMentionTestCase:	```mentions.exists { m => em.check(m)```
-    ForAllMentionTestCase:	```mentions.forall { m => em.check(m)```
+    - `ExistsMentionTestCase`	
+    ```scala mentions.exists { m => em.check(m) ```
+    - `ForAllMentionTestCase`
+    ```scala mentions.forall { m => em.check(m)```
 
 All functions called by checkMention have their own "check" boolean function.
 MentionTestCase (either variety)'s check function calls the check functions of its TextTestCase and LabelTestCase(s) obligatorily, and calls check from ArgTestCase if present.
@@ -27,11 +29,17 @@ mix:
 (neg label, pos text)<--make sure this string is not read as... 
 Running with the above example, suppose the parent MentionTestCase has text "June 12, 2100 hours". The MentionTestCase can either be ExistsTestCase, or ForAllTestCase.
 
-    Exists(PosLbl("date"), NegTxt("June12, 2100")). There's a date that is not the string __. ~
-    Exists(NegLbl("date"), PosTxt("2100 hours")) <-- some Mention isn't a date but has text __~
+    ```scala
+     Exists(PosLbl("date"), NegTxt("June12, 2100"))
+     // There's a date that is not the string __. ~ 
+    Exists(NegLbl("date"), PosTxt("2100 hours"))
+    // some Mention isn't a date but has text __~
 
-    ForAll(PosLbl("date"), NegTxt("June12, 2100")): all mentions are dates without text __. ??
-    ForAll(NegLbl("date"), PosTxt("2100 hours")) <--all mentions aren't dates but have text __??
+    ForAll(PosLbl("date"), NegTxt("June12, 2100"))
+    // all mentions are dates without text __. ??
+    ForAll(NegLbl("date"), PosTxt("2100 hours")) 
+    // all mentions aren't dates but have text __??
+    ```
 
 In fact, combinations under ForAll seem of little use. For this reason, and to avoid possible confusion, we have written into the function definitions the requirement that ForAll scopes over all-negative tests. 
 Combinations of positive and negative subtests under Exists are potentially useful. in keeping with the flexibility outlined for some Argtests below, we allow ExistsMentiontestCases to freely embed either polarity of label and text tests.
@@ -39,12 +47,19 @@ Combinations of positive and negative subtests under Exists are potentially usef
 ArgTest polarity adds a further layer of potential complexity. To simplify use, we hold the local polarity of ArgTests themselves to the polarity convention: ForAll(NegLbl, NegTxt, NegArg(...)). Exists may embed PosArgTests and/or NegArgTests.
 When it comes to polarity of Arg subtests, we keep NegArg to embed strictly positive Text-, Label-, and Role- subtests. Allowing NegArg tests to embed negative subtests, or a mix of positive and negative subtests, adds unwanted complexity unrewarded by clear use cases.
 
+    ```scala 
     ForAll(NegLbl, NegTxt, NegArg(PosLbl, PosRole, PosTxt))
+    ```
 
 To allow desired flexibility with easily-understood uses, we allow the subtests within Positive Arg tests (only) to be positive or negative, independently of other subtests within the same Argtest.
 
-    Exists(PosArg(PosLbl, PosRole, NegText): this label and role are present, but not corresponding to this string.
-    Exists(PosArg(PosLbl, NegRole, PosText): some Mention has an argument with this text and label, but not this role.
-    Exists(PosArg(NegLbl, PosRole, PosText): some argument with this role and text, but not this label.
+    ```scala
+    Exists(PosArg(PosLbl, PosRole, NegText)
+    // this label and role are present, but not corresponding to this string.
+    Exists(PosArg(PosLbl, NegRole, PosText)
+    // some Mention has an argument with this text and label, but not this role.
+    Exists(PosArg(NegLbl, PosRole, PosText)
+    // some argument with this role and text, but not this label.
+    ```
     etc.
 
