@@ -1,17 +1,14 @@
-redone 11/15
-Documentation:
-
 Testing is performed through two files:
 	TestEntities.scala  (reader/src/test/scala/org/parsertongue/mr/logx/entities/TestEntities.scala) 
 and TestEvents.scala (reader/src/test/scala/org/parsertongue/mr/logx/events/TestEvents.scala), 
-that utilize the testing function defined in TestUtils.scala (reader/src/test/scala/org/parsertongue/mr/TestUtils.scala).
+that utilize the testing functions defined in TestUtils.scala (reader/src/test/scala/org/parsertongue/mr/TestUtils.scala).
 
 Both TestEntities and TestEvents call the same boolean function, checkMention.
-checkMention operates on two inputs: a sequence of mentions (extracted by the MachineReadingSystem using the Odin rules of logx-reader), and a "MentionTestCase".
-MentionTestCase is split into two cases; ExistsMentionTestCase, and ForAllMentionTestCase. The names of the two cases indicate the quantifier applying to evaluation of the sequence of mentions, i.e. find at least one mention such that..., or insure that for all mentions ... .
+checkMention operates on two inputs: a sequence of Mentions (extracted by the MachineReadingSystem using the Odin rules in logx-reader), and a MentionTestCase.
+MentionTestCase is split into two cases; ExistsMentionTestCase, and ForAllMentionTestCase. The names of the two cases indicate the quantifier applying to evaluation of the sequence of Mentions, i.e. find at least one Mention such that..., or insure that for all Mentions ... .
 This different quantification is directly reflected in the evaluation procedure at the level of checkMention:
-ExistsMentionTestCase:	mentions.exists { m => em.check(m)
-ForAllMentionTestCase:	mentions.forall { m => em.check(m)
+    ExistsMentionTestCase:	```mentions.exists { m => em.check(m)```
+    ForAllMentionTestCase:	```mentions.forall { m => em.check(m)```
 
 All functions called by checkMention have their own "check" boolean function.
 MentionTestCase (either variety)'s check function calls the check functions of its TextTestCase and LabelTestCase(s) obligatorily, and calls check from ArgTestCase if present.
@@ -42,12 +39,12 @@ Combinations of positive and negative subtests under Exists are potentially usef
 ArgTest polarity adds a further layer of potential complexity. To simplify use, we hold the local polarity of ArgTests themselves to the same polarity convention: Exists(PosLbl, PosTxt, PosArg(...) , ForAll(NegLbl, NegTxt, NegArg(...)).
 When it comes to polarity of Arg subtests, we keep NegArg to embed strictly positive Text-, Label-, and Role- subtests. Allowing NegArg tests to embed negative subtests, or a mix of positive and negative subtests, adds unwanted complexity unrewarded by clear use cases.
 
-ForAll(NegLbl, NegTxt, NegArg(PosLbl, PosRole, PosTxt))
+    ForAll(NegLbl, NegTxt, NegArg(PosLbl, PosRole, PosTxt))
 
 PositiveArgTestCases must themselves be embedded, per our convention, under an ExistsMentiontestCase. But to allow desired flexibility with easily-understood uses, we allow the subtests within Positive Arg tests (only) to be positive or negative, independently of other subtests within the same Argtest.
 
-Exists(PosArg(PosLbl, PosRole, NegText): this label and role are present, but not corresponding to this string.
-Exists(PosArg(PosLbl, NegRole, PosText): some Mention has an argument with this text and label, but not this role.
-Exists(PosArg(NegLbl, PosRole, PosText): some argument with this role and text, but not this label.
-etc.
+    Exists(PosArg(PosLbl, PosRole, NegText): this label and role are present, but not corresponding to this string.
+    Exists(PosArg(PosLbl, NegRole, PosText): some Mention has an argument with this text and label, but not this role.
+    Exists(PosArg(NegLbl, PosRole, PosText): some argument with this role and text, but not this label.
+    etc.
 
