@@ -36,7 +36,7 @@ object TestUtils {
     labels: Seq[LabelTestCase], 
     text: String,
     mentionSpan: TextTestCase,
-    args: List[PositiveArgTestCase] = Nil, //added pos polarity
+    args: List[ArgTestCase] = Nil, //removed pos polarity; revert or change doc
     foundBy: Option[String] = None
   ) extends MentionTestCase
 

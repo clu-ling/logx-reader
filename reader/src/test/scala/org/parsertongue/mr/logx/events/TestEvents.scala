@@ -112,24 +112,7 @@ class TestEvents extends FlatSpec with Matchers {
               text = PositiveTextTestCase("after September 28th 2020")
             )
           )
-        ),
-        // ForAllMentionTestCase( //just added; identical to above except neg/gen mention. This fails, as desired.
-        //   labels = Seq(PositiveLabelTestCase("Transport")),
-        //   mentionSpan = PositiveTextTestCase("Frozen food that arrived before September 21st 2020 but after September 28th 2020"),
-        //   text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
-        //   args = List(
-        //     PositiveArgTestCase(
-        //       role = PositiveRoleTestCase("time"),
-        //       labels = Seq(PositiveLabelTestCase("BeforeTime"), PositiveLabelTestCase("TimeExpression")),
-        //       text = PositiveTextTestCase("before September 21st 2020")
-        //     ),
-        //     PositiveArgTestCase(
-        //       role = PositiveRoleTestCase("time"),
-        //       labels = Seq(PositiveLabelTestCase("AfterTime"), PositiveLabelTestCase("TimeExpression")),
-        //       text = PositiveTextTestCase("after September 28th 2020")
-        //     )
-        //   )
-        // )
+        )
       )
 
     //   // TODO: load AnnotatedDocument JSON from resources.
@@ -142,35 +125,91 @@ class TestEvents extends FlatSpec with Matchers {
       }
     }
     
-    // trying: neg test that fails in above block; try embed under should-not-find?
-    // it should "not find Transport events" in {
+    // trying: all Exists(posArg(+/- Label-, Role-, Text- subtests))
+    it should "find Transport events under varying polarity" in {
 
-    //   val testCases = Seq(
-    //     ForAllMentionTestCase( //just added; identical to above except neg/gen mention. This fails, as desired.
-    //       labels = Seq(PositiveLabelTestCase("Transport")),
-    //       mentionSpan = PositiveTextTestCase("Frozen food that arrived before September 21st 2020 but after September 28th 2020"),
-    //       text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
-    //       args = List(
-    //         PositiveArgTestCase(
-    //           role = PositiveRoleTestCase("time"),
-    //           labels = Seq(PositiveLabelTestCase("BeforeTime"), PositiveLabelTestCase("TimeExpression")),
-    //           text = PositiveTextTestCase("before September 21st 2020")
-    //         ),
-    //         PositiveArgTestCase(
-    //           role = PositiveRoleTestCase("time"),
-    //           labels = Seq(PositiveLabelTestCase("AfterTime"), PositiveLabelTestCase("TimeExpression")),
-    //           text = PositiveTextTestCase("after September 28th 2020")
-    //         )
-    //       )
-    //     )
-    //   )
+      val testCases = Seq(
+        // Exists (PosL, PosT, PosArg(...)) - for all;  
+        // see testEntities for all combos of Exists with +/- top-level Label, text tests.
+        // +R, +L, +T
+        ExistsMentionTestCase(
+          labels = Seq(PositiveLabelTestCase("Transport")),
+          mentionSpan = PositiveTextTestCase("Frozen food that arrived before September 21st 2020 but after September 28th 2020"),
+          text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
+          args = List(
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("time"),
+              labels = Seq(PositiveLabelTestCase("BeforeTime"), PositiveLabelTestCase("TimeExpression")),
+              text = PositiveTextTestCase("before September 21st 2020")
+            ),
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("time"),
+              labels = Seq(PositiveLabelTestCase("AfterTime"), PositiveLabelTestCase("TimeExpression")),
+              text = PositiveTextTestCase("after September 28th 2020")
+            )
+          )
+        ),
+        // Exists(NegArg)
+        ExistsMentionTestCase(
+          labels = Seq(PositiveLabelTestCase("Transport")),
+          mentionSpan = PositiveTextTestCase("Frozen food that arrived before September 21st 2020 but after September 28th 2020"),
+          text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
+          args = List(
+            NegativeArgTestCase(
+              role = PositiveRoleTestCase("need"),
+              labels = Seq(PositiveLabelTestCase("BeforeTime"), PositiveLabelTestCase("TimeExpression")),
+              text = PositiveTextTestCase("before September 21st 2020")
+            ),
+          )
+        ),
 
-    //   testCases foreach { tc =>
-    //     val results = system.extract(tc.text)
-    //     results should not be empty
-    //     checkMention(tc, results) should be (true)
-    //   }
-    // }
+        // -R, +L, +T -- this fails; others pass.
+        ExistsMentionTestCase(
+          labels = Seq(PositiveLabelTestCase("Transport")),
+          mentionSpan = PositiveTextTestCase("Frozen food that arrived before September 21st 2020 but after September 28th 2020"),
+          text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
+          // args = List(
+          //   PositiveArgTestCase(
+          //     role = NegativeRoleTestCase("need"),
+          //     labels = Seq(PositiveLabelTestCase("BeforeTime"), PositiveLabelTestCase("TimeExpression")),
+          //     text = PositiveTextTestCase("before September 21st 2020")
+          //   ),
+          // )
+        ),
+        // +R, -L, +T
+        ExistsMentionTestCase(
+          labels = Seq(PositiveLabelTestCase("Transport")),
+          mentionSpan = PositiveTextTestCase("Frozen food that arrived before September 21st 2020 but after September 28th 2020"),
+          text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
+          args = List(
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("time"),
+              labels = Seq(NegativeLabelTestCase("AfterTime")),
+              text = PositiveTextTestCase("before September 21st 2020")
+            ),
+          )
+        ),
+        // +R, +L, -T
+        ExistsMentionTestCase(
+          labels = Seq(PositiveLabelTestCase("Transport")),
+          mentionSpan = PositiveTextTestCase("Frozen food that arrived before September 21st 2020 but after September 28th 2020"),
+          text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
+          args = List(
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("time"),
+              labels = Seq(PositiveLabelTestCase("BeforeTime")),
+              text = NegativeTextTestCase("after September 21st 2020")
+            ),
+          )
+        ),
+      )
+
+      testCases foreach { tc =>
+        val results = system.extract(tc.text)
+        results should not be empty
+        checkMention(tc, results) should be (true)
+      }
+    }
 
     it should "find Query events" in {
 

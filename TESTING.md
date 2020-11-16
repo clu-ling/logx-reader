@@ -12,7 +12,7 @@ This different quantification is directly reflected in the evaluation procedure 
 
 All functions called by checkMention have their own "check" boolean function.
 MentionTestCase (either variety)'s check function calls the check functions of its TextTestCase and LabelTestCase(s) obligatorily, and calls check from ArgTestCase if present.
-ArgTestCase, in turn, through its check function, evaluates the check functions of its own TextTestCase, LabelTestCase(s), and RoleTestCase(s). The structure of calls is indicated in the included diagram.
+ArgTestCase, in turn, through its check function, evaluates the check functions of its own TextTestCase, LabelTestCase(s), and RoleTestCase(s).
 
 The bottom-level functions TextTestCase, LabelTestCase, RoleTestCase each have two varieties indicated by prefix: Positive-/Negative-. As the names suggest, a PositiveTextTestCase returns true if its string argument matches the text value of the Mention submitted to its check function. A NegativeTextTestCase returns true if its string argument does NOT match the Mention's text field.
 
@@ -34,14 +34,14 @@ Running with the above example, suppose the parent MentionTestCase has text "Jun
     ForAll(NegLbl("date"), PosTxt("2100 hours")) <--all mentions aren't dates but have text __??
 
 In fact, combinations under ForAll seem of little use. For this reason, and to avoid possible confusion, we have written into the function definitions the requirement that ForAll scopes over all-negative tests. 
-Combinations of positive and negative subtests under Exists are potentially useful. in keeping with the flexibility outlined for some Argtests below, we allow ExistsMentiontestCases to freely embed either polarity of label and text tests. However, the choice of Positive and Negative ArgTests is strictly tied to the choice of Exists or ForAll in the MentionTestCase.
+Combinations of positive and negative subtests under Exists are potentially useful. in keeping with the flexibility outlined for some Argtests below, we allow ExistsMentiontestCases to freely embed either polarity of label and text tests.
 
-ArgTest polarity adds a further layer of potential complexity. To simplify use, we hold the local polarity of ArgTests themselves to the same polarity convention: Exists(PosLbl, PosTxt, PosArg(...) , ForAll(NegLbl, NegTxt, NegArg(...)).
+ArgTest polarity adds a further layer of potential complexity. To simplify use, we hold the local polarity of ArgTests themselves to the polarity convention: ForAll(NegLbl, NegTxt, NegArg(...)). Exists may embed PosArgTests and/or NegArgTests.
 When it comes to polarity of Arg subtests, we keep NegArg to embed strictly positive Text-, Label-, and Role- subtests. Allowing NegArg tests to embed negative subtests, or a mix of positive and negative subtests, adds unwanted complexity unrewarded by clear use cases.
 
     ForAll(NegLbl, NegTxt, NegArg(PosLbl, PosRole, PosTxt))
 
-PositiveArgTestCases must themselves be embedded, per our convention, under an ExistsMentiontestCase. But to allow desired flexibility with easily-understood uses, we allow the subtests within Positive Arg tests (only) to be positive or negative, independently of other subtests within the same Argtest.
+To allow desired flexibility with easily-understood uses, we allow the subtests within Positive Arg tests (only) to be positive or negative, independently of other subtests within the same Argtest.
 
     Exists(PosArg(PosLbl, PosRole, NegText): this label and role are present, but not corresponding to this string.
     Exists(PosArg(PosLbl, NegRole, PosText): some Mention has an argument with this text and label, but not this role.
