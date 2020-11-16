@@ -9,7 +9,7 @@ class TestEvents extends FlatSpec with Matchers {
     "MachineReadingSystem" should "find Transport events" in {
 
       val testCases = Seq(
-        GeneralMentionTestCase(
+        ExistsMentionTestCase(
           labels = Seq(PositiveLabelTestCase("Transport")),
           mentionSpan = PositiveTextTestCase("frozen fish heading to Dubai on August 24th 2020"), //note: trimmed
           text = "What is the risk of spoilage for frozen fish heading to Dubai on August 24th 2020?",
@@ -31,7 +31,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        GeneralMentionTestCase(
+        ExistsMentionTestCase(
           labels = Seq(PositiveLabelTestCase("Transport")),
           mentionSpan = PositiveTextTestCase("F16 engines are heading to Dubai"),
           text = "How many F16 engines are heading to Dubai?",
@@ -46,31 +46,32 @@ class TestEvents extends FlatSpec with Matchers {
               labels = Seq(PositiveLabelTestCase("Location")),
               text  = PositiveTextTestCase("Dubai")
             ),
-            NegativeArgTestCase( //This behaves as desired. passes because pos subtest fails
-              role = PositiveRoleTestCase("shipment"), 
-              labels = Seq(PositiveLabelTestCase("Cargo")),
-              text = PositiveTextTestCase("F16") //note, missing ' engines'
-            ),
-            NegativeArgTestCase( //This behaves as desired. passes because neg subtest fails
-              role = PositiveRoleTestCase("shipment"), 
-              labels = Seq(PositiveLabelTestCase("Cargo")),
-              text = NegativeTextTestCase("F16 engines") //right text, makes false.
-            ),
-            NegativeArgTestCase( // trying: negative argtestcase within positive event
-              role = PositiveRoleTestCase("destination"),
-              labels = Seq(PositiveLabelTestCase("Location")),
-              text  = PositiveTextTestCase("Tucson") // correct role and label, wrong text
-            ),
-            NegativeArgTestCase( // trying: negative argtestcase within positive event
-              role = PositiveRoleTestCase("destination"),
-              labels = Seq(PositiveLabelTestCase("Unit")), // wrong label only
-              text  = PositiveTextTestCase("Dubai")
-            ),
-            NegativeArgTestCase( // trying: negative argtestcase within positive event
-              role = PositiveRoleTestCase("shipment"), // wrong role
-              labels = Seq(PositiveLabelTestCase("Location")),
-              text  = PositiveTextTestCase("Dubai")
-            ),
+            // deprecated next five blocks by exists-requires-pos-arg-tests, 11-15
+            // NegativeArgTestCase( //This behaves as desired. passes because pos subtest fails
+            //   role = PositiveRoleTestCase("shipment"), 
+            //   labels = Seq(PositiveLabelTestCase("Cargo")),
+            //   text = PositiveTextTestCase("F16") //note, missing ' engines'
+            // ),
+            // NegativeArgTestCase( //This behaves as desired. passes because neg subtest fails
+            //   role = PositiveRoleTestCase("shipment"), 
+            //   labels = Seq(PositiveLabelTestCase("Cargo")),
+            //   text = NegativeTextTestCase("F16 engines") //right text, makes false.
+            // ),
+            // NegativeArgTestCase( // trying: negative argtestcase within positive event
+            //   role = PositiveRoleTestCase("destination"),
+            //   labels = Seq(PositiveLabelTestCase("Location")),
+            //   text  = PositiveTextTestCase("Tucson") // correct role and label, wrong text
+            // ),
+            // NegativeArgTestCase( // trying: negative argtestcase within positive event
+            //   role = PositiveRoleTestCase("destination"),
+            //   labels = Seq(PositiveLabelTestCase("Unit")), // wrong label only
+            //   text  = PositiveTextTestCase("Dubai")
+            // ),
+            // NegativeArgTestCase( // trying: negative argtestcase within positive event
+            //   role = PositiveRoleTestCase("shipment"), // wrong role
+            //   labels = Seq(PositiveLabelTestCase("Location")),
+            //   text  = PositiveTextTestCase("Dubai")
+            // ),
             // NegativeArgTestCase( // trying: negative argtestcase within positive event
             //   role = PositiveRoleTestCase("destination"),  //feeding correct everything; should fail. it does.
             //   labels = Seq(PositiveLabelTestCase("Location")),
@@ -78,7 +79,7 @@ class TestEvents extends FlatSpec with Matchers {
             // )
           )
         ),
-        GeneralMentionTestCase(
+        ExistsMentionTestCase(
           labels = Seq(PositiveLabelTestCase("Transport")),
           mentionSpan = PositiveTextTestCase("TEUs of DoD Frozen Meat are heading to Hamburg"),
           text = "How many TEUs of DoD Frozen Meat are heading to Hamburg?",
@@ -95,7 +96,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        GeneralMentionTestCase(
+        ExistsMentionTestCase(
           labels = Seq(PositiveLabelTestCase("Transport")),
           mentionSpan = PositiveTextTestCase("Frozen food that arrived before September 21st 2020 but after September 28th 2020"),
           text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
@@ -112,7 +113,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        // NegativeMentionTestCase( //just added; identical to above except neg/gen mention. This fails, as desired.
+        // ForAllMentionTestCase( //just added; identical to above except neg/gen mention. This fails, as desired.
         //   labels = Seq(PositiveLabelTestCase("Transport")),
         //   mentionSpan = PositiveTextTestCase("Frozen food that arrived before September 21st 2020 but after September 28th 2020"),
         //   text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
@@ -141,10 +142,40 @@ class TestEvents extends FlatSpec with Matchers {
       }
     }
     
+    // trying: neg test that fails in above block; try embed under should-not-find?
+    // it should "not find Transport events" in {
+
+    //   val testCases = Seq(
+    //     ForAllMentionTestCase( //just added; identical to above except neg/gen mention. This fails, as desired.
+    //       labels = Seq(PositiveLabelTestCase("Transport")),
+    //       mentionSpan = PositiveTextTestCase("Frozen food that arrived before September 21st 2020 but after September 28th 2020"),
+    //       text = "Frozen food that arrived before September 21st 2020 but after September 28th 2020.",
+    //       args = List(
+    //         PositiveArgTestCase(
+    //           role = PositiveRoleTestCase("time"),
+    //           labels = Seq(PositiveLabelTestCase("BeforeTime"), PositiveLabelTestCase("TimeExpression")),
+    //           text = PositiveTextTestCase("before September 21st 2020")
+    //         ),
+    //         PositiveArgTestCase(
+    //           role = PositiveRoleTestCase("time"),
+    //           labels = Seq(PositiveLabelTestCase("AfterTime"), PositiveLabelTestCase("TimeExpression")),
+    //           text = PositiveTextTestCase("after September 28th 2020")
+    //         )
+    //       )
+    //     )
+    //   )
+
+    //   testCases foreach { tc =>
+    //     val results = system.extract(tc.text)
+    //     results should not be empty
+    //     checkMention(tc, results) should be (true)
+    //   }
+    // }
+
     it should "find Query events" in {
 
       val testCases = Seq(
-        GeneralMentionTestCase( 
+        ExistsMentionTestCase( 
           labels = Seq(
             PositiveLabelTestCase("Query"), 
             PositiveLabelTestCase("WhatQuery")
@@ -187,7 +218,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        GeneralMentionTestCase(
+        ExistsMentionTestCase(
           labels = Seq(PositiveLabelTestCase("Query"), PositiveLabelTestCase("WhatQuery")), 
           mentionSpan = PositiveTextTestCase("Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg since February 12"),
           text = "Find ports near Hamburg with enough excess cargo capacity to handle shipments redirected from Hamburg since February 12",
@@ -214,7 +245,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        GeneralMentionTestCase(
+        ExistsMentionTestCase(
           labels = Seq(PositiveLabelTestCase("LocationQuery")),
           mentionSpan = PositiveTextTestCase("What are alternative ports with enough cargo capacity to handle shipments redirected from Hamburg"),
           text = "What are alternative ports with enough cargo capacity to handle shipments redirected from Hamburg",
@@ -236,7 +267,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        GeneralMentionTestCase(
+        ExistsMentionTestCase(
           labels = Seq(PositiveLabelTestCase("CargoQuery"), PositiveLabelTestCase("QuantityQuery")),
           text = "How many TEUs of zebras are heading to Scotland from Zimbabwe?",
           mentionSpan = PositiveTextTestCase("How many TEUs of zebras are heading to Scotland from Zimbabwe"),
@@ -258,7 +289,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        GeneralMentionTestCase(
+        ExistsMentionTestCase(
           text = "How much frozen meat is heading to Hamburg?",
           labels = Seq(PositiveLabelTestCase("CargoQuery"), PositiveLabelTestCase("QuantityQuery")),
           mentionSpan = PositiveTextTestCase("How much frozen meat is heading to Hamburg"),
@@ -275,7 +306,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        GeneralMentionTestCase(
+        ExistsMentionTestCase(
           text = "How many shipments of frozen meat are heading to Hamburg?",
           labels = Seq(PositiveLabelTestCase("CargoQuery"), PositiveLabelTestCase("QuantityQuery")),
           mentionSpan = PositiveTextTestCase("How many shipments of frozen meat are heading to Hamburg"),
@@ -292,7 +323,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        GeneralMentionTestCase(
+        ExistsMentionTestCase(
           text = "Which vessel left on Thursday?",
           labels = Seq(PositiveLabelTestCase("VesselQuery"), PositiveLabelTestCase("Query")),
           mentionSpan = PositiveTextTestCase("Which vessel left on Thursday"),
@@ -309,7 +340,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        GeneralMentionTestCase(
+        ExistsMentionTestCase(
           text = "What cargo left Los Angeles last week?",
           labels = Seq(PositiveLabelTestCase("CargoQuery")),
           mentionSpan = PositiveTextTestCase("What cargo left Los Angeles last week"),
@@ -338,7 +369,7 @@ class TestEvents extends FlatSpec with Matchers {
     it should "not find Query events" in {
 
       val testCases = Seq(
-        NegativeMentionTestCase(
+        ForAllMentionTestCase(
           labels = Seq(NegativeLabelTestCase("CargoQuery"), NegativeLabelTestCase("QuantityQuery")),
           text = "Some zebras are galloping to Scotland from Zimbabwe",
           mentionSpan = NegativeTextTestCase("Some zebras are heading to Scotland from Zimbabwe"),
@@ -360,7 +391,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        // NegativeMentionTestCase(
+        // ForAllMentionTestCase(
         //   labels = Seq(PositiveLabelTestCase("CargoQuery"), PositiveLabelTestCase("QuantityQuery")),
         //   text = "Many zebras are galloping to Scotland from Zimbabwe?",
         //   mentionSpan = PositiveTextTestCase("tomfoolery") //block to here fails
@@ -383,27 +414,27 @@ class TestEvents extends FlatSpec with Matchers {
     //       //   )
     //       // )
         // ),
-        NegativeMentionTestCase(
+        ForAllMentionTestCase(
           labels = Seq(NegativeLabelTestCase("CargoQuery"), NegativeLabelTestCase("QuantityQuery")),
           text = "Many zebras are galloping to Scotland from Zimbabwe?",
           mentionSpan = NegativeTextTestCase("tomfoolery") //expect pass by parallel w above
         ),
-        GeneralMentionTestCase( //note: identical tests to NegMention above; both pass
+        ExistsMentionTestCase( //note: identical tests to NegMention above; both pass
           labels = Seq(NegativeLabelTestCase("CargoQuery"), NegativeLabelTestCase("QuantityQuery")),
           text = "Many zebras are galloping to Scotland from Zimbabwe?",
           mentionSpan = NegativeTextTestCase("tomfoolery") 
         ),
-        // NegativeMentionTestCase(// NB: just one failing pos-label test. this mention test fails.
+        // ForAllMentionTestCase(// NB: just one failing pos-label test. this mention test fails.
         //   labels = Seq(NegativeLabelTestCase("CargoQuery"), PositiveLabelTestCase("QuantityQuery")), 
         //   text = "Many zebras are galloping to Scotland from Zimbabwe?",
         //   mentionSpan = NegativeTextTestCase("tomfoolery")
         // ),
-        // NegativeMentionTestCase(// NB: just one failing pos-text test. this mention test fails.
+        // ForAllMentionTestCase(// NB: just one failing pos-text test. this mention test fails.
         //   labels = Seq(NegativeLabelTestCase("CargoQuery"), NegativeLabelTestCase("QuantityQuery")), 
         //   text = "Many zebras are galloping to Scotland from Zimbabwe?",
         //   mentionSpan = PositiveTextTestCase("tomfoolery")
         // ),
-        // GeneralMentionTestCase( //note: identical tests to NegMention above; both pass
+        // ExistsMentionTestCase( //note: identical tests to NegMention above; both pass
         //   labels = Seq(NegativeLabelTestCase("CargoQuery"), NegativeLabelTestCase("QuantityQuery")),
         //   text = "Many zebras are galloping to Scotland from Zimbabwe?",
         //   mentionSpan = NegativeTextTestCase("tomfoolery") 
@@ -418,7 +449,7 @@ class TestEvents extends FlatSpec with Matchers {
 
     it should "find structured TimeExpressions" in {
       val testCases = Seq(
-        GeneralMentionTestCase(
+        ExistsMentionTestCase(
           labels = Seq(PositiveLabelTestCase("IntervalTime"), PositiveLabelTestCase("TimeExpression")),
           text = "How many TEUs of frozen fish are heading to Dubai between September 30th 2020 and October 2nd 2020?",
           mentionSpan = PositiveTextTestCase("between September 30th 2020 and October 2nd 2020"),
@@ -435,7 +466,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        // NegativeMentionTestCase(//added to test failure output
+        // ForAllMentionTestCase(//added to test failure output
         //   labels = Seq(PositiveLabelTestCase("IntervalTime"), PositiveLabelTestCase("TimeExpression")),
         //   text = "How many TEUs of frozen fish are heading to Dubai between September 30th 2020 and October 2nd 2020?",
         //   mentionSpan = PositiveTextTestCase("between September 30th 2020 and October 2nd 2020"),

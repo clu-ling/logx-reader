@@ -32,19 +32,19 @@ object TestUtils {
     }
   }
  
-  case class GeneralMentionTestCase(
+  case class ExistsMentionTestCase(
     labels: Seq[LabelTestCase], 
     text: String,
     mentionSpan: TextTestCase,
-    args: List[ArgTestCase] = Nil, 
+    args: List[PositiveArgTestCase] = Nil, //added pos polarity
     foundBy: Option[String] = None
   ) extends MentionTestCase
 
-  case class NegativeMentionTestCase(
-    labels: Seq[LabelTestCase], 
+  case class ForAllMentionTestCase(
+    labels: Seq[NegativeLabelTestCase], 
     text: String,
-    mentionSpan: TextTestCase,
-    args: List[ArgTestCase] = Nil, 
+    mentionSpan: NegativeTextTestCase,
+    args: List[NegativeArgTestCase] = Nil, //added neg polarity
     foundBy: Option[String] = None
   ) extends MentionTestCase
 
@@ -72,9 +72,9 @@ object TestUtils {
   }
 
   case class NegativeArgTestCase(
-    role: RoleTestCase, 
-    labels: Seq[LabelTestCase], 
-    text: TextTestCase
+    role: PositiveRoleTestCase, 
+    labels: Seq[PositiveLabelTestCase], 
+    text: PositiveTextTestCase
   ) extends ArgTestCase {
     def check(parent: Mention): Boolean = {
       ! (role.check(parent) && 
@@ -140,26 +140,26 @@ object TestUtils {
   
   def checkMention(testCase: MentionTestCase, mentions: Seq[Mention]): Boolean = {
     val success = testCase match {
-      case nm: NegativeMentionTestCase =>
-        mentions.forall { m => nm.check(m) } //identical with below. 
-      case gm: GeneralMentionTestCase =>
-        mentions.exists { m => gm.check(m) }
+      case fm: ForAllMentionTestCase =>
+        mentions.forall { m => fm.check(m) } //removed negation
+      case em: ExistsMentionTestCase =>
+        mentions.exists { m => em.check(m) }
     }
 
     if (! success) {
       testCase match {
-        case gm: GeneralMentionTestCase =>
-          println(s"${Console.RED} Positive Mention test failed for '${gm.text}'${Console.RESET}")
-          if ( ! mentions.exists{ m => gm.foundBy.getOrElse(m.foundBy) == m.foundBy } ) {
-            println(s"\t${Console.RED} No Mention found by '${gm.foundBy.get}'${Console.RESET}")
+        case em: ExistsMentionTestCase =>
+          println(s"${Console.RED} Exists Mention test failed for '${em.text}'${Console.RESET}")
+          if ( ! mentions.exists{ m => em.foundBy.getOrElse(m.foundBy) == m.foundBy } ) {
+            println(s"\t${Console.RED} No Mention found by '${em.foundBy.get}'${Console.RESET}")
           }
-          if (! mentions.exists{ m => gm.labels.forall { lbl => lbl.check(m) } } ) {
-            println(s"\t${Console.RED} Labels (${gm.labels.mkString(",")}) missing${Console.RESET}")
+          if (! mentions.exists{ m => em.labels.forall { lbl => lbl.check(m) } } ) {
+            println(s"\t${Console.RED} ${em.labels.mkString(",")} failed.${Console.RESET}")
           }
-          gm.args.foreach{ tcArg => 
+          em.args.foreach{ tcArg => 
             // check for role
-            if (! mentions.exists{ m => m.arguments.contains(tcArg.role.role) } ) { //added .role; compile error without, works with.
-              println(s"\t${Console.RED} Role '${tcArg.role.role}' missing${Console.RESET}") // role --> role.role here too
+            if (! mentions.exists{ m => m.arguments.contains(tcArg.role.role) } ) {
+              println(s"\t${Console.RED} Role test failed for '${tcArg.role.role}'${Console.RESET}")
             }
             // check arg labels
             if (! mentions.exists{ m => 
@@ -168,7 +168,7 @@ object TestUtils {
                     }
                 } 
               ) {
-              println(s"\t${Console.RED} Arg labels '${tcArg.labels.mkString(", ")}' missing${Console.RESET}")
+              println(s"\t${Console.RED} Arg label test(s) failed: '${tcArg.labels.mkString(", ")}' ${Console.RESET}")
             }
             // check arg text
             if (! mentions.exists{ m => 
@@ -176,22 +176,22 @@ object TestUtils {
                       .exists{ ma => tcArg.check(ma) }
                   } 
               ) {
-              println(s"\t${Console.RED} Arg text '${tcArg.text}' missing${Console.RESET}")
+              println(s"\t${Console.RED} Arg text test failed for '${tcArg.text}'${Console.RESET}")
             }
           }
-        case nm: NegativeMentionTestCase =>
-          println(s"${Console.RED} NegativeTestCase failed for '${nm.text}'${Console.RESET}")
-          if ((nm.foundBy.nonEmpty) && ( mentions.exists{ m => nm.foundBy.getOrElse(m.foundBy) == m.foundBy } ) ){
-            println(s"\t${Console.RED} Mention incorrectly found by '${nm.foundBy.get}'${Console.RESET}")
+        case fm: ForAllMentionTestCase =>
+          println(s"${Console.RED} ForAllTestCase failed for '${fm.text}'${Console.RESET}")
+          if ((fm.foundBy.nonEmpty) && ( mentions.exists{ m => fm.foundBy.getOrElse(m.foundBy) == m.foundBy } ) ){
+            println(s"\t${Console.RED} FoundBy test failed for '${fm.foundBy.get}'${Console.RESET}")
           }
           //fill in rest
-          if (mentions.exists{ m => nm.labels.forall { lbl => lbl.check(m) } } ) {
-            println(s"\t${Console.RED} Labels (${nm.labels.mkString(",")}) incorrectly present${Console.RESET}")
+          if (mentions.exists{ m => fm.labels.forall { lbl => lbl.check(m) } } ) {
+            println(s"\t${Console.RED} One of (${fm.labels.mkString(",")}) failed.${Console.RESET}")
           }
-          nm.args.foreach{ tcArg => 
+          fm.args.foreach{ tcArg => 
             // check for role
             if (mentions.exists{ m => m.arguments.contains(tcArg.role.role) } ) {
-              println(s"\t${Console.RED} Role '${tcArg.role.role}' incorrectly present${Console.RESET}")
+              println(s"\t${Console.RED} Role incorrectly found: '${tcArg.role.role}'${Console.RESET}")
             }
             // check arg labels
             if (mentions.exists{ m => 
@@ -199,7 +199,7 @@ object TestUtils {
                     .exists{ ma => tcArg.labels.forall { lbl => lbl.check(ma) } }
                 } 
               ) {
-              println(s"\t${Console.RED} Arg labels '${tcArg.labels.mkString(", ")}' incorrectly found${Console.RESET}")
+              println(s"\t${Console.RED} Arg label incorrectly found: '${tcArg.labels.mkString(", ")}'${Console.RESET}")
             }
             // check arg text
             if (mentions.exists{ m => 
@@ -207,7 +207,7 @@ object TestUtils {
                       .exists{ ma => tcArg.check(ma) }
                   } 
               ) {
-              println(s"\t${Console.RED} Arg text '${tcArg.text}' incorrectly found${Console.RESET}")
+              println(s"\t${Console.RED} Arg text test failed for  '${tcArg.text}'${Console.RESET}")
             }
           } 
       }  
