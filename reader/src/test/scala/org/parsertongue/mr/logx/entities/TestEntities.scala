@@ -10,92 +10,162 @@ class TestEntities extends FlatSpec with Matchers {
   "LogX MachineReadingSystem" should "identify TimeExpression mentions" in {
 
     val testCases = Seq(
-      EntityTestCase(
-        labels = Seq("TimeExpression"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression")
+        ),
+        mentionSpan = PositiveTextTestCase("August 24th 2020"),
         text = "August 24th 2020"
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "OnTime"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"),
+          PositiveLabelTestCase("OnTime")
+        ),
+        mentionSpan = PositiveTextTestCase("on August 24th 2020"),
         text = "on August 24th 2020" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "AfterTime"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"),
+          PositiveLabelTestCase("AfterTime")
+        ),
+        mentionSpan = PositiveTextTestCase("after August 24, 2020"),
         text = "after August 24, 2020" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "BeforeTime"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("BeforeTime")
+        ),
+        mentionSpan = PositiveTextTestCase("by August 24th 2020"),
         text = "by August 24th 2020" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "IntervalTime"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("IntervalTime")
+        ),
+        mentionSpan = PositiveTextTestCase("from August 12, 2020 to August 19, 2020"),
         text = "from August 12, 2020 to August 19, 2020" 
       ),
-      // EntityTestCase(
-      //  labels = Seq("TimeExpression", "IntervalTimeExpression"),
-      //  text = "during the week of October 12"
-      // ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "IntervalTime"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("IntervalTime")
+        ),
+        mentionSpan = PositiveTextTestCase("during the week"),
         text = "during the week"
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "IntervalTime"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("IntervalTime")
+        ),
+        mentionSpan = PositiveTextTestCase("throughout 1991"),
         text = "throughout 1991"
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "TimeUnit"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("TimeUnit")
+        ),
+        mentionSpan = PositiveTextTestCase("the next few days"),
         text = "the next few days" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "Date"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("Date")
+        ),
+        mentionSpan = PositiveTextTestCase("August 2020"),
         text = "August 2020" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "Date"),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("TimeExpression"), 
+        PositiveLabelTestCase("Date")
+        ),
+        mentionSpan = PositiveTextTestCase("August 12 2020"),
         text = "August 12 2020" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "Date"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("Date")
+        ),
+        mentionSpan = PositiveTextTestCase("12/02/1986"),
         text = "12/02/1986" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "Date"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("Date")
+        ),
+        mentionSpan = PositiveTextTestCase("05/1986"),
         text = "05/1986" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "Date"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("Date")
+        ),
+        mentionSpan = PositiveTextTestCase("05/86"),
         text = "05/86" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "Date"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("Date")
+        ),
+        mentionSpan = PositiveTextTestCase("1986-12-21"),
         text = "1986-12-21" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "Date"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("Date")
+        ),
+        mentionSpan = PositiveTextTestCase("2012 11 30"),
         text = "2012 11 30" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "Date"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("Date")
+        ),
+        mentionSpan = PositiveTextTestCase("12 JUN 2021"),
         text = "12 JUN 2021" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "Date"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("Date")
+        ),
+        mentionSpan = PositiveTextTestCase("12 Jun 2021"),
         text = "12 Jun 2021" 
       ),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "Date"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("Date")
+        ),
+        mentionSpan = PositiveTextTestCase("12-Jun-2021"),
         text = "12-Jun-2021" 
       ),
-      //EntityTestCase(
-      //  labels = Seq("TimeExpression", "IntervalTime"),
-      //  text = "During the week of October 12" 
-      //),
-      //EntityTestCase(
-      //  labels = Seq("TimeExpression", "IntervalTime"),
-      //  text = "During the week of October 12th" 
-      //),
-      EntityTestCase(
-        labels = Seq("TimeExpression", "TimeUnit"),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"), 
+          PositiveLabelTestCase("IntervalTime")
+        ),
+        mentionSpan = PositiveTextTestCase("During the week of October 12"),
+        text = "During the week of October 12" 
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("TimeExpression"),
+          PositiveLabelTestCase("TimeUnit")
+        ),
+        mentionSpan = PositiveTextTestCase("The week ending October 12th"),
         text = "The week ending October 12th" 
       )
     )
@@ -103,44 +173,116 @@ class TestEntities extends FlatSpec with Matchers {
     testCases foreach { tc =>
       val results = system.extract(tc.text)
       results should not be empty
-      hasEntity(tc, results) should be (true)
+      checkMention(tc, results) should be (true)
     }  
   }
+
   it should "identify Vessel mentions" in {
 
     val testCases = Seq(
-      EntityTestCase(
-        labels = Seq("Vessel"),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Vessel")),
+        mentionSpan = PositiveTextTestCase("cargo vessel"),
         text = "cargo vessel"
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Vessel")),
+        mentionSpan = PositiveTextTestCase("SS Bandirma"),
+        text = "SS Bandirma"
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Vessel")),
+        mentionSpan = PositiveTextTestCase("MV Colombo Express"),
+        text = "MV Colombo Express"
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Vessel")),
+        mentionSpan = PositiveTextTestCase("CMA CGM Thalassa"),
+        text = "CMA CGM Thalassa"
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Vessel")),
+        mentionSpan = PositiveTextTestCase("LNG Finima"),
+        text = "LNG Finima"
       )
     )
 
     testCases foreach { tc =>
       val results = system.extract(tc.text)
       results should not be empty
-      hasEntity(tc, results) should be (true)
+      checkMention(tc, results) should be (true)
     }  
   }
 
-  it should "identify Cargo mentions" in {
+  it should "not identify Cargo mentions" in {
 
     val testCases = Seq(
-      EntityTestCase(
-        labels = Seq("QuantifiedCargo"),
+      ForAllMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
+        mentionSpan = NegativeTextTestCase("TUs of ostrich feathers"), 
+        text = "TUs of ostrich feathers"
+      ),
+      ForAllMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("QuantifiedCargo")), 
+        mentionSpan = NegativeTextTestCase("of ostrich feathers"), 
+        text = "of ostrich feathers"
+      ),
+      ForAllMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("WhatQuery")), 
+        mentionSpan = NegativeTextTestCase("of ostrich feathers"), 
         text = "TEUs of ostrich feathers"
       ),
-      EntityTestCase(
-        labels = Seq("QuantifiedCargo"),
-        text = "Metric tons of preserved duck eggs"
+    )
+
+    testCases foreach { tc =>
+      val results = system.extract(tc.text)
+      results should not be empty
+      checkMention(tc, results) should be (true)
+    }  
+  }
+
+  it should "identify systematic mentions" in {
+    //systematic: all allowed cases.
+    val testCases = Seq(
+      // ForAll(NegLbl, NegTxt)
+      ForAllMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("QuantifiedCargo")),
+        mentionSpan = NegativeTextTestCase("TUs of ostrich feathers"),
+        text = "TUs of ostrich feathers"
+      ),
+      // Exists(PosL, PosT)
+      ExistsMentionTestCase( 
+        labels = Seq(PositiveLabelTestCase("Vessel")),
+        mentionSpan = PositiveTextTestCase("LNG Finima"),
+        text = "LNG Finima"
+      ),
+      // Exists(NegL, NegT) <- dubious usefulness.
+      ExistsMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("QuantifiedCargo")), // wrong label
+        mentionSpan = NegativeTextTestCase("TEUs of ostrich feathers"), // mentionSpan doesn't match text
+        text = "of ostrich feathers"
+      ),
+      // Exists(NegL, PosT)
+      ExistsMentionTestCase( 
+        labels = Seq(NegativeLabelTestCase("Date")), // wrong label
+        mentionSpan = PositiveTextTestCase("LNG Finima"),
+        text = "LNG Finima"
+      ),
+      // Exists(PosL, NegT)
+      ExistsMentionTestCase( 
+        labels = Seq(PositiveLabelTestCase("Vessel")),
+        mentionSpan = NegativeTextTestCase("Finima"), // mentionSpan doesn't match text
+        text = "LNG Finima"
       )
     )
 
     testCases foreach { tc =>
       val results = system.extract(tc.text)
       results should not be empty
-      hasEntity(tc, results) should be (true)
+      checkMention(tc, results) should be (true)
     }  
   }
+  
 }
 
 //     val text2 = "What is the probability that Hamburgers and Mustard will be in the same container in a port in Germany?"
