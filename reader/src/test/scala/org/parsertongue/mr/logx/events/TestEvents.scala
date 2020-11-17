@@ -118,7 +118,7 @@ class TestEvents extends FlatSpec with Matchers {
             )
           )
         ),
-        // Exists(NegArg)
+        // Exists(NegArg, PosArg)
         ExistsMentionTestCase(
           labels = Seq(PositiveLabelTestCase("Transport")),
           mentionSpan = PositiveTextTestCase("Frozen food that arrived before September 21st 2020 but after September 28th 2020"),
@@ -129,7 +129,12 @@ class TestEvents extends FlatSpec with Matchers {
               labels = Seq(PositiveLabelTestCase("BeforeTime"), PositiveLabelTestCase("TimeExpression")),
               text = PositiveTextTestCase("before September 21st 2020")
             ),
-          )
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("time"),
+              labels = Seq(PositiveLabelTestCase("AfterTime"), PositiveLabelTestCase("TimeExpression")),
+              text = PositiveTextTestCase("after September 28th 2020")
+            )
+          ),
         ),
 
         // -R, +L, +T -- this fails; others pass. Args commented out.
