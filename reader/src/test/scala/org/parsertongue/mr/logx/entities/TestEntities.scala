@@ -55,7 +55,8 @@ class TestEntities extends FlatSpec with Matchers {
           PositiveLabelTestCase("IntervalTime")
         ),
         mentionSpan = PositiveTextTestCase("during the week"),
-        text = "during the week"
+        text = "during the week",
+        foundBy = Some("interval-time-expression")
       ),
       ExistsMentionTestCase(
         labels = Seq(
@@ -71,7 +72,7 @@ class TestEntities extends FlatSpec with Matchers {
           PositiveLabelTestCase("TimeUnit")
         ),
         mentionSpan = PositiveTextTestCase("the next few days"),
-        text = "the next few days" 
+        text = "the next few days"
       ),
       ExistsMentionTestCase(
         labels = Seq(

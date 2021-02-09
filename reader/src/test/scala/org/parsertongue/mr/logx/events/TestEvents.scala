@@ -271,7 +271,7 @@ class TestEvents extends FlatSpec with Matchers {
           )
         ),
         ExistsMentionTestCase(
-          labels = Seq(PositiveLabelTestCase("CargoQuery"), PositiveLabelTestCase("QuantityQuery")),
+          labels = Seq(PositiveLabelTestCase("CargoQuery")), //PositiveLabelTestCase("QuantityQuery")),
           text = "How many TEUs of zebras are heading to Scotland from Zimbabwe?",
           mentionSpan = PositiveTextTestCase("How many TEUs of zebras are heading to Scotland from Zimbabwe"),
           args = List(
@@ -294,7 +294,7 @@ class TestEvents extends FlatSpec with Matchers {
         ),
         ExistsMentionTestCase(
           text = "How much frozen meat is heading to Hamburg?",
-          labels = Seq(PositiveLabelTestCase("CargoQuery"), PositiveLabelTestCase("QuantityQuery")),
+          labels = Seq(PositiveLabelTestCase("CargoQuery")), //PositiveLabelTestCase("QuantityQuery")),
           mentionSpan = PositiveTextTestCase("How much frozen meat is heading to Hamburg"),
           args = List(
             PositiveArgTestCase(
@@ -311,7 +311,7 @@ class TestEvents extends FlatSpec with Matchers {
         ),
         ExistsMentionTestCase(
           text = "How many shipments of frozen meat are heading to Hamburg?",
-          labels = Seq(PositiveLabelTestCase("CargoQuery"), PositiveLabelTestCase("QuantityQuery")),
+          labels = Seq(PositiveLabelTestCase("CargoQuery")), //PositiveLabelTestCase("QuantityQuery")),
           mentionSpan = PositiveTextTestCase("How many shipments of frozen meat are heading to Hamburg"),
           args = List(
             PositiveArgTestCase(
