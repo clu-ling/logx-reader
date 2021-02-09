@@ -18,7 +18,7 @@ jobs:
         java-version: "11"
         java-package: jdk
     - name: Run tests
-      run: sbt test
+      run: sbt cleanTest
       #run: sbt coverage test
     #- name: Coverage Report
     #  run: sbt coverageReport

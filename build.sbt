@@ -217,6 +217,8 @@ editGrammars := {
 
 addCommandAlias("copyGrammars", ";clean;editsource:clean;editGrammars")
 
+addCommandAlias("cleanTest", ";copyGrammars;test")
+
 addCommandAlias("dockerize", ";copyGrammars;docker:publishLocal")
 
 // addCommandAlias("pushWebappToEcr", ";webapp/ecr:createRepository;webapp/ecr:login;webapp/ecr:push")

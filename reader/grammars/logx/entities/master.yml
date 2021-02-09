@@ -5,7 +5,7 @@ vars:
   # NOTE: change pathPrefix for development
   pathPrefix: "org/parsertongue/reader/grammars/logx"
   #pathPrefix: "file:///home/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
-  #pathPrefix: "file:///Users/davidmedeiros/repos/clu-ling/logx-reader/reader/grammars/logx"
+  #pathPrefix: "file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx"
   wh-words-en: "how|that|what|whatever|when|whenever|where|which|who|whoever|whom|whose|why"
 
 rules:
@@ -84,18 +84,18 @@ rules:
     type: token
     pattern: |
       @Concept? [lemma=/(?i)^(vessel|freighter|ship)$/ & tag=/^N/]
-      # |
+      |
       # example: "USS Alderamin"; "SS Bessemer Victory"; "MV Colombo Express"; "MCP Altona"
-      # [word=/^(U?SS|MV|MS|CS|MCP|MSC)$/] [word=/^[A-Z][a-z]+$/] [word=/^[A-Z][a-z]+$/]?
-      # |
+      [word=/^(U?SS|MV|MS|CS|MCP|MSC)$/] [word=/^[A-Z][a-z]+$/] [word=/^[A-Z][a-z]+$/]?
+      |
       #example: "LNG Tanker Umm Slal"; "LNG Finima"
-      # [word=/^L(N|P)G$/] [word=/^Tanker$/]? [word=/^[A-Z][a-z]+$/] [word=/^[A-Z][a-z]+$/]?
-      # |
+      [word=/^L(N|P)G$/] [word=/^Tanker$/]? [word=/^[A-Z][a-z]+$/] [word=/^[A-Z][a-z]+$/]?
+      |
       #example: "CMA CGM Thalassa"; "CMA CGM Vela"
-      # [word=/^CMA$/] [word=/^CGM$/] [word=/^[A-Z][a-z]+$/] [word=/^[A-Z][a-z]+$/]?
-      # |
+      [word=/^CMA$/] [word=/^CGM$/] [word=/^[A-Z][a-z]+$/] [word=/^[A-Z][a-z]+$/]?
+      |
       #example: "Estelle Maersk"; "Gudrun Maersk"
-      # [word=/^[A-Z][a-z]+$/] [word=/^Maersk$/]
+      [word=/^[A-Z][a-z]+$/] [word=/^Maersk$/]
 
 
   - name: "quantified-cargo"

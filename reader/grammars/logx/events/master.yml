@@ -5,7 +5,7 @@ vars:
   # NOTE: change pathPrefix for development
   pathPrefix: "org/parsertongue/reader/grammars/logx"
   #pathPrefix: "file:///home/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
-  #pathPrefix: "file:///Users/davidmedeiros/repos/clu-ling/logx-reader/reader/grammars/logx"
+  #pathPrefix: "file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx"
 
   agents: "nsubj|'nsubj:xsubj'|'nsubjpass:xsubj'|nsubjpass|csubj|csubjpass|<acl|nmod_along_with"
 
