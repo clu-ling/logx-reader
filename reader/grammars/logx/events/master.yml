@@ -1,5 +1,6 @@
 taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
 #taxonomy: file:///home/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
+#taxonomy: file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
 
 vars:
   # NOTE: change pathPrefix for development

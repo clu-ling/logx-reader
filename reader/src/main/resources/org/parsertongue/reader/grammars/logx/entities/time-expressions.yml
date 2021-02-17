@@ -126,7 +126,7 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      [lemma=/^(since|until|during|through|throughout|over)$/] @TimeExpression 
+      [lemma=/^(since|until|during|through|throughout|over|for)$/] @TimeExpression 
       #note that 'since', 'until' are both interval and after/before
       |
       (?<start> @AfterTime) (?<end> @BeforeTime)
@@ -134,7 +134,12 @@ rules:
       [lemma=between] (?<start> @TimeExpression) [lemma=and] (?<end> @TimeExpression)
       # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'
 
-  #- name: "iterative-time-expression"
+  - name: "complex-interval-time-expression"
+    label: ComplexIntervalTime
+    type: token
+    action: ${actionFlow}
+    pattern: |
+      [lemma=/^(daily|everyday)$/] (@IntervalTime)?
 
   - name: "time-unit"
     label: TimeUnit

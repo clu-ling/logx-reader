@@ -68,7 +68,8 @@
       - OnTime
       - BeforeTime
       - AfterTime
-      - IntervalTime
+      - IntervalTime:
+        - ComplexIntervalTime
       - TimeUnit
 
 # See https://gitlab.logx.cloud/team/bbn/logx-reader/-/issues/1
