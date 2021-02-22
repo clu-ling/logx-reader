@@ -133,7 +133,11 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
+<<<<<<< HEAD
       [lemma=/^(since|until|during|through|throughout|over|for)$/] @TimeExpression 
+=======
+      [lemma=/^(since|until|during|through|throughout|over)$/] @TimeExpression 
+>>>>>>> 44609eb94d9fa7eeae60d6b6db1f55d037a12ce6
       #note that 'since', 'until' are both interval and after/before
       |
       (?<start> @AfterTime) (?<end> @BeforeTime)
