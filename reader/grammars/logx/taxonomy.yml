@@ -64,7 +64,8 @@
           - CalendarDay
           # Monday, Tuesday, etc.
           - DayOfWeek
-        - Year
+        - Year:
+          - FiscalYear
       - OnTime
       - BeforeTime
       - AfterTime

@@ -48,7 +48,8 @@ rules:
     label: Quantity
     type: token
     pattern: |
-      [word=/^\d/] (?=@Unit)
+      [word=/^\d/] (?=@Unit) |
+      [word=/(?<=\d)(?i)k/]
 
   - name: "quantity-2"
     label: Quantity

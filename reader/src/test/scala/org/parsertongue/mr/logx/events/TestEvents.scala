@@ -434,6 +434,39 @@ class TestEvents extends FlatSpec with Matchers {
         checkMention(tc, results) should be (true)
       }
     }
+
+    it should "find InfluenceRelation" in {
+      val testCases = Seq(
+        ExistsMentionTestCase(
+          labels = Seq(PositiveLabelTestCase("InfluenceRelation")),
+          mentionSpan = PositiveTextTestCase("AAO fluctuates in response to political threats"),
+          text = "AAO fluctuates in response to political threats",
+          args = List(
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("influence"),
+              labels = Seq(PositiveLabelTestCase("Verb")),
+              text = PositiveTextTestCase("fluctuates")
+            ),
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("theme"),
+              labels = Seq(PositiveLabelTestCase("Organization")), //FIXME: wrong label for AAO
+              text = PositiveTextTestCase("AAO")
+            ),
+            PositiveArgTestCase(
+              role = PositiveRoleTestCase("cause"),
+              labels = Seq(PositiveLabelTestCase("Threat")),
+              text = PositiveTextTestCase("political threats")
+            )
+          )
+        )
+      ),
+
+      testCases foreach { tc =>
+        val results = system.extract(tc.text)
+        results should not be empty
+        checkMention(tc, results) should be (true)
+      }
+    }
 }
 
 // What cargo was shipped from Los Angeles on August 12 2014 and is heading to Hamburg?

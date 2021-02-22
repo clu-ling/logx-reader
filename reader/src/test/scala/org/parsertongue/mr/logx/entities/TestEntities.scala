@@ -183,6 +183,18 @@ class TestEntities extends FlatSpec with Matchers {
         ),
         mentionSpan = PositiveTextTestCase("daily for the next week"),
         text = "daily for the next week"
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(
+          PositiveLabelTestCase("FiscalYear")
+        ),
+        mentionSpan = PositiveTextTestCase("FY2017"),
+        text = "FY2017"
+      ),
+      ForAllMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("FiscalYear")),
+        mentionSpan = PositiveTextTestCase("FYI"),
+        text = "FYI"
       )
     )
 

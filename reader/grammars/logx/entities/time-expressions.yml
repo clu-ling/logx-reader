@@ -45,6 +45,13 @@ rules:
       |
       (?<=[word=/^(0?[1-9]|1[0-2])$/] ","?) [word=/^(1[8-9]|2[0-1])?[0-9][0-9]$/]
 
+  - name: "fiscal-year"
+    label: FiscalYear
+    type: token
+    action: ${actionFlow}
+    pattern: |
+      [word=/^FY\d\d\d\d/]
+
   - name: "date"
     label: Date
     type: token
@@ -139,7 +146,7 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      [lemma=/^(daily|everyday)$/] (@IntervalTime)?
+      (?<frequency> [lemma=/^(daily|everyday)$/]) (@interval:IntervalTime)
 
   - name: "time-unit"
     label: TimeUnit
