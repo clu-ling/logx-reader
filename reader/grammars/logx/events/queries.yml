@@ -7,16 +7,16 @@
 #   pattern: |
 #     (?<trigger> [tag=/^W/]) []*? (?<topic> [tag=/^N/ & incoming=/^nsubj|A1/])
 
-# - name: "quantity-query-1"
-#   label: QuantityQuery
-#   action: distinctArgs
-#   example: "How many TEUs of DoD frozen meat is heading to Hamburg?"
-#   example: "How many shipments of frozen meat are heading to Hamburg?"
-#   pattern: |
-#     trigger = [lemma=how] @Quantifier
-#     need:Entity = <amod nmod_of?
-#     predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
-#     constraints:Constraint* = (<<|>>)+
+- name: "quantity-query-1"
+  label: QuantityQuery
+  action: distinctArgs
+  example: "How many TEUs of DoD frozen meat is heading to Hamburg?"
+  example: "How many shipments of frozen meat are heading to Hamburg?"
+  pattern: |
+    trigger = [lemma=how] @Quantifier
+    need:Entity = <amod nmod_of?
+    predicate:Verb? = (<<|>>)+ [outgoing=nsubj]
+    constraints:Constraint* = (<<|>>)+
   
 - name: "when-query-1"
   label: WhenQuery

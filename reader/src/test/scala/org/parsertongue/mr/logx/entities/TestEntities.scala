@@ -189,13 +189,16 @@ class TestEntities extends FlatSpec with Matchers {
           PositiveLabelTestCase("FiscalYear")
         ),
         mentionSpan = PositiveTextTestCase("FY2017"),
-        text = "FY2017"
+        text = "FY2017",
+        foundBy = "fiscal-year"
       ),
       ForAllMentionTestCase(
         labels = Seq(NegativeLabelTestCase("FiscalYear")),
-        mentionSpan = PositiveTextTestCase("FYI"),
-        text = "FYI"
-      )
+        mentionSpan = NegativeTextTestCase("FYI"),
+        text = "FYI the planes left"
+      ),
+      //FIXME: add tests for Jul, etc...
+      //FIXME: add test for #K quantities
     )
 
     testCases foreach { tc =>

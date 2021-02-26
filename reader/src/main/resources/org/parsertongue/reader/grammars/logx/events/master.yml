@@ -4,9 +4,9 @@ taxonomy: file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx/taxo
 
 vars:
   # NOTE: change pathPrefix for development
+  #pathPrefix: "org/parsertongue/reader/grammars/logx"
+  #pathPrefix: "org/parsertongue/reader/grammars/logx"
   pathPrefix: "org/parsertongue/reader/grammars/logx"
-  #pathPrefix: "org/parsertongue/reader/grammars/logx"
-  #pathPrefix: "org/parsertongue/reader/grammars/logx"
 
   agents: "nsubj|'nsubj:xsubj'|'nsubjpass:xsubj'|nsubjpass|csubj|csubjpass|<acl|nmod_along_with"
 
@@ -14,7 +14,7 @@ vars:
 
   decrease_triggers: "limit|lose|loss|lower|negat|reduc"
 
-  event_action: "identity"
+  event_action: "identityAction"
 
 rules:
   - import: ${pathPrefix}/events/constraints.yml
@@ -33,6 +33,13 @@ rules:
       trigger = [lemma=risk] of
       type:Entity = nmod_of
 
+  - name: in-response-to
+    label: InfluenceRelation
+    action: ${event_action}
+    pattern: |
+      trigger = [lemma=/^(fluctuate)$/] in response to
+      theme: Entity = nsubj
+      cause: Entity = nmod_to
   
   ############################
   # Entity affects Entity

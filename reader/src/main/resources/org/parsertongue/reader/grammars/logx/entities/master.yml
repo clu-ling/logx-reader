@@ -4,9 +4,9 @@ taxonomy: file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx/taxo
 
 vars:
   # NOTE: change pathPrefix for development
+  #pathPrefix: "org/parsertongue/reader/grammars/logx"
+  #pathPrefix: "org/parsertongue/reader/grammars/logx"
   pathPrefix: "org/parsertongue/reader/grammars/logx"
-  #pathPrefix: "org/parsertongue/reader/grammars/logx"
-  #pathPrefix: "org/parsertongue/reader/grammars/logx"
   wh-words-en: "how|that|what|whatever|when|whenever|where|which|who|whoever|whom|whose|why"
 
 rules:

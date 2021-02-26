@@ -19,7 +19,9 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      January|February|March|April|May|June|July|August|September|October|November|December
+      January|February|March|April|May|June|July|August|September|October|November|December |
+      Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec |
+      Sept
 
   - name: "calendar-day"
     label: CalendarDay
@@ -133,11 +135,7 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-<<<<<<< HEAD
       [lemma=/^(since|until|during|through|throughout|over|for)$/] @TimeExpression 
-=======
-      [lemma=/^(since|until|during|through|throughout|over)$/] @TimeExpression 
->>>>>>> 44609eb94d9fa7eeae60d6b6db1f55d037a12ce6
       #note that 'since', 'until' are both interval and after/before
       |
       (?<start> @AfterTime) (?<end> @BeforeTime)
@@ -145,16 +143,12 @@ rules:
       [lemma=between] (?<start> @TimeExpression) [lemma=and] (?<end> @TimeExpression)
       # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'
 
-<<<<<<< HEAD
   - name: "complex-interval-time-expression"
     label: ComplexIntervalTime
     type: token
     action: ${actionFlow}
     pattern: |
       (?<frequency> [lemma=/^(daily|everyday)$/]) (@interval:IntervalTime)
-=======
-  #- name: "iterative-time-expression"
->>>>>>> 44609eb94d9fa7eeae60d6b6db1f55d037a12ce6
 
   - name: "time-unit"
     label: TimeUnit
