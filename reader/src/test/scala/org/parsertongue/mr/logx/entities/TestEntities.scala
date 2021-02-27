@@ -182,7 +182,8 @@ class TestEntities extends FlatSpec with Matchers {
           PositiveLabelTestCase("ComplexIntervalTime")
         ),
         mentionSpan = PositiveTextTestCase("daily for the next week"),
-        text = "daily for the next week"
+        text = "daily for the next week",
+        foundBy = Some("complex-interval-time-expression")
       ),
       ExistsMentionTestCase(
         labels = Seq(
@@ -190,15 +191,35 @@ class TestEntities extends FlatSpec with Matchers {
         ),
         mentionSpan = PositiveTextTestCase("FY2017"),
         text = "FY2017",
-        foundBy = "fiscal-year"
+        foundBy = Some("fiscal-year")
+      ),
+      // ForAllMentionTestCase(
+      //   labels = Seq(NegativeLabelTestCase("FiscalYear")),
+      //   mentionSpan = NegativeTextTestCase("FYI"),
+      //   text = "FYI the planes left"
+      // ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Month")),
+        mentionSpan = PositiveTextTestCase("Jul"),
+        text = "Jul",
+        foundBy = Some("month")
       ),
       ForAllMentionTestCase(
-        labels = Seq(NegativeLabelTestCase("FiscalYear")),
-        mentionSpan = NegativeTextTestCase("FYI"),
-        text = "FYI the planes left"
+        labels = Seq(NegativeLabelTestCase("Month")),
+        mentionSpan = NegativeTextTestCase("Jul"),
+        text = "Julia"
       ),
-      //FIXME: add tests for Jul, etc...
-      //FIXME: add test for #K quantities
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Quantity")),
+        mentionSpan = PositiveTextTestCase("202k"),
+        text = "202k",
+        foundBy = Some("quantity-1")
+      ),
+      ForAllMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("Quantity")),
+        mentionSpan = NegativeTextTestCase("k"),
+        text = "truck"
+      )     
     )
 
     testCases foreach { tc =>

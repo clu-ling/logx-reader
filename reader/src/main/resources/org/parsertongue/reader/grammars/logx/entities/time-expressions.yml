@@ -52,7 +52,7 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      [word=/^FY\d\d\d\d/]
+      [word=/^FY\d{4}/]
 
   - name: "date"
     label: Date
