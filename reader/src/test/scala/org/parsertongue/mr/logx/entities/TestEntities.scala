@@ -304,6 +304,23 @@ class TestEntities extends FlatSpec with Matchers {
         labels = Seq(PositiveLabelTestCase("Vessel")),
         mentionSpan = NegativeTextTestCase("Finima"), // mentionSpan doesn't match text
         text = "LNG Finima"
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("TypedThreat")),
+        mentionSpan = PositiveTextTestCase("political threats"),
+        text = "political threats",
+        foundBy = Some("typed-threat")
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Threat")),
+        mentionSpan = PositiveTextTestCase("threats to national security"),
+        text = "threats to national security",
+        foundBy = Some("threat")        
+      ),
+      ForAllMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("Threat")),
+        mentionSpan = NegativeTextTestCase("threatening to individual departments"),
+        text = "the decrease in AAO is threatening to individual departments"
       )
     )
 

@@ -35,6 +35,8 @@
       - QuantifiedCargo
       - ShipmentOf
     - RiskOf
+    - Threat:
+      - TypedThreat
 
 - Measurement:
   - Unit

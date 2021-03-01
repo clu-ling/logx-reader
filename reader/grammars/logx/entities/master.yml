@@ -173,6 +173,28 @@ rules:
   #   pattern: |
   #     [tag=/^(JJ|NN)/]* [lemma=/ility$/ & entity=O & !mention=/./]
 
+  #FIXME: Add rule for Threat and TypedThreat
+    #EG. threat to national security, political threat
+  - name: "threat"
+    label: Threat
+    type: token
+    pattern: |
+      # he is a threat
+      [lemma=threat]
+      |
+      # threat to national security
+      (?<trigger> [lemma=threat])
+      to @threatened:Entity
+
+  - name: "typed-threat"
+    label: TypedThreat
+    type: token
+    pattern: |
+      #political threats
+      #political threats to national security
+      (?<type> [tag=/^JJ/])
+      @threat:Threat
+
   - import: ${pathPrefix}/entities/time-expressions.yml
 
   - import: ${pathPrefix}/entities/xp.yml
