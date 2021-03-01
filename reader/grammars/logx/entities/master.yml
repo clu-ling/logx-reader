@@ -1,12 +1,12 @@
-#taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
+taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
 #taxonomy: file:///home/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
-taxonomy: file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
+#taxonomy: file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
 
 vars:
   # NOTE: change pathPrefix for development
-  #pathPrefix: "org/parsertongue/reader/grammars/logx"
+  pathPrefix: "org/parsertongue/reader/grammars/logx"
   #pathPrefix: "file:///home/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
-  pathPrefix: "file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx"
+  #pathPrefix: "file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx"
   wh-words-en: "how|that|what|whatever|when|whenever|where|which|who|whoever|whom|whose|why"
 
 rules:
@@ -179,12 +179,10 @@ rules:
     label: Threat
     type: token
     pattern: |
-      # he is a threat
-      [lemma=threat]
+      # threat (to national security)?
+      [lemma=threat] (?!to) 
       |
-      # threat to national security
-      (?<trigger> [lemma=threat])
-      to @threatened:Entity
+      [lemma=threat] to @Entity
 
   - name: "typed-threat"
     label: TypedThreat
@@ -193,7 +191,15 @@ rules:
       #political threats
       #political threats to national security
       (?<type> [tag=/^JJ/])
-      @threat:Threat
+      @trigger:Threat
+
+  - name: "equivalence"
+    label: Equivalence
+    type: token
+    pattern: |
+      # Overseas Contingency Operations (OCO)
+      @trigger:Organization 
+      (?<alias> "(" /^[A-Z][A-Za-z]+$/ ")")
 
   - import: ${pathPrefix}/entities/time-expressions.yml
 

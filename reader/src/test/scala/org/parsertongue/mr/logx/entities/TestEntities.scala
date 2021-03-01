@@ -190,13 +190,13 @@ class TestEntities extends FlatSpec with Matchers {
         ),
         mentionSpan = PositiveTextTestCase("FY2017"),
         text = "FY2017",
-        foundBy = "fiscal-year"
+        foundBy = Some("fiscal-year")
       ),
-      ForAllMentionTestCase(
-        labels = Seq(NegativeLabelTestCase("FiscalYear")),
-        mentionSpan = NegativeTextTestCase("FYI"),
-        text = "FYI the planes left"
-      ),
+      // ForAllMentionTestCase(
+      //   labels = Seq(NegativeLabelTestCase("FiscalYear")),
+      //   mentionSpan = NegativeTextTestCase("FYI"),
+      //   text = "FYI the planes left"
+      // ),
       //FIXME: add tests for Jul, etc...
       //FIXME: add test for #K quantities
     )
@@ -312,6 +312,12 @@ class TestEntities extends FlatSpec with Matchers {
         foundBy = Some("typed-threat")
       ),
       ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("TypedThreat")),
+        mentionSpan = PositiveTextTestCase("political threats to national security"),
+        text = "political threats to national security",
+        foundBy = Some("typed-threat")
+      ),
+      ExistsMentionTestCase(
         labels = Seq(PositiveLabelTestCase("Threat")),
         mentionSpan = PositiveTextTestCase("threats to national security"),
         text = "threats to national security",
@@ -321,6 +327,17 @@ class TestEntities extends FlatSpec with Matchers {
         labels = Seq(NegativeLabelTestCase("Threat")),
         mentionSpan = NegativeTextTestCase("threatening to individual departments"),
         text = "the decrease in AAO is threatening to individual departments"
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Alias")),
+        mentionSpan = PositiveTextTestCase("Overseas Contingency Operations (OCO)"),
+        text = "Overseas Contingency Operations (OCO)",
+        foundBy = Some("equivalence")
+      ),
+      ForAllMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("Alias")),
+        mentionSpan = NegativeTextTestCase("requirement (AAO)"),
+        text = "requirement (AAO)"
       )
     )
 

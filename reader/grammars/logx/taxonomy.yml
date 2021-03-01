@@ -37,6 +37,7 @@
     - RiskOf
     - Threat:
       - TypedThreat
+    - Equivalence
 
 - Measurement:
   - Unit

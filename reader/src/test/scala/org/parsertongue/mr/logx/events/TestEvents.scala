@@ -458,8 +458,8 @@ class TestEvents extends FlatSpec with Matchers {
               text = PositiveTextTestCase("political threats")
             )
           )
-        )
-      ),
+        ),
+      )
 
       testCases foreach { tc =>
         val results = system.extract(tc.text)
