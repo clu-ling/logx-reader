@@ -1,5 +1,6 @@
 taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
 #taxonomy: file:///home/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
+#taxonomy: file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
 
 vars:
   # NOTE: change pathPrefix for development
@@ -47,7 +48,8 @@ rules:
     label: Quantity
     type: token
     pattern: |
-      [word=/^\d/] (?=@Unit)
+      [word=/^\d/] (?=@Unit) |
+      [word=/(?<=\d)(?i)k/]
 
   - name: "quantity-2"
     label: Quantity
@@ -174,4 +176,3 @@ rules:
   - import: ${pathPrefix}/entities/time-expressions.yml
 
   - import: ${pathPrefix}/entities/xp.yml
-  

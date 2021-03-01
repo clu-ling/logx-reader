@@ -19,7 +19,9 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      January|February|March|April|May|June|July|August|September|October|November|December
+      January|February|March|April|May|June|July|August|September|October|November|December |
+      Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec |
+      Sept
 
   - name: "calendar-day"
     label: CalendarDay
@@ -44,6 +46,13 @@ rules:
       (?<=@Month|[word=/^([0-2]?\d|3[0-1])(nd|rd|th|st)?$/] ","?) [word=/^(1[8-9]|2[0-1])?[0-9][0-9]$/]
       |
       (?<=[word=/^(0?[1-9]|1[0-2])$/] ","?) [word=/^(1[8-9]|2[0-1])?[0-9][0-9]$/]
+
+  - name: "fiscal-year"
+    label: FiscalYear
+    type: token
+    action: ${actionFlow}
+    pattern: |
+      [word=/^FY\d{4}/]
 
   - name: "date"
     label: Date
@@ -126,7 +135,7 @@ rules:
     type: token
     action: ${actionFlow}
     pattern: |
-      [lemma=/^(since|until|during|through|throughout|over)$/] @TimeExpression 
+      [lemma=/^(since|until|during|through|throughout|over|for)$/] @TimeExpression 
       #note that 'since', 'until' are both interval and after/before
       |
       (?<start> @AfterTime) (?<end> @BeforeTime)
@@ -134,7 +143,12 @@ rules:
       [lemma=between] (?<start> @TimeExpression) [lemma=and] (?<end> @TimeExpression)
       # todo: add possibility of conjunction, ex. 'starting 9/20 and ending 11/20'
 
-  #- name: "iterative-time-expression"
+  - name: "complex-interval-time-expression"
+    label: ComplexIntervalTime
+    type: token
+    action: ${actionFlow}
+    pattern: |
+      (?<frequency> [lemma=/^(daily|everyday)$/]) (@interval:IntervalTime)
 
   - name: "time-unit"
     label: TimeUnit

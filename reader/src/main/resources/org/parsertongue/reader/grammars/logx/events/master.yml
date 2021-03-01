@@ -1,5 +1,6 @@
 taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
 #taxonomy: file:///home/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
+#taxonomy: file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
 
 vars:
   # NOTE: change pathPrefix for development
@@ -13,7 +14,7 @@ vars:
 
   decrease_triggers: "limit|lose|loss|lower|negat|reduc"
 
-  event_action: "identity"
+  event_action: "identityAction"
 
 rules:
   - import: ${pathPrefix}/events/constraints.yml
@@ -31,7 +32,6 @@ rules:
     pattern: |
       trigger = [lemma=risk] of
       type:Entity = nmod_of
-
   
   ############################
   # Entity affects Entity
