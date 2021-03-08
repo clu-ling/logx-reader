@@ -219,7 +219,47 @@ class TestEntities extends FlatSpec with Matchers {
         labels = Seq(NegativeLabelTestCase("Quantity")),
         mentionSpan = NegativeTextTestCase("k"),
         text = "truck"
-      )     
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("IntervalTime")),
+        mentionSpan = PositiveTextTestCase("between 2001 and 2007"),
+        text = "between 2001 and 2007",
+        foundBy = Some("interval-time-expression")
+      ),
+      ForAllMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("IntervalTime")),
+        mentionSpan = NegativeTextTestCase("between 1900 and 2000"),
+        text = "between 1900 and 2000 tons of shipping"
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("AfterTime")),
+        mentionSpan = PositiveTextTestCase("post 2012"),
+        text = "post 2012",
+        foundBy = Some("after-time-expression")
+      ),
+      ForAllMentionTestCase(
+        labels = Seq(NegativeLabelTestCase("AfterTime")),
+        mentionSpan = NegativeTextTestCase("post 2000"),
+        text = "you should post 2000 articles by July"
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Date")),
+        mentionSpan = PositiveTextTestCase("2 November 2016"),
+        text = "2 November 2016",
+        foundBy = Some("date")
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("ApproximateTime")),
+        mentionSpan = PositiveTextTestCase("circa Nov 2016"),
+        text = "circa Nov 2016",
+        foundBy = Some("approx-time") //FIXME: Implement me
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("AfterTime")),
+        mentionSpan = PositiveTextTestCase("as of Jul 2017"),
+        text = "as of Jul 2017",
+        foundBy = Some("after-time-expression")
+      )
     )
 
     testCases foreach { tc =>
