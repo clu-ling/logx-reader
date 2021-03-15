@@ -374,6 +374,163 @@ class TestEntities extends FlatSpec with Matchers {
       checkMention(tc, results) should be (true)
     }  
   }
+
+  it should "identify concepts mentions" in {
+    val testCases = Seq(
+      ExistsMentionTestCase( //complex subtype
+        labels = Seq(PositiveLabelTestCase("ComplexConcept")),
+        mentionSpan = PositiveTextTestCase("ancient ostrich feathers"),
+        text = "ancient ostrich feathers",
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("ancient ostrich")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("feathers")
+          )
+        )
+      ),
+      ExistsMentionTestCase( //multiple subtypes
+        labels = Seq(PositiveLabelTestCase("ComplexConcept")),
+        mentionSpan = PositiveTextTestCase("intercontinental ballistic missile"),
+        text = "intercontinental ballistic missile",
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("intercontinental")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("ballistic")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("missile")
+          )
+        )
+      ),
+      ExistsMentionTestCase( //subtypes right-of core
+        labels = Seq(PositiveLabelTestCase("ComplexConcept")),
+        mentionSpan = PositiveTextTestCase("jar of acid"),
+        text = "jar of acid",
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("of acid")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("jar")
+          )
+        )
+      ),
+      ExistsMentionTestCase( //recursive subtypes, right-of core
+      //ComplexConcept:
+      //  core: jar of acid (ComplexConcept)
+      //        core: jar (Concept)
+      //        subtype: of acid (Modifier)
+      //  subtype: from Paris (Modifier)
+        labels = Seq(PositiveLabelTestCase("ComplexConcept")),
+        mentionSpan = PositiveTextTestCase("jar of acid from Paris"),
+        text = "jar of acid from Paris",
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("from Paris")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("ComplexConcept")),
+            text = PositiveTextTestCase("jar of acid")
+          )
+        )
+      ),
+      ExistsMentionTestCase( //conjoined subtypes
+        labels = Seq(PositiveLabelTestCase("ComplexConcept")),
+        mentionSpan = PositiveTextTestCase("political, economic, and national security threats"),
+        text = "political, economic, and national security threats",
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("political")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("economic")
+          ),
+          PositiveArgTestCase( //national security should be labeled "Concept" AND "Modifier"
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Concept"), PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("national security")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("threats")
+          )
+        )
+      ),
+      ExistsMentionTestCase( //Organizations not labeled ComplexConcept
+        labels = Seq(
+          PositiveLabelTestCase("Concept"), 
+          PositiveLabelTestCase("Organization"),
+          NegativeLabelTestCase("ComplexConcept")
+        ),
+        mentionSpan = PositiveTextTestCase("National Command Authority"),
+        text = "National Command Authority",
+        foundBy = Some("base-concept")
+      ),
+      ExistsMentionTestCase( //Complex subtype with LOC NER-tag
+        labels = Seq(PositiveLabelTestCase("ComplexConcept")),
+        mentionSpan = PositiveTextTestCase("Chicago style pizza"),
+        text = "Chicago style pizza",
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("Chicago style")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("pizza")
+          )
+        )
+      ),
+      ExistsMentionTestCase( //"Empire State Building" not ComplexConcept
+      // FIXME: currently labeled Organization by NER-tagging
+        labels = Seq(PositiveLabelTestCase("Concept"), NegativeLabelTestCase("ComplexConcept")),
+        mentionSpan = PositiveTextTestCase("Empire State Building"),
+        text = "Empire State Building",
+        foundBy = Some("base-conecpt")
+      ),
+      ForAllMentionTestCase( //don't include determiners
+        labels = Seq(NegativeLabelTestCase("ComplexConcept")),
+        mentionSpan = NegativeTextTestCase("the jar of acid"),
+        text = "the jar of acid"
+      )
+      //Relative Clauses? e.g. "the threat which is posed by national security leaks"   
+      //Possessives? e.g. "New York's skyscrapers"
+    )
+
+    testCases foreach { tc =>
+      val results = system.extract(tc.text)
+      results should not be empty
+      checkMention(tc, results) should be (true)
+    }
+  }
   
 }
 

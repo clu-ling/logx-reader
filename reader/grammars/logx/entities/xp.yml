@@ -4,8 +4,17 @@
   priority: 3
   type: token
   pattern: |
-    [tag=/^(NN|JJ)/ & !mention=/./ & !word=/(?i)^(many|several)/]* 
-    [tag=/NN/ &!mention=/./]+
+    # [tag=/^(NN|JJ)/ & !mention=/./ & !word=/(?i)^(many|several)/]* 
+    # [tag=/NN/ &!mention=/./]+
+    [tag=/NN/ & !mention=/./] (?![mention=Concept])
+
+- name: "complex-concept-penn"
+  label: ComplexConcept
+  priority: 4
+  type: token
+  pattern: |
+    (?<subtype> [tag=/^(NN|JJ)/ & !mention=/./ & !word=/(?i)^(many|several)/])+
+    (?<core> [mention=/^(Concept|ComplexConcept)/])
 
 - name: "verb"
   label: Verb
@@ -13,6 +22,7 @@
   unit: tag
   pattern: |
     /^V/
+
 # # FIXME: switch to Penn tagset
 # - name: "base-concept-universal"
 #   label: Concept
