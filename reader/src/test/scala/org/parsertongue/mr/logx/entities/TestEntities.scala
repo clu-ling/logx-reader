@@ -377,7 +377,7 @@ class TestEntities extends FlatSpec with Matchers {
 
   it should "identify concepts mentions" in {
     val testCases = Seq(
-      ExistsMentionTestCase( //complex subtype
+      ExistsMentionTestCase( //multiple subtypes (Ambiguous: feathers from ancient ostriches | ancient feathers from ostriches)
         labels = Seq(PositiveLabelTestCase("ComplexConcept")),
         mentionSpan = PositiveTextTestCase("ancient ostrich feathers"),
         text = "ancient ostrich feathers",
@@ -385,7 +385,12 @@ class TestEntities extends FlatSpec with Matchers {
           PositiveArgTestCase(
             role = PositiveRoleTestCase("subtype"),
             labels = Seq(PositiveLabelTestCase("Modifier")),
-            text = PositiveTextTestCase("ancient ostrich")
+            text = PositiveTextTestCase("ancient")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("ostrich")
           ),
           PositiveArgTestCase(
             role = PositiveRoleTestCase("core"),
@@ -430,28 +435,6 @@ class TestEntities extends FlatSpec with Matchers {
             role = PositiveRoleTestCase("core"),
             labels = Seq(PositiveLabelTestCase("Concept")),
             text = PositiveTextTestCase("jar")
-          )
-        )
-      ),
-      ExistsMentionTestCase( //recursive subtypes, right-of core
-      //ComplexConcept:
-      //  core: jar of acid (ComplexConcept)
-      //        core: jar (Concept)
-      //        subtype: of acid (Modifier)
-      //  subtype: from Paris (Modifier)
-        labels = Seq(PositiveLabelTestCase("ComplexConcept")),
-        mentionSpan = PositiveTextTestCase("jar of acid from Paris"),
-        text = "jar of acid from Paris",
-        args = List(
-          PositiveArgTestCase(
-            role = PositiveRoleTestCase("subtype"),
-            labels = Seq(PositiveLabelTestCase("Modifier")),
-            text = PositiveTextTestCase("from Paris")
-          ),
-          PositiveArgTestCase(
-            role = PositiveRoleTestCase("core"),
-            labels = Seq(PositiveLabelTestCase("ComplexConcept")),
-            text = PositiveTextTestCase("jar of acid")
           )
         )
       ),
@@ -520,7 +503,7 @@ class TestEntities extends FlatSpec with Matchers {
         labels = Seq(NegativeLabelTestCase("ComplexConcept")),
         mentionSpan = NegativeTextTestCase("the jar of acid"),
         text = "the jar of acid"
-      )
+      ),
       //Relative Clauses? e.g. "the threat which is posed by national security leaks"   
       //Possessives? e.g. "New York's skyscrapers"
     )

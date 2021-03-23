@@ -89,7 +89,7 @@ class OdinActions extends Actions {
     // find mentions of the same label and sentence overlap
       (k, v) <- mentions.groupBy(m => (m.sentence, m.label))
       m <- v
-      // for overlapping mentions starting at the same token, keep only the longest
+      // for overlapping mentions, keep only the longest
       longest = v.filter(_.tokenInterval.overlaps(m.tokenInterval)).maxBy(_.tokenInterval.length)
     } yield longest
     mns.toVector.distinct

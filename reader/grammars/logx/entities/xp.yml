@@ -1,20 +1,48 @@
 # FIXME: switch to Penn tagset
-- name: "base-concept-penn"
-  label: Concept
-  priority: 3
-  type: token
-  pattern: |
-    # [tag=/^(NN|JJ)/ & !mention=/./ & !word=/(?i)^(many|several)/]* 
-    # [tag=/NN/ &!mention=/./]+
-    [tag=/NN/ & !mention=/./] (?![mention=Concept])
+# - name: "base-concept-penn"
+#   label: Concept
+#   priority: 3
+#   type: token
+#   pattern: |
+#     # [tag=/^(NN|JJ)/ & !mention=/./ & !word=/(?i)^(many|several)/]* 
+#     # [tag=/NN/ &!mention=/./]+
+#     [tag=/NN/ & !mention=/./]
 
-- name: "complex-concept-penn"
-  label: ComplexConcept
-  priority: 4
+# - name: "complex-concept-penn"
+#   label: ComplexConcept
+#   priority: 4
+#   type: token
+#   pattern: |
+#     (?<subtype> [tag=/^(NN|JJ)/ & !mention=/./ & !word=/(?i)^(many|several)/])+
+#     (?<core> [mention=/^(Concept|ComplexConcept)/])
+
+- name: concept-1
+  label: Concept
   type: token
   pattern: |
-    (?<subtype> [tag=/^(NN|JJ)/ & !mention=/./ & !word=/(?i)^(many|several)/])+
-    (?<core> [mention=/^(Concept|ComplexConcept)/])
+    [tag=/^NNS?$/] 
+    |
+    [entity=/^B\-(LOC|ORG|PER)$/] [entity=/^I\-(LOC|ORG|PER)$/]*
+    |
+    [tag=/^NNP/]+
+
+- name: concept-modifier
+  label: Modifier
+  type: token
+  pattern: |
+    # Any JJ or Concept in a sequence of JJs and Concepts (not last)
+    [tag=/^JJ/]
+    |
+    @Concept (?=[mention="Concept"]|[tag=/^JJ/])
+
+- name: concept-2
+  label: Concept
+  type: token
+  pattern: |
+    (@subtype:Concept | @subtype:Modifier)
+    #(?<subtype> [mention="Modifier" | mention="Concept"])+
+    @core:Concept
+    #(?<core> [mention="Concept"])
 
 - name: "verb"
   label: Verb
