@@ -16,8 +16,9 @@
 #     (?<subtype> [tag=/^(NN|JJ)/ & !mention=/./ & !word=/(?i)^(many|several)/])+
 #     (?<core> [mention=/^(Concept|ComplexConcept)/])
 
-- name: concept-1
+- name: base-concept
   label: Concept
+  priority: 1
   type: token
   pattern: |
     [tag=/^NNS?$/] 
@@ -26,23 +27,37 @@
     |
     [tag=/^NNP/]+
 
-- name: concept-modifier
+- name: base-modifier
   label: Modifier
   type: token
   pattern: |
     # Any JJ or Concept in a sequence of JJs and Concepts (not last)
     [tag=/^JJ/]
     |
-    @Concept (?=[mention="Concept"]|[tag=/^JJ/])
+    @Concept (?=[lemma=","]? [lemma=and]? (@Concept|[tag=/^JJ/]))
 
-- name: concept-2
+# - name: compound-modifier
+#   label: Modifier
+#   priority: 3
+#   type: token
+#   pattern: |
+#     @subtype:Modifier
+#     (?<core> [mention=Concept & mention=Modifier])
+
+- name: concept-serial-mod
   label: Concept
   type: token
   pattern: |
-    (@subtype:Concept | @subtype:Modifier)
-    #(?<subtype> [mention="Modifier" | mention="Concept"])+
+    @subtype:Modifier+
     @core:Concept
-    #(?<core> [mention="Concept"])
+
+- name: concept-coord-mod
+  label: Concept
+  priority: 4
+  pattern: |
+    core:Concept
+    # subtype:Modifier = (>> | (<< >>?)) [!mention=Concept.subtype]
+    subtype:Modifier = (>amod | (<conj_and >conj_and?)) [!mention=Concept.subtype]
 
 - name: "verb"
   label: Verb

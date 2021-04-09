@@ -93,9 +93,11 @@ class LogxActions extends OdinActions {
     val validEntities  = MentionFilter.validEntities(mentions)
     val res1 = keepLongestByLabel(validEntities, "TimeExpression")
     // now cleanup concepts and keep longest (the nested concept containing all simpler cases)
+    val toKeep = res1.filter(_.foundBy == "concept-coord-mod")
     val prunedEntities = keepLongestByLabel(res1, "Concept")
     val entities = MentionFilter.keepLongestMentions(prunedEntities)
-    entities
+    (entities ++ toKeep).distinct
+    //entities
   }
 
   def finalSweep(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {

@@ -210,10 +210,10 @@ class TestEntities extends FlatSpec with Matchers {
         text = "Julia"
       ),
       ExistsMentionTestCase(
-        labels = Seq(PositiveLabelTestCase("Quantity")),
+        labels = Seq(PositiveLabelTestCase("NumericExpression")),
         mentionSpan = PositiveTextTestCase("202k"),
         text = "202k",
-        foundBy = Some("quantity-1")
+        foundBy = Some("numeric-expression")
       ),
       ForAllMentionTestCase(
         labels = Seq(NegativeLabelTestCase("Quantity")),
@@ -231,35 +231,35 @@ class TestEntities extends FlatSpec with Matchers {
         mentionSpan = NegativeTextTestCase("between 1900 and 2000"),
         text = "between 1900 and 2000 tons of shipping"
       ),
-      ExistsMentionTestCase(
-        labels = Seq(PositiveLabelTestCase("AfterTime")),
-        mentionSpan = PositiveTextTestCase("post 2012"),
-        text = "post 2012",
-        foundBy = Some("after-time-expression")
-      ),
+      // ExistsMentionTestCase( // FIXME: Implement me
+      //   labels = Seq(PositiveLabelTestCase("AfterTime")),
+      //   mentionSpan = PositiveTextTestCase("post 2012"),
+      //   text = "post 2012",
+      //   foundBy = Some("after-time-expression")
+      // ),
       ForAllMentionTestCase(
         labels = Seq(NegativeLabelTestCase("AfterTime")),
         mentionSpan = NegativeTextTestCase("post 2000"),
         text = "you should post 2000 articles by July"
       ),
-      ExistsMentionTestCase(
-        labels = Seq(PositiveLabelTestCase("Date")),
-        mentionSpan = PositiveTextTestCase("2 November 2016"),
-        text = "2 November 2016",
-        foundBy = Some("date")
-      ),
-      ExistsMentionTestCase(
-        labels = Seq(PositiveLabelTestCase("ApproximateTime")),
-        mentionSpan = PositiveTextTestCase("circa Nov 2016"),
-        text = "circa Nov 2016",
-        foundBy = Some("approx-time") //FIXME: Implement me
-      ),
-      ExistsMentionTestCase(
-        labels = Seq(PositiveLabelTestCase("AfterTime")),
-        mentionSpan = PositiveTextTestCase("as of Jul 2017"),
-        text = "as of Jul 2017",
-        foundBy = Some("after-time-expression")
-      )
+      // ExistsMentionTestCase( // FIXME: Implement me
+      //   labels = Seq(PositiveLabelTestCase("Date")),
+      //   mentionSpan = PositiveTextTestCase("2 November 2016"),
+      //   text = "2 November 2016",
+      //   foundBy = Some("date")
+      // ),
+      // ExistsMentionTestCase( // FIXME: Implement me
+      //   labels = Seq(PositiveLabelTestCase("ApproximateTime")),
+      //   mentionSpan = PositiveTextTestCase("circa Nov 2016"),
+      //   text = "circa Nov 2016",
+      //   foundBy = Some("approx-time")
+      // ),
+      // ExistsMentionTestCase( // FIXME: Implement me
+      //   labels = Seq(PositiveLabelTestCase("AfterTime")),
+      //   mentionSpan = PositiveTextTestCase("as of Jul 2017"),
+      //   text = "as of Jul 2017",
+      //   foundBy = Some("after-time-expression")
+      // )
     )
 
     testCases foreach { tc =>
@@ -375,10 +375,10 @@ class TestEntities extends FlatSpec with Matchers {
     }  
   }
 
-  it should "identify concepts mentions" in {
+  it should "identify concept mentions" in {
     val testCases = Seq(
-      ExistsMentionTestCase( //multiple subtypes (Ambiguous: feathers from ancient ostriches | ancient feathers from ostriches)
-        labels = Seq(PositiveLabelTestCase("ComplexConcept")),
+      ExistsMentionTestCase( //multiple subtypes
+        labels = Seq(PositiveLabelTestCase("Concept")),
         mentionSpan = PositiveTextTestCase("ancient ostrich feathers"),
         text = "ancient ostrich feathers",
         args = List(
@@ -400,7 +400,7 @@ class TestEntities extends FlatSpec with Matchers {
         )
       ),
       ExistsMentionTestCase( //multiple subtypes
-        labels = Seq(PositiveLabelTestCase("ComplexConcept")),
+        labels = Seq(PositiveLabelTestCase("Concept")),
         mentionSpan = PositiveTextTestCase("intercontinental ballistic missile"),
         text = "intercontinental ballistic missile",
         args = List(
@@ -421,69 +421,15 @@ class TestEntities extends FlatSpec with Matchers {
           )
         )
       ),
-      ExistsMentionTestCase( //subtypes right-of core
-        labels = Seq(PositiveLabelTestCase("ComplexConcept")),
-        mentionSpan = PositiveTextTestCase("jar of acid"),
-        text = "jar of acid",
+      ExistsMentionTestCase( //Compound subtype
+        labels = Seq(PositiveLabelTestCase("Concept")),
+        mentionSpan = PositiveTextTestCase("Chicago-style pizza"),
+        text = "Chicago-style pizza",
         args = List(
           PositiveArgTestCase(
             role = PositiveRoleTestCase("subtype"),
             labels = Seq(PositiveLabelTestCase("Modifier")),
-            text = PositiveTextTestCase("of acid")
-          ),
-          PositiveArgTestCase(
-            role = PositiveRoleTestCase("core"),
-            labels = Seq(PositiveLabelTestCase("Concept")),
-            text = PositiveTextTestCase("jar")
-          )
-        )
-      ),
-      ExistsMentionTestCase( //conjoined subtypes
-        labels = Seq(PositiveLabelTestCase("ComplexConcept")),
-        mentionSpan = PositiveTextTestCase("political, economic, and national security threats"),
-        text = "political, economic, and national security threats",
-        args = List(
-          PositiveArgTestCase(
-            role = PositiveRoleTestCase("subtype"),
-            labels = Seq(PositiveLabelTestCase("Modifier")),
-            text = PositiveTextTestCase("political")
-          ),
-          PositiveArgTestCase(
-            role = PositiveRoleTestCase("subtype"),
-            labels = Seq(PositiveLabelTestCase("Modifier")),
-            text = PositiveTextTestCase("economic")
-          ),
-          PositiveArgTestCase( //national security should be labeled "Concept" AND "Modifier"
-            role = PositiveRoleTestCase("subtype"),
-            labels = Seq(PositiveLabelTestCase("Concept"), PositiveLabelTestCase("Modifier")),
-            text = PositiveTextTestCase("national security")
-          ),
-          PositiveArgTestCase(
-            role = PositiveRoleTestCase("subtype"),
-            labels = Seq(PositiveLabelTestCase("Concept")),
-            text = PositiveTextTestCase("threats")
-          )
-        )
-      ),
-      ExistsMentionTestCase( //Organizations not labeled ComplexConcept
-        labels = Seq(
-          PositiveLabelTestCase("Concept"), 
-          PositiveLabelTestCase("Organization"),
-          NegativeLabelTestCase("ComplexConcept")
-        ),
-        mentionSpan = PositiveTextTestCase("National Command Authority"),
-        text = "National Command Authority",
-        foundBy = Some("base-concept")
-      ),
-      ExistsMentionTestCase( //Complex subtype with LOC NER-tag
-        labels = Seq(PositiveLabelTestCase("ComplexConcept")),
-        mentionSpan = PositiveTextTestCase("Chicago style pizza"),
-        text = "Chicago style pizza",
-        args = List(
-          PositiveArgTestCase(
-            role = PositiveRoleTestCase("subtype"),
-            labels = Seq(PositiveLabelTestCase("Modifier")),
-            text = PositiveTextTestCase("Chicago style")
+            text = PositiveTextTestCase("Chicago-style")
           ),
           PositiveArgTestCase(
             role = PositiveRoleTestCase("core"),
@@ -492,17 +438,265 @@ class TestEntities extends FlatSpec with Matchers {
           )
         )
       ),
+      ExistsMentionTestCase( //Multiple compound subtypes
+        labels = Seq(PositiveLabelTestCase("Concept")),
+        mentionSpan = PositiveTextTestCase("Chicago-style thin-crust pizza"),
+        text = "Chicago-style thin-crust pizza",
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("Chicago-style")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("thin-crust")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("pizza")
+          )
+        )
+      ),
+      // ExistsMentionTestCase( //subtypes right-of core
+      //   labels = Seq(PositiveLabelTestCase("ComplexConcept")),
+      //   mentionSpan = PositiveTextTestCase("jar of acid"),
+      //   text = "jar of acid",
+      //   args = List(
+      //     PositiveArgTestCase(
+      //       role = PositiveRoleTestCase("subtype"),
+      //       labels = Seq(PositiveLabelTestCase("Modifier")),
+      //       text = PositiveTextTestCase("of acid")
+      //     ),
+      //     PositiveArgTestCase(
+      //       role = PositiveRoleTestCase("core"),
+      //       labels = Seq(PositiveLabelTestCase("Concept")),
+      //       text = PositiveTextTestCase("jar")
+      //     )
+      //   )
+      // ),
+
+      // EX: They pose a national security threat.
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Concept")),
+        mentionSpan = PositiveTextTestCase("national security threat"),
+        text = "They pose a national security threat.",
+        foundBy = Some("concept-serial-mod"),
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("national")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("security")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("threat")
+          )
+        )
+      ),
+
+      // EX: They pose a political, economic, and geographical threat.
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Concept")),
+        mentionSpan = PositiveTextTestCase("political, economic, and geographical threat"),
+        text = "They pose a political, economic, and geographical threat.",
+        foundBy = Some("concept-coord-mod"),
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("political")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("threat")
+          )
+        )
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Concept")),
+        mentionSpan = PositiveTextTestCase("economic, and geographical threat"),
+        text = "They pose a political, economic, and geographical threat.",
+        foundBy = Some("concept-coord-mod"),
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("economic")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("threat")
+          )
+        )
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Concept")),
+        mentionSpan = PositiveTextTestCase("geographical threat"),
+        text = "They pose a political, economic, and geographical threat.",
+        foundBy = Some("concept-serial-mod"),
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("geographical")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("threat")
+          )
+        )
+      ),
+
+      // EX: He poses a political, economic, and threat to national security.
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Concept")),
+        mentionSpan = PositiveTextTestCase("political, economic, and threat"),
+        text = "He poses a political, economic, and threat to national security.",
+        foundBy = Some("concept-coord-mod"),
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("political")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("threat")
+          )
+        )
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Concept")),
+        mentionSpan = PositiveTextTestCase("economic, and threat"),
+        text = "He poses a political, economic, and threat to national security.",
+        foundBy = Some("concept-coord-mod"),
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("economic")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("threat")
+          )
+        )
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Concept")),
+        mentionSpan = PositiveTextTestCase("national security"),
+        text = "He poses a political, economic, and threat to national security.",
+        foundBy = Some("concept-serial-mod"),
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("national")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("security")
+          )
+        )
+      ),
+
+      // EX: He poses a political, economic, and national security threat.
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Concept")),
+        mentionSpan = PositiveTextTestCase("political, economic, and threat"),
+        text = "He poses a political, economic, and national security threat.",
+        foundBy = Some("concept-coord-mod"),
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("political")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("threat")
+          )
+        )
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Concept")),
+        mentionSpan = PositiveTextTestCase("economic, and threat"),
+        text = "He poses a political, economic, and national security threat.",
+        foundBy = Some("concept-coord-mod"),
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("economic")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("threat")
+          )
+        )
+      ),
+      ExistsMentionTestCase(
+        labels = Seq(PositiveLabelTestCase("Concept")),
+        mentionSpan = PositiveTextTestCase("national security threat"),
+        text = "He poses a political, economic, and national security threat.",
+        foundBy = Some("concept-serial-mod"),
+        args = List(
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
+            text = PositiveTextTestCase("national")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("subtype"),
+            labels = Seq(PositiveLabelTestCase("Modifier"), PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("security")
+          ),
+          PositiveArgTestCase(
+            role = PositiveRoleTestCase("core"),
+            labels = Seq(PositiveLabelTestCase("Concept")),
+            text = PositiveTextTestCase("threat")
+          )
+        )
+      ),
+      
+      // Negatives
+      ExistsMentionTestCase( //Organizations not labeled ComplexConcept
+        labels = Seq(
+          PositiveLabelTestCase("Concept"), 
+          PositiveLabelTestCase("Organization")
+        ),
+        mentionSpan = PositiveTextTestCase("National Command Authority"),
+        text = "National Command Authority",
+        foundBy = Some("base-concept")
+      ),
       ExistsMentionTestCase( //"Empire State Building" not ComplexConcept
       // FIXME: currently labeled Organization by NER-tagging
-        labels = Seq(PositiveLabelTestCase("Concept"), NegativeLabelTestCase("ComplexConcept")),
+        labels = Seq(PositiveLabelTestCase("Concept")),
         mentionSpan = PositiveTextTestCase("Empire State Building"),
         text = "Empire State Building",
         foundBy = Some("base-conecpt")
       ),
       ForAllMentionTestCase( //don't include determiners
-        labels = Seq(NegativeLabelTestCase("ComplexConcept")),
-        mentionSpan = NegativeTextTestCase("the jar of acid"),
-        text = "the jar of acid"
+        labels = Seq(NegativeLabelTestCase("Concept")),
+        mentionSpan = NegativeTextTestCase("the jar"),
+        text = "the jar"
       ),
       //Relative Clauses? e.g. "the threat which is posed by national security leaks"   
       //Possessives? e.g. "New York's skyscrapers"
