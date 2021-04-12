@@ -1,10 +1,10 @@
-#taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
+# taxonomy: org/parsertongue/reader/grammars/logx/taxonomy.yml
 #taxonomy: file:///home/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
 taxonomy: file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx/taxonomy.yml
 
 vars:
   # NOTE: change pathPrefix for development
-  #pathPrefix: "org/parsertongue/reader/grammars/logx"
+  # pathPrefix: "org/parsertongue/reader/grammars/logx"
   #pathPrefix: "file:///home/hahnpowell/repos/clu-ling/logx-reader/reader/grammars/logx"
   pathPrefix: "file:///home/zack/repos/clu-ling/logx-reader/reader/grammars/logx"
   wh-words-en: "how|that|what|whatever|when|whenever|where|which|who|whoever|whom|whose|why"
@@ -17,15 +17,16 @@ rules:
 # Concepts
 ######################################
 
-  - name: "org-ner"
-    label: Organization
-    priority: 3
-    example: "DoD"
-    type: token
-    pattern: |
-      [entity="B-ORG"]
-      # extant mentions should take priority
-      [entity="I-ORG" & !mention=/./]* 
+  # - name: "org-ner"
+  #   label: Organization
+  #   example: "DoD"
+  #   type: token
+  #   pattern: |
+  #     [entity="B-ORG"]
+  #     # extant mentions should take priority
+  #     # [entity="I-ORG" & !mention=/./]* 
+  #     # Concept updates create extant mentions without priority over ORG
+  #     [entity="I-ORG"]*
 
   - name: "loc-ner"
     label: Location

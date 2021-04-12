@@ -32,7 +32,7 @@
   type: token
   pattern: |
     # Any JJ or Concept in a sequence of JJs and Concepts (not last)
-    [tag=/^JJ/]
+    [tag=/^JJ/ & !word=/(?i)^(many|several|alternative|much)/]
     |
     @Concept (?=[lemma=","]? [lemma=and]? (@Concept|[tag=/^JJ/]))
 
@@ -57,8 +57,8 @@
   pattern: |
     core:Concept
     # subtype:Modifier = (>> | (<< >>?)) [!mention=Concept.subtype]
-    subtype:Modifier = (>amod | (<conj_and >conj_and?)) [!mention=Concept.subtype]
-
+    subtype:Modifier = (>amod | (<conj_and >conj_and?) | >compound) [!mention=Concept.subtype]
+    
 - name: "verb"
   label: Verb
   type: token

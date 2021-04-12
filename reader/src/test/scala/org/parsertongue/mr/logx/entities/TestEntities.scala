@@ -618,7 +618,7 @@ class TestEntities extends FlatSpec with Matchers {
       // EX: He poses a political, economic, and national security threat.
       ExistsMentionTestCase(
         labels = Seq(PositiveLabelTestCase("Concept")),
-        mentionSpan = PositiveTextTestCase("political, economic, and threat"),
+        mentionSpan = PositiveTextTestCase("political, economic, and national security threat"),
         text = "He poses a political, economic, and national security threat.",
         foundBy = Some("concept-coord-mod"),
         args = List(
@@ -636,7 +636,7 @@ class TestEntities extends FlatSpec with Matchers {
       ),
       ExistsMentionTestCase(
         labels = Seq(PositiveLabelTestCase("Concept")),
-        mentionSpan = PositiveTextTestCase("economic, and threat"),
+        mentionSpan = PositiveTextTestCase("economic, and national security threat"),
         text = "He poses a political, economic, and national security threat.",
         foundBy = Some("concept-coord-mod"),
         args = List(
@@ -665,7 +665,7 @@ class TestEntities extends FlatSpec with Matchers {
           ),
           PositiveArgTestCase(
             role = PositiveRoleTestCase("subtype"),
-            labels = Seq(PositiveLabelTestCase("Modifier"), PositiveLabelTestCase("Concept")),
+            labels = Seq(PositiveLabelTestCase("Modifier")),
             text = PositiveTextTestCase("security")
           ),
           PositiveArgTestCase(
@@ -679,8 +679,7 @@ class TestEntities extends FlatSpec with Matchers {
       // Negatives
       ExistsMentionTestCase( //Organizations not labeled ComplexConcept
         labels = Seq(
-          PositiveLabelTestCase("Concept"), 
-          PositiveLabelTestCase("Organization")
+          PositiveLabelTestCase("Concept")
         ),
         mentionSpan = PositiveTextTestCase("National Command Authority"),
         text = "National Command Authority",
@@ -691,12 +690,7 @@ class TestEntities extends FlatSpec with Matchers {
         labels = Seq(PositiveLabelTestCase("Concept")),
         mentionSpan = PositiveTextTestCase("Empire State Building"),
         text = "Empire State Building",
-        foundBy = Some("base-conecpt")
-      ),
-      ForAllMentionTestCase( //don't include determiners
-        labels = Seq(NegativeLabelTestCase("Concept")),
-        mentionSpan = NegativeTextTestCase("the jar"),
-        text = "the jar"
+        foundBy = Some("base-concept")
       ),
       //Relative Clauses? e.g. "the threat which is posed by national security leaks"   
       //Possessives? e.g. "New York's skyscrapers"
