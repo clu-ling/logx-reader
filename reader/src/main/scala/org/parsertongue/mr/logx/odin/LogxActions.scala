@@ -91,16 +91,26 @@ class LogxActions extends OdinActions {
 
   def cleanupEntities(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
     val validEntities  = MentionFilter.validEntities(mentions)
-    val prunedEntities = keepLongestByLabel(validEntities, "TimeExpression")
+    val res1 = keepLongestByLabel(validEntities, "TimeExpression")
+    // now cleanup concepts and keep longest (the nested concept containing all simpler cases)
+    val res2 = res1.filter(_.foundBy == "concept-coord-mod")
+    // Discard "concept-coord-mod" mentions with core notfoundBy "base-concept"
+    val toKeep = res2.filter(_.arguments("core").forall(_.foundBy == "base-concept"))
+    // Keep only the longest mentions foundBy concept-serial-mod
+    val res3 = res1.filterNot(_.foundBy == "concept-coord-mod")
+    val prunedEntities = keepLongestByLabel(res3, "Concept")
     val entities = MentionFilter.keepLongestMentions(prunedEntities)
-    entities
+    (entities ++ toKeep).distinct
+    // entities
   }
 
   def finalSweep(mentions: Seq[Mention], state: State = new State()): Seq[Mention] = {
+    val labelsToDiscard = Seq("VerbPhrase", "Modifier")
     //mentions.foreach{ m => println(s"MENTION: text:\t${m.text}\t(${m.label})\t${m.foundBy}") }
     val shortEnough = MentionFilter.keepShortSpans(mentions)
     val longest = MentionFilter.keepLongestMentions(shortEnough)
-    val filtered = longest.filterNot(_ matches "VerbPhrase")
+    //Discard VerbPhrase and Modifier mentions
+    val filtered = longest.filterNot(s => labelsToDiscard.exists(m => {s matches m}))
     //val events = MentionFilter.disallowOverlappingArgs(filtered)
     val remaining = filtered
 

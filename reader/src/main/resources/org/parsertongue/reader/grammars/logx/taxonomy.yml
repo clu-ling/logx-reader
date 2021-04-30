@@ -8,6 +8,7 @@
     # NOTE: these are converted in an action to create Concepts
     - NounPhrase:
       - Noun
+    - Modifier
   - Quantifier
 
 - Avoid:
@@ -35,10 +36,13 @@
       - QuantifiedCargo
       - ShipmentOf
     - RiskOf
+    # - Threat:
+    #   - TypedThreat
 
 - Measurement:
   - Unit
-  - Quantity
+  - NumericExpression:
+    - Quantity
 
 - Event:
   - Causal:

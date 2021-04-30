@@ -1,18 +1,71 @@
 # FIXME: switch to Penn tagset
-- name: "base-concept-penn"
+# - name: "base-concept-penn"
+#   label: Concept
+#   priority: 3
+#   type: token
+#   pattern: |
+#     # [tag=/^(NN|JJ)/ & !mention=/./ & !word=/(?i)^(many|several)/]* 
+#     # [tag=/NN/ &!mention=/./]+
+#     [tag=/NN/ & !mention=/./]
+
+# - name: "complex-concept-penn"
+#   label: ComplexConcept
+#   priority: 4
+#   type: token
+#   pattern: |
+#     (?<subtype> [tag=/^(NN|JJ)/ & !mention=/./ & !word=/(?i)^(many|several)/])+
+#     (?<core> [mention=/^(Concept|ComplexConcept)/])
+
+- name: base-concept
   label: Concept
-  priority: 3
+  priority: 1
   type: token
   pattern: |
-    [tag=/^(NN|JJ)/ & !mention=/./ & !word=/(?i)^(many|several)/]* 
-    [tag=/NN/ &!mention=/./]+
+    [tag=/^NNS?$/] 
+    |
+    [entity=/^B\-(LOC|ORG|PER)$/] [entity=/^I\-(LOC|ORG|PER)$/]*
+    |
+    [tag=/^NNP/]+
 
+- name: base-modifier
+  label: Modifier
+  type: token
+  pattern: |
+    # Any JJ or Concept in a sequence of JJs and Concepts (not last)
+    [tag=/^JJ/ & !word=/(?i)^(many|several|alternative|much)/]
+    |
+    @Concept (?=[lemma=","]? [lemma=and]? (@Concept|[tag=/^JJ/]))
+
+# - name: compound-modifier
+#   label: Modifier
+#   priority: 3
+#   type: token
+#   pattern: |
+#     @subtype:Modifier
+#     (?<core> [mention=Concept & mention=Modifier])
+
+- name: concept-serial-mod
+  label: Concept
+  type: token
+  pattern: |
+    @subtype:Modifier+
+    @core:Concept
+
+- name: concept-coord-mod
+  label: Concept
+  priority: 4
+  pattern: |
+    core:Concept
+    # subtype:Modifier = (>> | (<< >>?)) [!mention=Concept.subtype]
+    subtype:Modifier = (>amod | (<conj_and >conj_and?) | >compound) [!mention=Concept.subtype]
+    
 - name: "verb"
   label: Verb
   type: token
   unit: tag
   pattern: |
     /^V/
+
 # # FIXME: switch to Penn tagset
 # - name: "base-concept-universal"
 #   label: Concept

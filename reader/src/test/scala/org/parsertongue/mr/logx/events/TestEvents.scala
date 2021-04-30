@@ -253,7 +253,7 @@ class TestEvents extends FlatSpec with Matchers {
           mentionSpan = PositiveTextTestCase("What are alternative ports with enough cargo capacity to handle shipments redirected from Hamburg"),
           text = "What are alternative ports with enough cargo capacity to handle shipments redirected from Hamburg",
           args = List(
-            PositiveArgTestCase( 
+            PositiveArgTestCase(  
               role = PositiveRoleTestCase("constraints"),
               labels = Seq(PositiveLabelTestCase("OriginConstraint"), PositiveLabelTestCase("Constraint")),
               text = PositiveTextTestCase("Hamburg") 
@@ -294,12 +294,12 @@ class TestEvents extends FlatSpec with Matchers {
         ),
         ExistsMentionTestCase(
           text = "How much frozen meat is heading to Hamburg?",
-          labels = Seq(PositiveLabelTestCase("CargoQuery")), //PositiveLabelTestCase("QuantityQuery")),
+          labels = Seq(PositiveLabelTestCase("QuantityQuery")), //PositiveLabelTestCase("CargoQuery")),
           mentionSpan = PositiveTextTestCase("How much frozen meat is heading to Hamburg"),
           args = List(
             PositiveArgTestCase(
               role = PositiveRoleTestCase("need"),
-              labels = Seq(PositiveLabelTestCase("Cargo")),
+              labels = Seq(PositiveLabelTestCase("Concept")),
               text = PositiveTextTestCase("frozen meat")
             ),
             PositiveArgTestCase(

@@ -32,6 +32,18 @@ rules:
     pattern: |
       trigger = [lemma=risk] of
       type:Entity = nmod_of
+
+  # - name: "modifier"
+  #   label: Modifier
+  #   type: token
+  #   pattern: |
+  #     [tag=/^JJ|ADJ/]
+
+  # - name: "threat"
+  #   label: Threat
+  #   pattern: |
+  #     trigger = [lemma=threat]
+  #     theme:Entity? = >nmod
   
   ############################
   # Entity affects Entity
