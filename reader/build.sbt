@@ -7,6 +7,7 @@ libraryDependencies ++= {
   val procVersion   = "8.1.0"
   val json4sVersion = "3.2.11" // Spark is incompatible with newer versions: https://github.com/json4s/json4s/issues/316  "3.5.2"
   val luceneVersion = "6.6.0"
+  val http4sVersion = "0.20.22"
 
   Seq(
     "org.scalactic" %% "scalactic" % "3.0.5",
@@ -25,6 +26,8 @@ libraryDependencies ++= {
     "org.yaml"      %  "snakeyaml"               % "1.14",
     // lucene
     "org.apache.lucene" % "lucene-core" % luceneVersion,
-    "org.apache.lucene" % "lucene-queryparser" % luceneVersion
+    "org.apache.lucene" % "lucene-queryparser" % luceneVersion,
+    // http4s
+    "org.http4s" %% "http4s-json4s-jackson" % http4sVersion
   )
 }
