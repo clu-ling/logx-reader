@@ -27,8 +27,7 @@ libraryDependencies ++= {
     // lucene
     "org.apache.lucene" % "lucene-core" % luceneVersion,
     "org.apache.lucene" % "lucene-queryparser" % luceneVersion,
-    // http4s
-    "org.http4s" %% "http4s-json4s-jackson" % http4sVersion,
-    "org.http4s" %% "http4s-dsl" % http4sVersion
+    // scala.requests
+    "com.lihaoyi" %% "requests" % "0.6.5"
   )
 }

@@ -5,37 +5,20 @@ import org.clulab.serialization.json.JSONSerializer
 
 import org.json4s.JsonDSL._
 import org.json4s._
-import org.json4s.jackson.JsonMethods._
+import org.json4s.jackson.JsonMethods.{parse => parseJson}
 import org.json4s.jackson.prettyJson
-import org.http4s._
-import org.http4s.dsl.io._
-
-import scala.concurrent.ExecutionContext.global
-import cats.effect.Blocker
-import java.util.concurrent._
 
 // FIXME: implement me
-class ProxiedProcessor(url: String) extends Processor {
+class ProxiedProcessor(val url: String) extends Processor {
 
   // FIXME: implement me
   override def annotate(text: String, keepText: Boolean): CluDocument = {
 
-    // make httpClient
-    val blockingPool = Executors.newFixedThreadPool(5)
-    val blocker = Blocker.liftExecutorService(blockingPool)
-    val httpClient: Client[IO] = JavaNetClientBuilder[IO](blocker).create
+    val urlPath = s"${url}/api/annotate"
+    val response = requests.post(urlPath, params = Map("text" -> text))
 
-    // make URI for request
-    val baseUri = Uri(url)
-    val withPath = baseUri.withPath("/api/annotate")
-
-    // make POST request
-    val req = POST(text, withPath)
-    val response: Json = httpClient.expect(req).unsafeRunSync()
-    
-    // Use json4s.jackson to parse json response to JValue
-    val json: JValue = parse(req)
-    val doc: ClueDocument = JSONSerializer.toDocument(json)
+    val json: JValue = parseJson(response.text)
+    val doc: CluDocument = JSONSerializer.toDocument(json)
 
     doc
     //CluDocument(Array.empty[Sentence])
