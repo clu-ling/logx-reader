@@ -25,6 +25,8 @@ libraryDependencies ++= {
     "org.yaml"      %  "snakeyaml"               % "1.14",
     // lucene
     "org.apache.lucene" % "lucene-core" % luceneVersion,
-    "org.apache.lucene" % "lucene-queryparser" % luceneVersion
+    "org.apache.lucene" % "lucene-queryparser" % luceneVersion,
+    // scala.requests
+    "com.lihaoyi" %% "requests" % "0.6.5"
   )
 }

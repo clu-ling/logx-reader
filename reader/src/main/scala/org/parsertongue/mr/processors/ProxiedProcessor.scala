@@ -1,13 +1,27 @@
 package org.parsertongue.mr.processors
 
 import org.clulab.processors.{ Document => CluDocument, Processor, Sentence }
+import org.clulab.serialization.json.JSONSerializer 
+
+import org.json4s.JsonDSL._
+import org.json4s._
+import org.json4s.jackson.JsonMethods.{parse => parseJson}
+import org.json4s.jackson.prettyJson
 
 // FIXME: implement me
-class ProxiedProcessor(url: String) extends Processor {
+class ProxiedProcessor(val url: String) extends Processor {
 
   // FIXME: implement me
   override def annotate(text: String, keepText: Boolean): CluDocument = {
-    CluDocument(Array.empty[Sentence])
+
+    val urlPath = s"${url}/api/annotate"
+    val response = requests.post(urlPath, params = Map("text" -> text))
+
+    val json: JValue = parseJson(response.text)
+    val doc: CluDocument = JSONSerializer.toDocument(json)
+
+    doc
+    //CluDocument(Array.empty[Sentence])
   }
 
   // FIXME: implement me
