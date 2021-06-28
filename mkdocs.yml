@@ -35,9 +35,9 @@ nav:
         - Documentation: dev/documentation.md
         - Developing: dev/developing.md
         - FAQ: dev/faq.md
-    - API: # FIXME: location of api docs?
-        - "logx-reader": api/reader/index.html
-        - "logx-rest": api/rest/index.html
+    - API:
+        - "reader": api/reader/index.html
+        - "rest": api/rest/index.html
 
 extra_css:
     - css/extra.css
