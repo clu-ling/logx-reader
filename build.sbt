@@ -97,6 +97,7 @@ lazy val core = (project in file("core"))
   .settings(commonSettings)
   .settings(sharedDeps)
   .settings(assemblySettings)
+  // .settings(target in Compile in doc := baseDirectory.in(root).value / "docs" / "api" / "core")
   //.settings(s3Settings)
 
 lazy val reader = (project in file("reader"))
@@ -215,11 +216,30 @@ editGrammars := {
   val _ = (edit in EditSource).value
 }
 
+lazy val cp = taskKey[Unit]("Copies api directories from target to docs")
+
+cp := {
+  println{"Copying api documentation..."}
+  def copyDocs(): Unit = {
+    val projects = Seq("core", "reader", "rest")
+    for (s <- projects) {
+      println(s"$s docs...")
+      val source = baseDirectory.value / s / "target" / "scala-2.12" / "api"
+      val target = baseDirectory.value / "docs" / "api" / s
+      IO.copyDirectory(source, target, overwrite = true)
+    }
+  }
+  copyDocs()
+}
+
+
 addCommandAlias("copyGrammars", ";clean;editsource:clean;editGrammars")
 
 addCommandAlias("cleanTest", ";copyGrammars;test")
 
 addCommandAlias("dockerize", ";copyGrammars;docker:publishLocal")
+
+addCommandAlias("documentize", ";clean;doc;cp")
 
 // addCommandAlias("pushWebappToEcr", ";webapp/ecr:createRepository;webapp/ecr:login;webapp/ecr:push")
 // addCommandAlias("dockerizeWebappAndPushToEcr", ";dockerizeWebapp;pushWebappToEcr")

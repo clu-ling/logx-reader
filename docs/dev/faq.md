@@ -19,3 +19,7 @@ The config file passed to the API upon startup should include a specification fo
 ## What variables can I specify in the config file?
 
 The user can specify `RULES_PREFIX` and `PROCESSORS_SERVICE_URL`. The latter is the url of the proxied processor service.
+
+## What sbt command line options are there?
+
+sbt tasks

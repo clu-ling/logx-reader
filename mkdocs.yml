@@ -36,6 +36,7 @@ nav:
         - Developing: dev/developing.md
         - FAQ: dev/faq.md
     - API:
+        - "core": api/core/index.html
         - "reader": api/reader/index.html
         - "rest": api/rest/index.html
 

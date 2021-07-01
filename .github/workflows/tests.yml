@@ -44,23 +44,10 @@ jobs:
       run: sbt cleanTest
     # docs
     - name: "Create documentation (API docs)"
-      run: sbt doc
-    # Copy api docs to docs/api, see https://github.com/canastro/copy-action
-    - name: copy files reader
-      uses: canastro/copy-file-action@master
-      with:clu-template
-        source: "reader/target/scala-2.12/api/."
-        target: "docs/api/reader/"
-        flags: "-r"
-    - name: copy files rest
-      uses: canastro/copy-file-action@master
-      with:
-        source: "rest/target/scala-2.12/api/."
-        target: "docs/api/rest/"
-        flags: "-r"
+      run: sbt documentize
     # docs
     - name: "Create documentation (other)"
-      env:clu-template
+      env: 
       run: |
         docker pull "${ORG}/${IMAGE_NAME}:${TAG}"
         docker run -i -v "$GITHUB_WORKSPACE:/app" "${ORG}/${IMAGE_NAME}:${TAG}" mkdocs build -c
