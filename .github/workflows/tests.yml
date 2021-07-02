@@ -48,8 +48,10 @@ jobs:
     # docs
     - name: "Create documentation (other)"
       env: 
+        ORG: "parsertongue"
+        IMAGE_NAME: "mkdocs"
+        TAG: "latest"
       run: |
-        docker pull "${ORG}/${IMAGE_NAME}:${TAG}"
         docker run -i -v "$GITHUB_WORKSPACE:/app" "${ORG}/${IMAGE_NAME}:${TAG}" mkdocs build -c
     - name: Deploy docs
       if: github.ref == 'refs/heads/master'
