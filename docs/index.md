@@ -6,4 +6,8 @@ The `LogX-Reader` is a machine reading system which utilizes [Odin](https://gith
 
 ## How do I use it?
 
-The `LogX-Reader` can be used through a rest API defined in the `rest` subproject. The API can be run following the instruction in `Install`.
+The `LogX-Reader` can be used through a REST API defined in the `rest` subproject. The REST API can be run following the instructions in [Usage](./tutorial.md) after installing.
+
+## Developing
+
+For instructions on developing the `LogX-Reader`, navigate to the [Development](./dev/install.md) section.

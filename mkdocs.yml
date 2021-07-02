@@ -27,13 +27,15 @@ nav:
     # NOTE: all relative to docs/
     - Home: index.md
     - User Guide:
-        - Usage: tutorial.md
         - Installation: install.md
-    - Developing:
+        - Usage: tutorial.md
+    - Development:
         - Install: dev/install.md
-        - Testing: dev/test.md
         - Documentation: dev/documentation.md
         - Developing: dev/developing.md
+        - Testing: dev/test.md
+        - Annotations: dev/annotations.md
+        - How it Works: dev/howitworks.md
         - FAQ: dev/faq.md
     - API:
         - "core": api/core/index.html

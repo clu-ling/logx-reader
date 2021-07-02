@@ -22,4 +22,4 @@ The user can specify `RULES_PREFIX` and `PROCESSORS_SERVICE_URL`. The latter is 
 
 ## What sbt command line options are there?
 
-sbt tasks
+To see what commands are available, run ```sbt tasks```.

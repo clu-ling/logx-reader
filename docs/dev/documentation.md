@@ -13,7 +13,7 @@ This will generate HTML pages documenting the API for each subproject:
 - `reader`: reader/target/scala-2.12/api/index.html
 - `rest`: rest/target/scala-2.12/api/index.html
 
-**NOTE: These files are copied to the `docs/api` directory via github actions when the static documentation is generated.
+**NOTE: These files are copied to the `docs/api` directory when the command `sbt documentize` is used.
 
 ## General Documentation
 
@@ -32,4 +32,4 @@ docker run --rm -it -v $PWD:/app \
     mkdocs serve -a 0.0.0.0:8000
 ```
 
-Open your browser to `localhost:8000`.
+Open your browser to [localhost:8000](http://localhost:80000).

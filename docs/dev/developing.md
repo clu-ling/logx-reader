@@ -1,29 +1,61 @@
 # Developing The LogX Reader
 
-For instructions on developing the reader rules live, follow the ```Dev Instructions``` in the logx-reader repo wiki on github. The following provides information on how the LogX Reader runs and how to develop the full system, including actions, processors, and dockerization.
-
-The ```/api/extract``` endpoint will be used as a running example of the LogX reader workflow. The api endpoints are designated in ```rest.app.controllers.ApiController.scala```.
-
-The following components of the LogX reader can be developed following the [Odin manual]( LINK ).
+In developing the `logx-reader` there are three pieces: `rules` (and corresponding tests), `taxonomy`, and `actions`. The REST API and its endpoints are already defined. For information on how annotations are generated for use in rules, or how to use alternate processors, see the [Annotations](./annotations.md) section.
 
 ## Rules
 
-Rules (and the taxonomy) are written in yaml. To develop, rules should be added to the entities and events in ```reader.grammars.logx```, NOT ```reader.src.main.resources.org.parsertongue.reader.grammars.logx```. When the api is run the ```reader.grammars.logx``` directory is to update the congruent directory in ```reader.src```, which is used in defining the ```MachineReadingSystem``` over which the api endpoints are run.
+Before developing a new rule or set of related rules, it is best to first define tests which describe the expected behavior of the rule(s). To develop tests follow the `Testing` section.
 
-Rules should be developed in a test oriented manner. That is, tests should be written before the rules. Tests should capture what the expected output of the new rules should be, based on example inputs and the intended purpose.
+Rules in the `logx-reader` are defined using Odin. For an in depth look at Odin and writing a grammar, please see the [manual](https://arxiv.org/pdf/1509.07513.pdf).
 
-### Entities
+The `logx-reader` has two grammars, `entities` and `events`. The grammars can be found under `reader/grammars/logx`. An identical set of grammars can be found under `reader/src/main/resources/org/parsertongue/reader/grammars/logx`, however, when developing the grammars the user should only modify the top level grammars. These will be edited and copied to the `src` grammars via action.
 
-### Events
+Rules can be developed with live reloading following the instructions in the [Development/Install](./install.md) section.
+
+### Writing Rules
+
+Odin rules are written in yaml and run over annotated text (the Odin manual includes a gentle introduction to [yaml syntax](https://arxiv.org/pdf/1509.07513.pdf#subsection.4.1)). Annotated text is produced using an external NLP service (such as `StanfordCoreNLP` or `SpaCY`), however, [Penn Tags](https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html) and [Universal Dependencies](https://universaldependencies.org/) are always included in the annotations.
+
+There are two types of rules, `token` and `dependency`. If the type is not specified it defaults to `type=dependency`. Token rules are defined over the set of tokens and their values, while dependency rules are defined over the set of dependencies.
+
+**Token Rule**
+
+```yaml
+- name: ner-loc
+  label: Location
+  priority: 1
+  type: token
+  pattern: |
+    [entity=LOCATION]+
+```
+
+**Dependency Rule**
+
+```yaml
+- name: dancers_1
+  label: Dance
+  priority: 2
+  pattern: |
+    trigger = [lemma=dance]
+    dancer:Entity = nsubj
+    partner:Entity = dobj? prep_with
+```
+
+When the rules are run on text, a JSON file of `labeled mentions` is generated. Mentions are the matches found by the rules within the text, and the labels are included in a heiarchy defined in the `Taxomony`.
 
 ## Taxonomy
 
-The taxonomy should be developed alongside the rules in the same manner. Always add to the taxonomy under ```reader.grammars.logx``` and NOT the corresponding directory under ```reader.src```.
+The `taxonomy` is a set of heiarchical relationships between mention labels. Like the grammars, the taxonomy can be found in two places but only the top level taxonomy should be modified in development.
 
-The taxonomy represents the hiearchical structure of the entities and events being extracted. For example, if a rule produces the label ```Date```, the resultant mention in the json file will be displayed with the labels ```Constraint, TimeConstraint, TimeExpression, Date```, representing the hypernymic relationship of the rule's label.
+A sample of the `logx-reader` taxonomy can be seen here:
+
+```yaml
+- Measurement:
+  - Unit
+  - NumericExpression:
+    - Quantity
+```
 
 ## Actions
 
-Actions dictate how text is annotated, how rules are applied to annotated text, and the final structure of the resultant mentions.
-
-The MachineReadingSystem stipulates that the EntityFinder and EventFinder have three types of actions: actions, globalAction, and finalAction. The location of these actions is found in the config file used to initialize the MachineReadingSystem. For the running example this is ```reference.conf```, which sets the actions for both the Entity and Event Finder as ```LogxActions.scala```, which can be found under ```reader.src.main.resources.org.parsertongue.mr.logx.odin```. The global and final actions differ for the EntityFinder and EventFinder, as is expected given the flow of extraction. Global actions can be found in ```OdinActions.scala```, under ```reader.src.main.resources.scala.org.parsertongue.mr.actions```. Under the running config, the EntityFinder's globalAction is ```identityAction``` and the EventFinder's globalAction is ```cleanupEvents```. The final actions are ```cleanupEntities``` and ```finalSweep```. These globalActions and finalActions are in line with the LogX Reader workflow, in which the annotated text is first run through the EntityFinder and then the EventFinder, which is run over the "cleaned up" entity mentions, followed by a "clean up" of the event mentions and a "final sweep" of all mentions.
+Generally, when developing rules there should be no need to change the existing actions. However, if it is necessary, new actions or modifications to existing actions can be made in `reader/src/main/scala/org/parsertongue/mr/logx/odin/LogxActions.scala`. For more information about actions, see [How it Works](./howitworks.md).

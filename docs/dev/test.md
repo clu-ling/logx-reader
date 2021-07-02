@@ -1,14 +1,12 @@
 # Testing
 
-Tests should be developed before the rules, follow the `Developing Tests` section below.
-
-When developing rules, tests can be run using the following command:
+Tests should be developed before rules. When developing rules, tests can be run using the command:
 
 ```bash
 sbt cleanTest
 ```
 
-**NOTE: This command first copies the grammars to the `src` files before running the tests.
+**NOTE: This command first copies the grammars to the `src` files before running the tests. To run the tests without updating the rules use the command ```sbt test```.
 
 ## Developing Tests
 
