@@ -15,10 +15,22 @@ Navigate to [localhost:9000/api](http://localhost:9000/api) to interactively exp
 
 ## API Endpoints and Examples
 
-| Endpoint | Example Output |
+The main endpoint is `/api/extract`, which returns a json file of extracted mentions over the query.
+
+| Endpoint | Example |
 | :--- | :--- |
-| /api/extract | See [this gist](https://gist.github.com/myedibleenso/9241a4c9c71d29f148ef0b8c44602b60) |
-| /api/annotate | See [Annotations](./dev/annotations.md) |
-| /api/parse-query | .. |
-| /api/taxonomy/hyponyms-for | .. |
-| /api/taxonomy/hypernyms-for | .. |
+| /api/extract | [Github Gist](https://gist.github.com/myedibleenso/9241a4c9c71d29f148ef0b8c44602b60) |
+| /api/annotate | [Github Gist](https://gist.github.com/zwellington/21688441b3d8a62f8e2f2051e1792a63) |
+| /api/parse-query | [Github Gist](https://gist.github.com/zwellington/f89929624a2ba82b66cf70add24f26ea) |
+| /api/taxonomy/hyponyms-for | [Github Gist](https://gist.github.com/zwellington/7a7ae44bff5cd890198d2eea4f2f0145) |
+| /api/taxonomy/hypernyms-for | [Github Gist](https://gist.github.com/zwellington/59041ebd68e60e1b7f21bb30545a4213) |
+
+## Common Workflows
+
+- Extraction from documents: To extract over a document we use a python package, `doculist`, to convert documents (PDF, Word, HTML, etc) to a structured format available to the `LogX-Reader`. The system is then run over the document iteratively.
+
+<!--- 
+- Manipulatiing mentions
+  - python
+  - scala
+-->

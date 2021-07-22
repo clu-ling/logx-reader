@@ -1,5 +1,7 @@
 # Documentation
 
+You can view the latest documentation at the [`LogX-Reader Website`](https://clu-ling.github.io/logx-reader/).
+
 ## API Documentation
 
 We use `scaladoc` to generate our API documentation. To generate API documentaion use the following command:
@@ -13,7 +15,8 @@ This will generate HTML pages documenting the API for each subproject:
 - `reader`: reader/target/scala-2.12/api/index.html
 - `rest`: rest/target/scala-2.12/api/index.html
 
-**NOTE: These files are copied to the `docs/api` directory when the command `sbt documentize` is used.
+!!! note
+    These files are copied to the `docs/api` directory when the command `sbt documentize` is used.
 
 ## General Documentation
 
