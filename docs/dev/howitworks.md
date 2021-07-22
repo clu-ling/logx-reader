@@ -6,7 +6,7 @@ The following components of the LogX reader can be developed following the [Odin
 
 ## Rules
 
-Rules (and the taxonomy) are written in yaml. To develop, rules should be added to the entities and events grammars in ```reader.grammars.logx```, NOT ```reader.src.main.resources.org.parsertongue.reader.grammars.logx```. When the api is launched, the ```reader.grammars.logx``` directory is used to update the congruent directory in ```reader.src```, which is used in defining the ```MachineReadingSystem``` over which the api endpoints are run.
+Rules (and the taxonomy) are written in [YAML](https://yaml.org/). To develop, rules should be added to the entities and events grammars in ```reader.grammars.logx```, NOT ```reader.src.main.resources.org.parsertongue.reader.grammars.logx```. When the api is launched, the ```reader.grammars.logx``` directory is used to update the congruent directory in ```reader.src```, which is used in defining the ```MachineReadingSystem``` over which the api endpoints are run.
 
 Rules should be developed in a test oriented manner. That is, tests should be written before the rules. Tests should capture what the expected output of the new rules should be, based on example inputs and the intended purpose.
 
@@ -39,7 +39,7 @@ graph LR
         end
     end
     mentions{Mentions}
-    extract--Text-->proc;
+    Text--extract-->proc;
     proc--Annotations-->entf;
     entf--EntityMentions-->evf;
     evf-->mentions;

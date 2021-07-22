@@ -25,13 +25,15 @@ This different quantification is directly reflected in the evaluation procedure 
 - `ExistsMentionTestCase`:
 
 ```scala
-mentions.exists { m => em.check(m)
+// At least one mention must meet the criteria
+mentions.exists { m => em.check(m) }
 ```
 
 - `ForAllMentionTestCase`:
 
 ```scala
-mentions.forall { m => em.check(m)
+// Every mention must meet the criteria
+mentions.forall { m => em.check(m) }
 ```
 
 All functions called by `checkMention` have their own `check()` boolean function.

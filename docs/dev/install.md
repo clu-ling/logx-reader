@@ -3,7 +3,7 @@
 ## Requirements
 
 - [docker](https://docs.docker.com/get-docker/)
-- [JDK11](https://sdkman.io/jdks#AdoptOpenJDK)
+- [JDK 11](https://sdkman.io/jdks#AdoptOpenJDK)
 - [sbt](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
 - 8G of RAM
 
@@ -47,10 +47,10 @@ Open your browser to [localhost:9000](http://localhost:9000).
 !!! note
     If you didn't clone the `logx-reader` repository under the recomended directory, change the `RULES_PREFIX` path to reflect your local path.
 
-To run the visualizer, open a second terminal window under the `odin-tutorial` directory and run the command:
+To run the visualizer *without docker*, you'll need a version of Node installed.  Clone the `odin-tutorial` repo run the command from the project root:
 
 ```bash
-npm run start
+npm install && npm run start
 ```
 
 Open your browser to [localhost:7777/playground](http://localhost:7777/playground).
