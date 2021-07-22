@@ -4,7 +4,7 @@
 
 - [sbt](https://www.scala-sbt.org/)
 - [docker](https://docs.docker.com/get-docker/)
-- 8G of RAM
+- >= 8G of RAM
 
 ## REST API
 

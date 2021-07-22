@@ -18,7 +18,7 @@ Odin rules are written in yaml and run over annotated text (the Odin manual incl
 
 There are two types of rules, `token` and `dependency`. If the type is not specified it defaults to `type=dependency`. Token rules are defined over the set of tokens and their values, while dependency rules are defined over the set of dependencies.
 
-**Token Rule**
+**Token rule**
 
 If you wanted to label all tokens which carry the NER tag "LOCATION" as "Location," the following rule can be used.
 
@@ -36,9 +36,9 @@ If you wanted to label all tokens which carry the NER tag "LOCATION" as "Locatio
 
 For example, given the text "How many F16 engines are heading to The United Kingdom?" the sequence "The United Kingdom" would be labeled `Location` by this rule.
 
-**Dependency Rule**
+**Graph traversal rule**
 
-If you wanted to capture a "risk of" event, you could start with a simple dependency rule such as the following:
+If you wanted to capture a "risk of" event, you could start with a simple rule defining a traversal over a syntactic dependency graph such as the following:
 
 ```yaml
 - name: risk-of
@@ -52,7 +52,7 @@ If you wanted to capture a "risk of" event, you could start with a simple depend
 This rule finds all words whose lemma is "risk" and if followed by "of" labels the sequence as a trigger of a `RiskOf` event, which is given a `type` defined by the dependency relation "nmod_of." In the provided example "spoilage" would be labeled as the `type` of the `RiskOf` event.
 
 !!! note
-    When the rules are run on text, a JSON file of `labeled mentions` is generated. Mentions are the matches found by the rules within the text, and the labels are included in a heiarchy defined in the `Taxomony`.
+    When the rules are run on text, a JSON file of labeled `mentions` is generated. Mentions are the matches found by the rules within the text, and the labels are included in a heiarchy defined in the `Taxonomy`.
 
 ## Taxonomy
 
@@ -69,4 +69,4 @@ A sample of the `logx-reader` taxonomy can be seen here:
 
 ## Actions
 
-Generally, when developing rules there should be no need to change the existing actions. However, if it is necessary, new actions or modifications to existing actions can be made in `reader/src/main/scala/org/parsertongue/mr/logx/odin/LogxActions.scala`. For more information about actions, see [How it Works](./howitworks.md).
+Generally, when developing rules there should be no need to change the existing actions. However, if it is necessary, new actions or modifications to existing actions can be made in [`reader/src/main/scala/org/parsertongue/mr/logx/odin/LogxActions.scala`](https://github.com/clu-ling/logx-reader/blob/master/reader/src/main/scala/org/parsertongue/mr/logx/odin/LogxActions.scala). For more information about actions, see [How it Works](./howitworks.md).

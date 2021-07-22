@@ -27,10 +27,10 @@ The main endpoint is `/api/extract`, which returns a json file of extracted ment
 
 ## Common Workflows
 
-- Extraction from documents: To extract over a document we use a python package, `doculist`, to convert documents (PDF, Word, HTML, etc) to a structured format available to the `LogX-Reader`. The system is then run over the document iteratively.
+- Extraction from documents: To extract over a document we use a python package, [`doculist`](https://github.com/clu-ling/doculist), to convert documents (PDF, Word, HTML, etc) to a structured format available to the `LogX-Reader`. The system is then run over the document iteratively.
 
 <!--- 
-- Manipulatiing mentions
+- Manipulating mentions
   - python
   - scala
 -->
