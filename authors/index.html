@@ -7,9 +7,9 @@
 <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="Gus Hahn-Powell" name="author"/>
-<link href="https://clu-ling.github.io/logx-reader/tutorial/" rel="canonical"/>
+<link href="https://clu-ling.github.io/logx-reader/authors/" rel="canonical"/>
 <link href="../img/favicon.ico" rel="shortcut icon"/>
-<title>Usage - logx-reader</title>
+<title>Contributors - logx-reader</title>
 <link href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" rel="stylesheet">
 <link href="../css/theme.css" rel="stylesheet">
 <link href="../css/theme_extra.css" rel="stylesheet"/>
@@ -17,9 +17,9 @@
 <link href="../css/extra.css" rel="stylesheet"/>
 <script>
     // Current page data
-    var mkdocs_page_name = "Usage";
-    var mkdocs_page_input_path = "tutorial.md";
-    var mkdocs_page_url = "/logx-reader/tutorial/";
+    var mkdocs_page_name = "Contributors";
+    var mkdocs_page_input_path = "authors.md";
+    var mkdocs_page_url = "/logx-reader/authors/";
   </script>
 <script defer="" src="../js/jquery-2.1.1.min.js"></script>
 <script defer="" src="../js/modernizr-2.8.3.min.js"></script>
@@ -46,16 +46,10 @@
 </li>
 </ul>
 <p class="caption"><span class="caption-text">User Guide</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../install/">Installation</a>
 </li>
-<li class="toctree-l1 current"><a class="reference internal current" href="./">Usage</a>
-<ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="#api-endpoints-and-examples">API Endpoints and Examples</a>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#common-workflows">Common Workflows</a>
-</li>
-</ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/">Usage</a>
 </li>
 </ul>
 <p class="caption"><span class="caption-text">Development</span></p>
@@ -84,8 +78,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/rest/">rest</a>
 </li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../authors/">Contributors</a>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal current" href="./">Contributors</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#graduate-developers">Graduate Developers</a>
+</li>
+</ul>
 </li>
 </ul>
 </div>
@@ -101,73 +99,24 @@
 <div aria-label="breadcrumbs navigation" role="navigation">
 <ul class="wy-breadcrumbs">
 <li><a href="..">Docs</a> »</li>
-<li>User Guide »</li>
-<li>Usage</li>
+<li>Contributors</li>
 <li class="wy-breadcrumbs-aside">
-<a class="icon icon-github" href="https://github.com/clu-ling/logx-reader/blob/master/docs/tutorial.md"> Edit on GitHub</a>
+<a class="icon icon-github" href="https://github.com/clu-ling/logx-reader/blob/master/docs/authors.md"> Edit on GitHub</a>
 </li>
 </ul>
 <hr/>
 </div>
 <div role="main">
 <div class="section">
-<h1 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link"></a></h1>
-<p>The reader can be used through the REST API. After building the docker image, launch a container using the following command:</p>
-<pre><code class="language-bash">docker run --name="logx-reader" \
-  -it \
-  --restart "on-failure" \
-  -e "HOME=/app" \
-  -p "0.0.0.0:9000:9000" \
-  "gitlab-registry.logx.cloud/team/bbn/logx-reader:latest"
-</code></pre>
-<p>Navigate to <a href="http://localhost:9000/api">localhost:9000/api</a> to interactively explore the API through the <a href="http://spec.openapis.org/oas/v3.0.3">OpenAPI 3.0</a> specification.</p>
-<h2 id="api-endpoints-and-examples">API Endpoints and Examples<a class="headerlink" href="#api-endpoints-and-examples" title="Permanent link"></a></h2>
-<p>The main endpoint is <code>/api/extract</code>, which returns a json file of extracted mentions over the query.</p>
-<table>
-<thead>
-<tr>
-<th align="left">Endpoint</th>
-<th align="left">Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">/api/extract</td>
-<td align="left"><a href="https://gist.github.com/myedibleenso/9241a4c9c71d29f148ef0b8c44602b60">Github Gist</a></td>
-</tr>
-<tr>
-<td align="left">/api/annotate</td>
-<td align="left"><a href="https://gist.github.com/zwellington/21688441b3d8a62f8e2f2051e1792a63">Github Gist</a></td>
-</tr>
-<tr>
-<td align="left">/api/parse-query</td>
-<td align="left"><a href="https://gist.github.com/zwellington/f89929624a2ba82b66cf70add24f26ea">Github Gist</a></td>
-</tr>
-<tr>
-<td align="left">/api/taxonomy/hyponyms-for</td>
-<td align="left"><a href="https://gist.github.com/zwellington/7a7ae44bff5cd890198d2eea4f2f0145">Github Gist</a></td>
-</tr>
-<tr>
-<td align="left">/api/taxonomy/hypernyms-for</td>
-<td align="left"><a href="https://gist.github.com/zwellington/59041ebd68e60e1b7f21bb30545a4213">Github Gist</a></td>
-</tr>
-</tbody>
-</table>
-<h2 id="common-workflows">Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link"></a></h2>
-<ul>
-<li>Extraction from documents: To extract over a document we use a python package, <code>doculist</code>, to convert documents (PDF, Word, HTML, etc) to a structured format available to the <code>LogX-Reader</code>. The system is then run over the document iteratively.</li>
-</ul>
-<!--- 
-- Manipulatiing mentions
-  - python
-  - scala
--->
+<h1 id="main-author">Main Author<a class="headerlink" href="#main-author" title="Permanent link"></a></h1>
+<p>Gus Hahn-Powell</p>
+<h2 id="graduate-developers">Graduate Developers<a class="headerlink" href="#graduate-developers" title="Permanent link"></a></h2>
+<p>Zachary Wellington</p>
 </div>
 </div>
 <footer>
 <div aria-label="footer navigation" class="rst-footer-buttons" role="navigation">
-<a class="btn btn-neutral float-right" href="../dev/install/" title="Install">Next <span class="icon icon-circle-arrow-right"></span></a>
-<a class="btn btn-neutral" href="../install/" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral" href="../api/rest/" title="rest"><span class="icon icon-circle-arrow-left"></span> Previous</a>
 </div>
 <hr/>
 <div role="contentinfo">
@@ -186,8 +135,7 @@
 <span>
 <a class="fa fa-github" href="https://github.com/clu-ling/logx-reader/" style="color: #fcfcfc"> GitHub</a>
 </span>
-<span><a href="../install/" style="color: #fcfcfc">« Previous</a></span>
-<span><a href="../dev/install/" style="color: #fcfcfc">Next »</a></span>
+<span><a href="../api/rest/" style="color: #fcfcfc">« Previous</a></span>
 </span>
 </div>
 <script>var base_url = '..';</script>
