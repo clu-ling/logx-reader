@@ -129,12 +129,14 @@ This different quantification is directly reflected in the evaluation procedure 
 <ul>
 <li><code>ExistsMentionTestCase</code>:</li>
 </ul>
-<pre><code class="language-scala">mentions.exists { m =&gt; em.check(m)
+<pre><code class="language-scala">// At least one mention must meet the criteria
+mentions.exists { m =&gt; em.check(m) }
 </code></pre>
 <ul>
 <li><code>ForAllMentionTestCase</code>:</li>
 </ul>
-<pre><code class="language-scala">mentions.forall { m =&gt; em.check(m)
+<pre><code class="language-scala">// Every mention must meet the criteria
+mentions.forall { m =&gt; em.check(m) }
 </code></pre>
 <p>All functions called by <code>checkMention</code> have their own <code>check()</code> boolean function.
 <code>MentionTestCase</code> (either variety)'s <code>check</code> function calls the <code>check</code> functions of its <code>TextTestCase</code> and <code>LabelTestCase(s)</code> obligatorily, and calls <code>check</code> from <code>ArgTestCase</code> if present.

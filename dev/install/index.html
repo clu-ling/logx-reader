@@ -117,7 +117,7 @@
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link"></a></h2>
 <ul>
 <li><a href="https://docs.docker.com/get-docker/">docker</a></li>
-<li><a href="https://sdkman.io/jdks#AdoptOpenJDK">JDK11</a></li>
+<li><a href="https://sdkman.io/jdks#AdoptOpenJDK">JDK 11</a></li>
 <li><a href="https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html">sbt</a></li>
 <li>8G of RAM</li>
 </ul>
@@ -153,8 +153,8 @@ services:
 <p class="admonition-title">Note</p>
 <p>If you didn't clone the <code>logx-reader</code> repository under the recomended directory, change the <code>RULES_PREFIX</code> path to reflect your local path.</p>
 </div>
-<p>To run the visualizer, open a second terminal window under the <code>odin-tutorial</code> directory and run the command:</p>
-<pre><code class="language-bash">npm run start
+<p>To run the visualizer <em>without docker</em>, you'll need a version of Node installed.  Clone the <code>odin-tutorial</code> repo run the command from the project root:</p>
+<pre><code class="language-bash">npm install &amp;&amp; npm run start
 </code></pre>
 <p>Open your browser to <a href="http://localhost:7777/playground">localhost:7777/playground</a>.</p>
 </div>
