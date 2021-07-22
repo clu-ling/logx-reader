@@ -13,6 +13,7 @@ theme:
   # list additional languages here
   hljs_languages:
     - yaml
+    - scala
   analytics:
     gtag: null
   shortcuts:
@@ -37,10 +38,11 @@ nav:
         - Annotations: dev/annotations.md
         - How it Works: dev/howitworks.md
         - FAQ: dev/faq.md
-    - API:
+    - API Documentation:
         - "core": api/core/index.html
         - "reader": api/reader/index.html
         - "rest": api/rest/index.html
+    - Contributors: authors.md
 
 extra_css:
     - css/extra.css
@@ -82,5 +84,7 @@ plugins:
     - git-revision-date-localized
     # see https://github.com/timvink/mkdocs-git-authors-plugin
     - git-authors
+    # see https://github.com/fralau/mkdocs-mermaid2-plugin
+    - mermaid2
     # TODO: add https://github.com/timvink/mkdocs-table-reader-plugin
     # TODO: add https://github.com/fralau/mkdocs-mermaid2-plugin

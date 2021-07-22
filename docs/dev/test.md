@@ -6,7 +6,8 @@ Tests should be developed before rules. When developing rules, tests can be run 
 sbt cleanTest
 ```
 
-**NOTE: This command first copies the grammars to the `src` files before running the tests. To run the tests without updating the rules use the command ```sbt test```.
+!!! note
+    This command first copies the grammars to the `src` files before running the tests. To run the tests without updating the rules use the command ```sbt test```.
 
 ## Developing Tests
 

@@ -3,17 +3,18 @@
 ## Requirements
 
 - [docker](https://docs.docker.com/get-docker/)
-- [sdkman](https://sdkman.io/install)
-    - [JDK11](https://sdkman.io/jdks#AdoptOpenJDK)
-    - [sbt](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
+- [JDK11](https://sdkman.io/jdks#AdoptOpenJDK)
+- [sbt](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
 - 8G of RAM
 
 ## Install
 
 Clone the [logx-reader](https://github.com/clu-ling/logx-reader) repository.
 
-**NOTE: We suggest developing the `logx-reader` on a Linux environment under the `~/repos/clu-ling` directory. This documentation contains commands which run under these assumptions.
+!!! note
+    We suggest developing the `logx-reader` on a Linux environment under the `~/repos/clu-ling` directory. This documentation contains commands which run under these assumptions.
 
+<!--- FIXME: docker run command for odin-tutorial image -->
 To run the visualizer alongside the logx-reader REST API, clone the [odin-tuorial](https://github.com/clu-ling/odin-tutorial) repository and change the `docker-compose.yml` file to:
 
 ```yaml
@@ -43,7 +44,8 @@ RULES_PREFIX=file://$HOME/repos/clu-ling/logx-reader/reader/grammars/logx sbt we
 
 Open your browser to [localhost:9000](http://localhost:9000).
 
-**NOTE: If you didn't clone the `logx-reader` repository under the recomended directory, change the `RULES_PREFIX` path to reflect your local path.
+!!! note
+    If you didn't clone the `logx-reader` repository under the recomended directory, change the `RULES_PREFIX` path to reflect your local path.
 
 To run the visualizer, open a second terminal window under the `odin-tutorial` directory and run the command:
 

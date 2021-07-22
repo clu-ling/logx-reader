@@ -12,7 +12,7 @@ To rebuild the Docker image, simply run ```sbt dockerize``` in your terminal. Ma
 
 Always add/change rules in the yml files under ```reader.grammars.logx```. The changes made to these files will be updated in the src files automatically.
 
-## How do I change processors?
+## How do I change annotation pipelines?
 
 The config file passed to the API upon startup should include a specification for the preffered processor. Currently only "ProxiedProcessor", "CluProcessor", and "logx" are supported processor options. To specify a custom processor use "ProxiedProcessor."
 
